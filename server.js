@@ -1,9 +1,6 @@
 const express = require('express');
 const cors = require('cors');
 const path = require('path');
-const fs = require('fs');
-const { jsPDF } = require('jspdf');
-const puppeteer = require('puppeteer');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -361,49 +358,7 @@ app.post('/api/generate-proposal', (req, res) => {
   res.json({ html: proposalHTML });
 });
 
-// 5. Gerar PDF
-app.post('/api/generate-pdf', async (req, res) => {
-  try {
-    const { proposalData } = req.body;
-    
-    // Gerar HTML da proposta
-    const response = await fetch('http://localhost:3000/api/generate-proposal', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(proposalData)
-    });
-    
-    const { html } = await response.json();
-    
-    // Gerar PDF com Puppeteer
-    const browser = await puppeteer.launch();
-    const page = await browser.newPage();
-    await page.setContent(html);
-    
-    const pdf = await page.pdf({
-      format: 'A4',
-      printBackground: true,
-      margin: {
-        top: '20mm',
-        right: '20mm',
-        bottom: '20mm',
-        left: '20mm'
-      }
-    });
-    
-    await browser.close();
-    
-    res.setHeader('Content-Type', 'application/pdf');
-    res.setHeader('Content-Disposition', `attachment; filename="proposta-factorial-${proposalData.companyName.toLowerCase().replace(/\s+/g, '-')}.pdf"`);
-    res.send(pdf);
-    
-  } catch (error) {
-    console.error('Erro ao gerar PDF:', error);
-    res.status(500).json({ error: 'Erro ao gerar PDF' });
-  }
-});
-
-// 6. Processar transcrição
+// 5. Processar transcrição
 app.post('/api/process-transcription', (req, res) => {
   const { transcription } = req.body;
   
@@ -538,7 +493,6 @@ app.listen(PORT, () => {
   console.log(`   - GET  /api/segments`);
   console.log(`   - POST /api/calculate-price`);
   console.log(`   - POST /api/generate-proposal`);
-  console.log(`   - POST /api/generate-pdf`);
   console.log(`   - POST /api/process-transcription`);
 });
 
