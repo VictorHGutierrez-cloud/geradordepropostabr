@@ -13,7 +13,12 @@
         .factorial-brand { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); }
         .module-card { transition: all 0.3s ease; cursor: pointer; }
         .module-card:hover { transform: translateY(-2px); box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15); }
-        .module-card.selected { border-color: #2563EB; background-color: #EFF6FF; }
+        .module-card.selected { 
+            border-color: #2563EB;
+            background-color: #EFF6FF;
+            transform: scale(1.02);
+            box-shadow: 0 8px 25px rgba(37, 99, 235, 0.2);
+        }
         .status-message { position: fixed; top: 20px; right: 20px; padding: 15px 20px; border-radius: 8px; color: white; font-weight: bold; z-index: 1000; opacity: 0; transition: opacity 0.3s ease; }
         .status-message.show { opacity: 1; }
         .status-success { background-color: #10B981; }
@@ -353,14 +358,31 @@
                     moduleCard.classList.remove('selected');
                 }
                 
-                updateSummary();
+                calculateTotal();
             });
         });
 
-        // Atualizar resumo
-        function updateSummary() {
+        // Adicionar event listeners para inputs
+        document.getElementById('employeeCount').addEventListener('input', calculateTotal);
+        document.getElementById('discount').addEventListener('input', calculateTotal);
+
+        // Função principal de cálculo (baseada no seu exemplo)
+        function calculateTotal() {
             const employeeCount = parseInt(document.getElementById('employeeCount').value) || 0;
             const discount = parseInt(document.getElementById('discount').value) || 0;
+            
+            if (employeeCount === 0) {
+                // Limpar valores se não há funcionários
+                document.getElementById('selectedModules').textContent = '€0.00/mês';
+                document.getElementById('pricePerEmployee').textContent = '€0.00/mês';
+                document.getElementById('totalMonthly').textContent = '€0.00/mês';
+                document.getElementById('totalYearly').textContent = '€0.00/ano';
+                document.getElementById('selectedServices').textContent = '€0.00';
+                document.getElementById('discountAmount').textContent = '€0.00';
+                document.getElementById('totalImplementation').textContent = '€0.00';
+                document.getElementById('totalGeneral').textContent = '€0.00';
+                return;
+            }
             
             // Calcular custos mensais
             let monthlyCost = 0;
@@ -379,6 +401,7 @@
                 }
             });
             
+            // Aplicar desconto
             const finalMonthlyCost = monthlyCost * (1 - discount / 100);
             const totalMonthly = finalMonthlyCost * employeeCount;
             const totalYearly = totalMonthly * 12;
@@ -386,15 +409,33 @@
             const discountAmount = (monthlyCost + oneTimeCost) * (discount / 100);
             const totalGeneral = totalYearly + finalOneTimeCost;
             
-            // Atualizar interface
-            document.getElementById('selectedModules').textContent = `€${finalMonthlyCost.toFixed(2)}/mês`;
-            document.getElementById('pricePerEmployee').textContent = `€${finalMonthlyCost.toFixed(2)}/mês`;
-            document.getElementById('totalMonthly').textContent = `€${totalMonthly.toFixed(2)}/mês`;
-            document.getElementById('totalYearly').textContent = `€${totalYearly.toFixed(2)}/ano`;
-            document.getElementById('selectedServices').textContent = `€${oneTimeCost.toFixed(2)}`;
-            document.getElementById('discountAmount').textContent = `-€${discountAmount.toFixed(2)}`;
-            document.getElementById('totalImplementation').textContent = `€${finalOneTimeCost.toFixed(2)}`;
-            document.getElementById('totalGeneral').textContent = `€${totalGeneral.toFixed(2)}`;
+            // Atualizar interface com animação
+            updateValueWithAnimation('selectedModules', `€${finalMonthlyCost.toFixed(2)}/mês`);
+            updateValueWithAnimation('pricePerEmployee', `€${finalMonthlyCost.toFixed(2)}/mês`);
+            updateValueWithAnimation('totalMonthly', `€${totalMonthly.toFixed(2)}/mês`);
+            updateValueWithAnimation('totalYearly', `€${totalYearly.toFixed(2)}/ano`);
+            updateValueWithAnimation('selectedServices', `€${oneTimeCost.toFixed(2)}`);
+            updateValueWithAnimation('discountAmount', `-€${discountAmount.toFixed(2)}`);
+            updateValueWithAnimation('totalImplementation', `€${finalOneTimeCost.toFixed(2)}`);
+            updateValueWithAnimation('totalGeneral', `€${totalGeneral.toFixed(2)}`);
+            
+            // Mostrar status
+            if (selectedModules.size > 2) { // Mais que os obrigatórios
+                showStatus(`✅ ${selectedModules.size} módulos selecionados - Total: €${totalGeneral.toFixed(2)}`, 'success');
+            }
+        }
+
+        // Função para animar mudanças de valores
+        function updateValueWithAnimation(elementId, newValue) {
+            const element = document.getElementById(elementId);
+            if (element) {
+                element.style.transform = 'scale(1.1)';
+                element.style.transition = 'all 0.3s ease';
+                element.textContent = newValue;
+                setTimeout(() => {
+                    element.style.transform = 'scale(1)';
+                }, 300);
+            }
         }
 
         // Gerar proposta
@@ -494,7 +535,7 @@
             document.getElementById('employeeCount').value = '';
             document.getElementById('discount').value = '';
             
-            updateSummary();
+            calculateTotal();
             showStatus('🗑️ Seleção limpa!', 'success');
         }
 
@@ -703,16 +744,14 @@
             document.getElementById('exportPDF').addEventListener('click', exportPDF);
             document.getElementById('clearSelection').addEventListener('click', clearSelection);
             
-            document.getElementById('employeeCount').addEventListener('input', updateSummary);
-            document.getElementById('discount').addEventListener('input', updateSummary);
-            
             // Marcar módulos obrigatórios como selecionados
             document.querySelectorAll('[data-module="core-hr"], [data-module="core-time"]').forEach(card => {
                 card.classList.add('selected');
             });
             
-            updateSummary();
-            showStatus('Sistema carregado! Selecione os módulos desejados.', 'success');
+            // Calcular valores iniciais
+            calculateTotal();
+            showStatus('🎯 Sistema carregado! Selecione os módulos e veja o cálculo automático!', 'success');
         });
     </script>
 </body>

@@ -1,0 +1,740 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Factorial Operations | Bundle Demo Portal</title>
+    
+    <!-- Enhanced CSS Framework -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.2/dist/gsap.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.2/dist/ScrollTrigger.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.2/dist/TextPlugin.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.158.0/build/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/particles.js@2.0.0/particles.min.js"></script>
+    
+    <!-- Factorial Font: Fira Sans -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Sans:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
+    
+    <!-- 🚀 ULTIMATE ENHANCED VISUAL SYSTEM -->
+    <link rel="stylesheet" href="enhanced-styles.css">
+    
+    <!-- 🔥 CRITICAL FALLBACK CSS FOR IMMEDIATE LOADING -->
+    <style>
+        :root {
+            --brand-radical: #FF355E;
+            --brand-viridian: #07A2AD;
+            --brand-sunbeam: #FFB940;
+            --brand-tangerine: #FF9153;
+            --brand-midnight: #25253D;
+            --bg-primary: #ffffff;
+            --bg-secondary: #f8fafc;
+            --text-primary: #0f172a;
+            --text-secondary: #475569;
+        }
+        
+        body {
+            font-family: 'Fira Sans', sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            overflow-x: hidden;
+        }
+        
+        .hero-gradient {
+            background: linear-gradient(135deg, var(--brand-radical) 0%, var(--brand-tangerine) 50%, var(--brand-sunbeam) 100%);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .radical-red-box-title {
+            background: #FF355E !important;
+            border: none !important;
+            border-radius: 20px !important;
+            padding: 25px 35px !important;
+            margin: 15px 0 !important;
+            box-shadow: 
+                0 0 25px rgba(255, 53, 94, 0.4),
+                0 0 50px rgba(255, 53, 94, 0.15) !important;
+            position: relative !important;
+            overflow: hidden !important;
+            z-index: 10 !important;
+        }
+        
+        .radical-red-box-subtitle {
+            background: rgba(255, 53, 94, 0.06) !important;
+            border: 2px solid rgba(255, 53, 94, 0.8) !important;
+            border-radius: 20px !important;
+            padding: 20px 25px !important;
+            margin: 12px 0 !important;
+            box-shadow: 
+                0 0 20px rgba(255, 53, 94, 0.25),
+                0 0 40px rgba(255, 53, 94, 0.1) !important;
+            position: relative !important;
+            overflow: hidden !important;
+            z-index: 10 !important;
+        }
+        
+        .bundle-card {
+            background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
+            border: 1px solid #e2e8f0;
+            border-radius: 20px;
+            padding: 2rem;
+            margin: 1rem 0;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+            transition: all 0.3s ease;
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        .bundle-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+        }
+        
+        .bundle-number {
+            background: linear-gradient(135deg, var(--brand-radical), var(--brand-tangerine));
+            color: white;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            font-weight: bold;
+            margin-bottom: 1rem;
+        }
+        
+        .sidebar {
+            position: fixed;
+            top: 0;
+            left: -300px;
+            width: 300px;
+            height: 100vh;
+            background: linear-gradient(135deg, #25253D, #FF355E);
+            z-index: 9999;
+            transition: left 0.3s ease-in-out;
+            overflow-y: auto;
+            box-shadow: 5px 0 15px rgba(0, 0, 0, 0.3);
+        }
+        
+        .sidebar.open {
+            left: 0;
+        }
+        
+        .sidebar-header {
+            padding: 2rem;
+            text-align: center;
+            border-bottom: 2px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .sidebar-logo {
+            width: 120px;
+            height: auto;
+            margin-bottom: 1rem;
+        }
+        
+        .sidebar-title {
+            color: white;
+            font-size: 1.5rem;
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+        }
+        
+        .sidebar-subtitle {
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 0.9rem;
+        }
+        
+        .sidebar-nav {
+            padding: 2rem 0;
+        }
+        
+        .sidebar-nav a {
+            display: block;
+            color: white;
+            padding: 1rem 2rem;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            border-left: 3px solid transparent;
+        }
+        
+        .sidebar-nav a:hover {
+            background: rgba(255, 255, 255, 0.1);
+            border-left-color: #FF355E;
+        }
+        
+        .sidebar-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 9998;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+        
+        .sidebar-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+        
+        .menu-toggle {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            z-index: 10000;
+            background: var(--brand-radical);
+            color: white;
+            border: none;
+            padding: 12px;
+            border-radius: 50%;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(255, 53, 94, 0.3);
+            transition: all 0.3s ease;
+        }
+        
+        .menu-toggle:hover {
+            transform: scale(1.1);
+            box-shadow: 0 6px 20px rgba(255, 53, 94, 0.4);
+        }
+        
+        .roi-calculator {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 20px;
+            padding: 2rem;
+            margin: 2rem 0;
+            color: white;
+        }
+        
+        .roi-result {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            padding: 1.5rem;
+            margin: 1rem 0;
+            backdrop-filter: blur(10px);
+        }
+        
+        .chart-container {
+            background: white;
+            border-radius: 15px;
+            padding: 1.5rem;
+            margin: 1rem 0;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+    </style>
+</head>
+<body>
+    <!-- Sidebar Navigation -->
+    <div class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <div class="sidebar-logo">
+                <svg width="120" height="40" viewBox="0 0 120 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <rect width="120" height="40" rx="8" fill="white"/>
+                    <text x="60" y="25" text-anchor="middle" fill="#FF355E" font-family="Fira Sans" font-size="16" font-weight="bold">Factorial</text>
+                </svg>
+            </div>
+            <div class="sidebar-title">Operations Portal</div>
+            <div class="sidebar-subtitle">Bundle Demo & ROI Calculator</div>
+        </div>
+        <nav class="sidebar-nav">
+            <a href="#home">🏠 Home</a>
+            <a href="#bundles">📦 Bundles</a>
+            <a href="#calculator">🧮 ROI Calculator</a>
+            <a href="#comparison">⚖️ Comparison</a>
+            <a href="#success-stories">📈 Success Stories</a>
+            <a href="#contact">📞 Contact</a>
+        </nav>
+    </div>
+    
+    <!-- Sidebar Overlay -->
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+    
+    <!-- Menu Toggle Button -->
+    <button class="menu-toggle" id="menuToggle">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="3" y1="6" x2="21" y2="6"></line>
+            <line x1="3" y1="12" x2="21" y2="12"></line>
+            <line x1="3" y1="18" x2="21" y2="18"></line>
+        </svg>
+    </button>
+    
+    <!-- Main Content -->
+    <main class="min-h-screen">
+        <!-- Hero Section -->
+        <section id="home" class="hero-gradient py-20 px-4">
+            <div class="container mx-auto max-w-6xl">
+                <div class="text-center text-white">
+                    <h1 class="text-5xl md:text-7xl font-bold mb-6">
+                        Operations <span class="text-yellow-300">Bundles</span>
+                    </h1>
+                    <p class="text-xl md:text-2xl mb-8 opacity-90">
+                        Transform your business with Factorial's modular Operations solutions
+                    </p>
+                    <div class="flex flex-col md:flex-row gap-4 justify-center">
+                        <button class="bg-white text-red-600 px-8 py-4 rounded-full font-bold text-lg hover:bg-gray-100 transition-all duration-300 transform hover:scale-105">
+                            🧮 Calculate Your ROI
+                        </button>
+                        <button class="border-2 border-white text-white px-8 py-4 rounded-full font-bold text-lg hover:bg-white hover:text-red-600 transition-all duration-300">
+                            📦 View Bundles
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Bundles Section -->
+        <section id="bundles" class="py-20 px-4 bg-gray-50">
+            <div class="container mx-auto max-w-6xl">
+                <div class="text-center mb-16">
+                    <div class="radical-red-box-title text-white text-center">
+                        <h2 class="text-4xl font-bold mb-4">Choose Your Operations Bundle</h2>
+                        <p class="text-xl opacity-90">Modular solutions designed for Portuguese businesses</p>
+                    </div>
+                </div>
+                
+                <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
+                    <!-- Bundle 1: Financial Starter -->
+                    <div class="bundle-card">
+                        <div class="bundle-number">1</div>
+                        <h3 class="text-2xl font-bold mb-4 text-gray-800">Financial Starter</h3>
+                        <p class="text-gray-600 mb-4">Perfect for 10-50 employees</p>
+                        <div class="mb-6">
+                            <div class="text-3xl font-bold text-red-600 mb-2">€29/month</div>
+                            <div class="text-sm text-gray-500">per employee</div>
+                        </div>
+                        <ul class="space-y-2 mb-6">
+                            <li class="flex items-center text-sm">
+                                <span class="text-green-500 mr-2">✓</span>
+                                Core HR Management
+                            </li>
+                            <li class="flex items-center text-sm">
+                                <span class="text-green-500 mr-2">✓</span>
+                                Expense Management
+                            </li>
+                            <li class="flex items-center text-sm">
+                                <span class="text-green-500 mr-2">✓</span>
+                                Basic Reporting
+                            </li>
+                        </ul>
+                        <button class="w-full bg-red-600 text-white py-3 rounded-lg font-bold hover:bg-red-700 transition-colors">
+                            Get Started
+                        </button>
+                    </div>
+                    
+                    <!-- Bundle 2: Project Controller -->
+                    <div class="bundle-card">
+                        <div class="bundle-number">2</div>
+                        <h3 class="text-2xl font-bold mb-4 text-gray-800">Project Controller</h3>
+                        <p class="text-gray-600 mb-4">Ideal for 30-150 employees</p>
+                        <div class="mb-6">
+                            <div class="text-3xl font-bold text-red-600 mb-2">€39/month</div>
+                            <div class="text-sm text-gray-500">per employee</div>
+                        </div>
+                        <ul class="space-y-2 mb-6">
+                            <li class="flex items-center text-sm">
+                                <span class="text-green-500 mr-2">✓</span>
+                                Everything in Financial Starter
+                            </li>
+                            <li class="flex items-center text-sm">
+                                <span class="text-green-500 mr-2">✓</span>
+                                Time Tracking
+                            </li>
+                            <li class="flex items-center text-sm">
+                                <span class="text-green-500 mr-2">✓</span>
+                                Project Management
+                            </li>
+                            <li class="flex items-center text-sm">
+                                <span class="text-green-500 mr-2">✓</span>
+                                Advanced Analytics
+                            </li>
+                        </ul>
+                        <button class="w-full bg-red-600 text-white py-3 rounded-lg font-bold hover:bg-red-700 transition-colors">
+                            Get Started
+                        </button>
+                    </div>
+                    
+                    <!-- Bundle 3: Operations Command Center -->
+                    <div class="bundle-card">
+                        <div class="bundle-number">3</div>
+                        <h3 class="text-2xl font-bold mb-4 text-gray-800">Operations Command</h3>
+                        <p class="text-gray-600 mb-4">Complete solution for 50-200 employees</p>
+                        <div class="mb-6">
+                            <div class="text-3xl font-bold text-red-600 mb-2">€49/month</div>
+                            <div class="text-sm text-gray-500">per employee</div>
+                        </div>
+                        <ul class="space-y-2 mb-6">
+                            <li class="flex items-center text-sm">
+                                <span class="text-green-500 mr-2">✓</span>
+                                Everything in Project Controller
+                            </li>
+                            <li class="flex items-center text-sm">
+                                <span class="text-green-500 mr-2">✓</span>
+                                Procurement Management
+                            </li>
+                            <li class="flex items-center text-sm">
+                                <span class="text-green-500 mr-2">✓</span>
+                                IT Asset Management
+                            </li>
+                            <li class="flex items-center text-sm">
+                                <span class="text-green-500 mr-2">✓</span>
+                                Advanced Workflows
+                            </li>
+                        </ul>
+                        <button class="w-full bg-red-600 text-white py-3 rounded-lg font-bold hover:bg-red-700 transition-colors">
+                            Get Started
+                        </button>
+                    </div>
+                    
+                    <!-- Bundle 4: Finance Pro -->
+                    <div class="bundle-card">
+                        <div class="bundle-number">4</div>
+                        <h3 class="text-2xl font-bold mb-4 text-gray-800">Finance Pro</h3>
+                        <p class="text-gray-600 mb-4">Enterprise-grade for 100+ employees</p>
+                        <div class="mb-6">
+                            <div class="text-3xl font-bold text-red-600 mb-2">€69/month</div>
+                            <div class="text-sm text-gray-500">per employee</div>
+                        </div>
+                        <ul class="space-y-2 mb-6">
+                            <li class="flex items-center text-sm">
+                                <span class="text-green-500 mr-2">✓</span>
+                                Everything in Operations Command
+                            </li>
+                            <li class="flex items-center text-sm">
+                                <span class="text-green-500 mr-2">✓</span>
+                                Advanced Financial Controls
+                            </li>
+                            <li class="flex items-center text-sm">
+                                <span class="text-green-500 mr-2">✓</span>
+                                Custom Integrations
+                            </li>
+                            <li class="flex items-center text-sm">
+                                <span class="text-green-500 mr-2">✓</span>
+                                Dedicated Support
+                            </li>
+                        </ul>
+                        <button class="w-full bg-red-600 text-white py-3 rounded-lg font-bold hover:bg-red-700 transition-colors">
+                            Get Started
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- ROI Calculator Section -->
+        <section id="calculator" class="py-20 px-4">
+            <div class="container mx-auto max-w-4xl">
+                <div class="text-center mb-16">
+                    <div class="radical-red-box-subtitle text-center">
+                        <h2 class="text-3xl font-bold mb-4 text-gray-800">ROI Calculator</h2>
+                        <p class="text-lg text-gray-600">Calculate your potential savings with Factorial Operations</p>
+                    </div>
+                </div>
+                
+                <div class="roi-calculator">
+                    <div class="grid md:grid-cols-2 gap-8">
+                        <div>
+                            <h3 class="text-2xl font-bold mb-6">Your Company Details</h3>
+                            <div class="space-y-4">
+                                <div>
+                                    <label class="block text-sm font-medium mb-2">Number of Employees</label>
+                                    <input type="number" id="employees" class="w-full p-3 rounded-lg bg-white bg-opacity-20 border border-white border-opacity-30 text-white placeholder-white placeholder-opacity-70" placeholder="Enter number of employees">
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium mb-2">Industry</label>
+                                    <select id="industry" class="w-full p-3 rounded-lg bg-white bg-opacity-20 border border-white border-opacity-30 text-white">
+                                        <option value="technology">Technology</option>
+                                        <option value="manufacturing">Manufacturing</option>
+                                        <option value="services">Services</option>
+                                        <option value="retail">Retail</option>
+                                        <option value="healthcare">Healthcare</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium mb-2">Current Monthly Expenses (€)</label>
+                                    <input type="number" id="expenses" class="w-full p-3 rounded-lg bg-white bg-opacity-20 border border-white border-opacity-30 text-white placeholder-white placeholder-opacity-70" placeholder="Enter monthly expenses">
+                                </div>
+                                <button onclick="calculateROI()" class="w-full bg-white text-purple-600 py-3 rounded-lg font-bold hover:bg-gray-100 transition-colors">
+                                    Calculate ROI
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <div>
+                            <h3 class="text-2xl font-bold mb-6">Your Potential Savings</h3>
+                            <div id="roi-results" class="space-y-4">
+                                <div class="roi-result">
+                                    <div class="text-sm opacity-80">Monthly Time Saved</div>
+                                    <div id="time-saved" class="text-2xl font-bold">0 hours</div>
+                                </div>
+                                <div class="roi-result">
+                                    <div class="text-sm opacity-80">Monthly Cost Savings</div>
+                                    <div id="cost-savings" class="text-2xl font-bold">€0</div>
+                                </div>
+                                <div class="roi-result">
+                                    <div class="text-sm opacity-80">Annual ROI</div>
+                                    <div id="annual-roi" class="text-2xl font-bold">0%</div>
+                                </div>
+                                <div class="roi-result">
+                                    <div class="text-sm opacity-80">Recommended Bundle</div>
+                                    <div id="recommended-bundle" class="text-xl font-bold">-</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Chart Container -->
+                    <div class="mt-8">
+                        <div class="chart-container">
+                            <canvas id="roiChart" width="400" height="200"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Success Stories Section -->
+        <section id="success-stories" class="py-20 px-4 bg-gray-50">
+            <div class="container mx-auto max-w-6xl">
+                <div class="text-center mb-16">
+                    <div class="radical-red-box-title text-white text-center">
+                        <h2 class="text-4xl font-bold mb-4">Success Stories</h2>
+                        <p class="text-xl opacity-90">Real results from Portuguese companies</p>
+                    </div>
+                </div>
+                
+                <div class="grid md:grid-cols-3 gap-8">
+                    <div class="bundle-card">
+                        <div class="text-center">
+                            <div class="text-4xl mb-4">🏭</div>
+                            <h3 class="text-xl font-bold mb-2">Manufacturing Co.</h3>
+                            <p class="text-gray-600 mb-4">150 employees</p>
+                            <div class="text-3xl font-bold text-green-600 mb-2">€45,000</div>
+                            <p class="text-sm text-gray-500">Annual savings</p>
+                        </div>
+                    </div>
+                    
+                    <div class="bundle-card">
+                        <div class="text-center">
+                            <div class="text-4xl mb-4">💻</div>
+                            <h3 class="text-xl font-bold mb-2">Tech Startup</h3>
+                            <p class="text-gray-600 mb-4">75 employees</p>
+                            <div class="text-3xl font-bold text-green-600 mb-2">€28,000</div>
+                            <p class="text-sm text-gray-500">Annual savings</p>
+                        </div>
+                    </div>
+                    
+                    <div class="bundle-card">
+                        <div class="text-center">
+                            <div class="text-4xl mb-4">🏥</div>
+                            <h3 class="text-xl font-bold mb-2">Healthcare Group</h3>
+                            <p class="text-gray-600 mb-4">200 employees</p>
+                            <div class="text-3xl font-bold text-green-600 mb-2">€62,000</div>
+                            <p class="text-sm text-gray-500">Annual savings</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Contact Section -->
+        <section id="contact" class="py-20 px-4">
+            <div class="container mx-auto max-w-4xl text-center">
+                <div class="radical-red-box-subtitle">
+                    <h2 class="text-3xl font-bold mb-4 text-gray-800">Ready to Transform Your Operations?</h2>
+                    <p class="text-lg text-gray-600 mb-8">Get a personalized demo and see how Factorial can help your business</p>
+                    <div class="flex flex-col md:flex-row gap-4 justify-center">
+                        <button class="bg-red-600 text-white px-8 py-4 rounded-full font-bold text-lg hover:bg-red-700 transition-colors">
+                            📞 Schedule Demo
+                        </button>
+                        <button class="border-2 border-red-600 text-red-600 px-8 py-4 rounded-full font-bold text-lg hover:bg-red-600 hover:text-white transition-colors">
+                            💬 Contact Sales
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+    
+    <!-- Scripts -->
+    <script src="enhanced-styles.css"></script>
+    <script src="advanced-features.js"></script>
+    <script>
+        // Sidebar functionality
+        const sidebar = document.getElementById('sidebar');
+        const sidebarOverlay = document.getElementById('sidebarOverlay');
+        const menuToggle = document.getElementById('menuToggle');
+        
+        menuToggle.addEventListener('click', () => {
+            sidebar.classList.toggle('open');
+            sidebarOverlay.classList.toggle('active');
+        });
+        
+        sidebarOverlay.addEventListener('click', () => {
+            sidebar.classList.remove('open');
+            sidebarOverlay.classList.remove('active');
+        });
+        
+        // Smooth scrolling for navigation links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                    // Close sidebar on mobile
+                    sidebar.classList.remove('open');
+                    sidebarOverlay.classList.remove('active');
+                }
+            });
+        });
+        
+        // ROI Calculator
+        function calculateROI() {
+            const employees = parseInt(document.getElementById('employees').value) || 0;
+            const industry = document.getElementById('industry').value;
+            const expenses = parseFloat(document.getElementById('expenses').value) || 0;
+            
+            if (employees === 0) {
+                alert('Please enter the number of employees');
+                return;
+            }
+            
+            // Calculate based on industry and company size
+            const industryMultipliers = {
+                'technology': 1.2,
+                'manufacturing': 1.0,
+                'services': 0.8,
+                'retail': 0.9,
+                'healthcare': 1.1
+            };
+            
+            const multiplier = industryMultipliers[industry] || 1.0;
+            
+            // Calculate time saved (hours per month)
+            const timeSaved = Math.round(employees * 2.5 * multiplier);
+            
+            // Calculate cost savings (€ per month)
+            const hourlyRate = 25; // Average hourly rate in Portugal
+            const costSavings = Math.round(timeSaved * hourlyRate);
+            
+            // Calculate annual ROI
+            const monthlyCost = employees * 39; // Average bundle cost
+            const annualROI = Math.round(((costSavings * 12) - (monthlyCost * 12)) / (monthlyCost * 12) * 100);
+            
+            // Recommend bundle
+            let recommendedBundle = 'Financial Starter';
+            if (employees >= 100) {
+                recommendedBundle = 'Finance Pro';
+            } else if (employees >= 50) {
+                recommendedBundle = 'Operations Command';
+            } else if (employees >= 30) {
+                recommendedBundle = 'Project Controller';
+            }
+            
+            // Update results
+            document.getElementById('time-saved').textContent = timeSaved + ' hours';
+            document.getElementById('cost-savings').textContent = '€' + costSavings.toLocaleString();
+            document.getElementById('annual-roi').textContent = annualROI + '%';
+            document.getElementById('recommended-bundle').textContent = recommendedBundle;
+            
+            // Update chart
+            updateROIChart(employees, costSavings, monthlyCost);
+        }
+        
+        function updateROIChart(employees, monthlySavings, monthlyCost) {
+            const ctx = document.getElementById('roiChart').getContext('2d');
+            
+            // Destroy existing chart if it exists
+            if (window.roiChartInstance) {
+                window.roiChartInstance.destroy();
+            }
+            
+            window.roiChartInstance = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: ['Current Cost', 'Factorial Cost', 'Monthly Savings', 'Annual Savings'],
+                    datasets: [{
+                        label: 'Cost Comparison (€)',
+                        data: [monthlyCost * 12, monthlyCost * 12, monthlySavings * 12, monthlySavings * 12],
+                        backgroundColor: [
+                            'rgba(255, 53, 94, 0.8)',
+                            'rgba(7, 162, 173, 0.8)',
+                            'rgba(255, 185, 64, 0.8)',
+                            'rgba(34, 197, 94, 0.8)'
+                        ],
+                        borderColor: [
+                            'rgba(255, 53, 94, 1)',
+                            'rgba(7, 162, 173, 1)',
+                            'rgba(255, 185, 64, 1)',
+                            'rgba(34, 197, 94, 1)'
+                        ],
+                        borderWidth: 2
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        title: {
+                            display: true,
+                            text: 'ROI Analysis - 12 Month Projection'
+                        },
+                        legend: {
+                            display: false
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            ticks: {
+                                callback: function(value) {
+                                    return '€' + value.toLocaleString();
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        }
+        
+        // Initialize GSAP animations
+        gsap.registerPlugin(ScrollTrigger);
+        
+        // Animate bundle cards on scroll
+        gsap.from('.bundle-card', {
+            scrollTrigger: '.bundle-card',
+            y: 50,
+            opacity: 0,
+            duration: 0.8,
+            stagger: 0.2,
+            ease: 'power2.out'
+        });
+        
+        // Animate hero text
+        gsap.from('h1', {
+            duration: 1.2,
+            y: 100,
+            opacity: 0,
+            ease: 'power3.out'
+        });
+        
+        gsap.from('p', {
+            duration: 1.2,
+            y: 50,
+            opacity: 0,
+            delay: 0.3,
+            ease: 'power3.out'
+        });
+    </script>
+</body>
+</html>
+
