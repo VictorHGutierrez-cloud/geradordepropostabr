@@ -1,16 +1,15 @@
-# GitHub Pages Configuration
-title: "Distribusion - Sistema de Geração de Propostas"
-description: "Sistema completo para automatizar a criação de propostas comerciais"
-author: "Distribusion Team"
-baseurl: ""
-url: ""
+# GitHub Pages configuration for Factorial Proposal Generator
+title: "Factorial - Gerador de Propostas"
+description: "Sistema interno para geração de propostas comerciais da Factorial"
+baseurl: "/geradordepropostabr"
+url: "https://victorhgutierrez-cloud.github.io"
 
 # Build settings
 markdown: kramdown
 highlighter: rouge
 theme: minima
 
-# Exclude from processing
+# Exclude files from processing
 exclude:
   - README.md
   - Gemfile
@@ -21,15 +20,15 @@ exclude:
   - vendor/gems/
   - vendor/ruby/
 
-# Include only these files
+# Include files
 include:
   - _redirects
 
 # Collections
 collections:
-  posts:
+  docs:
     output: true
-    permalink: /:categories/:year/:month/:day/:title:output_ext
+    permalink: /:collection/:name/
 
 # Defaults
 defaults:
@@ -43,6 +42,11 @@ defaults:
       type: "posts"
     values:
       layout: "post"
+  - scope:
+      path: ""
+      type: "docs"
+    values:
+      layout: "doc"
 
 # Plugins
 plugins:
@@ -51,23 +55,15 @@ plugins:
   - jekyll-seo-tag
 
 # SEO
-seo:
-  type: "WebSite"
-  name: "Distribusion"
-  description: "Sistema de geração de propostas comerciais automatizadas"
-  url: "https://distribusion.github.io/gerador-propostas-distribusion"
-  image: "/assets/logo.png"
-
-# Social
+author: "Factorial Team"
 social:
-  name: "Distribusion"
+  name: Factorial
   links:
-    - "https://github.com/distribusion"
-    - "https://linkedin.com/company/distribusion"
+    - https://factorialhr.com
 
-# Analytics (opcional)
-google_analytics: ""
+# Analytics (if needed)
+# google_analytics: UA-XXXXXXXXX-X
 
-# Comments (opcional)
-disqus:
-  shortname: ""
+# Comments (if needed)
+# disqus:
+#   shortname: your-disqus-shortname
