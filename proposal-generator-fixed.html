@@ -1,0 +1,858 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Distribusion - Gerador de Propostas Comerciais</title>
+    <!-- Load Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Load Chart.js for data visualization -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.3/dist/chart.umd.min.js"></script>
+    <!-- Lucide icons for professional visuals -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <!-- jsPDF for PDF generation -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <!-- html2canvas for HTML to canvas conversion -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap');
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f7f9fb;
+        }
+        .proposal-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+        .header-title {
+            color: #2563EB;
+            font-weight: 800;
+        }
+        .plan-card {
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+        .plan-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+        }
+        .plan-card.selected {
+            border-color: #2563EB;
+            background-color: #EFF6FF;
+        }
+        .icon-list li {
+            display: flex;
+            align-items: center;
+            margin-bottom: 0.75rem;
+            font-size: 1.125rem;
+        }
+        .icon-list li svg {
+            margin-right: 0.75rem;
+            flex-shrink: 0;
+        }
+        .status-message {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 15px 20px;
+            border-radius: 8px;
+            color: white;
+            font-weight: bold;
+            z-index: 1000;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        .status-message.show {
+            opacity: 1;
+        }
+        .status-success {
+            background-color: #10B981;
+        }
+        .status-error {
+            background-color: #EF4444;
+        }
+    </style>
+</head>
+<body class="p-6">
+    <!-- Status Messages -->
+    <div id="statusMessage" class="status-message"></div>
+
+    <div class="proposal-container">
+        <!-- Header -->
+        <div class="bg-gradient-to-r from-blue-600 to-blue-800 text-white p-8">
+            <h1 class="text-4xl font-bold mb-2">DISTRIBUSION</h1>
+            <h2 class="text-2xl font-light">Gerador de Propostas Comerciais</h2>
+            <p class="text-blue-100 mt-2">Transforme leads em clientes com propostas personalizadas</p>
+        </div>
+
+        <!-- Formulário de Dados do Cliente -->
+        <div class="p-8 border-b">
+            <h3 class="text-2xl font-semibold mb-6 text-gray-800">📋 Dados do Cliente</h3>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Nome da Empresa</label>
+                    <input type="text" id="companyName" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent" placeholder="Ex: Grab, Booking.com, Expedia">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Segmento</label>
+                    <select id="segment" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                        <option value="">Selecione o segmento</option>
+                        <option value="super-apps">Super Apps (APAC)</option>
+                        <option value="otas">OTAs Globais</option>
+                        <option value="wholesalers">Wholesalers & TMCs</option>
+                        <option value="gds">GDS Partners</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Contato Principal</label>
+                    <input type="text" id="contactName" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent" placeholder="Nome do tomador de decisão">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Cargo</label>
+                    <input type="text" id="contactRole" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent" placeholder="Ex: CTO, VP Technology, Head of Partnerships">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Volume Mensal de Transações</label>
+                    <input type="number" id="monthlyVolume" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent" placeholder="Ex: 10000">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Região Principal</label>
+                    <select id="region" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                        <option value="">Selecione a região</option>
+                        <option value="apac">APAC</option>
+                        <option value="europe">Europa</option>
+                        <option value="americas">Américas</option>
+                        <option value="global">Global</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <!-- Seleção de Plano -->
+        <div class="p-8 border-b">
+            <h3 class="text-2xl font-semibold mb-6 text-gray-800">🎯 Escolha o Plano</h3>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <!-- Plano Starter -->
+                <div class="plan-card p-6 rounded-lg border-2 border-gray-200 bg-white" data-plan="starter">
+                    <div class="text-center mb-4">
+                        <h4 class="text-xl font-bold text-gray-800">STARTER</h4>
+                        <p class="text-sm text-gray-600">Para OTAs e Wholesalers</p>
+                        <div class="mt-2">
+                            <span class="text-3xl font-bold text-blue-600">€2.500</span>
+                            <span class="text-gray-600">/mês</span>
+                        </div>
+                    </div>
+                    <ul class="space-y-2 text-sm text-gray-700">
+                        <li>✓ Até 10.000 transações/mês</li>
+                        <li>✓ API padrão</li>
+                        <li>✓ Suporte por e-mail</li>
+                        <li>✓ Relatórios básicos</li>
+                        <li>✓ 1 integração simultânea</li>
+                    </ul>
+                </div>
+
+                <!-- Plano Professional -->
+                <div class="plan-card p-6 rounded-lg border-2 border-gray-200 bg-white" data-plan="professional">
+                    <div class="text-center mb-4">
+                        <h4 class="text-xl font-bold text-gray-800">PROFESSIONAL</h4>
+                        <p class="text-sm text-gray-600">Para OTAs Globais</p>
+                        <div class="mt-2">
+                            <span class="text-3xl font-bold text-blue-600">€7.500</span>
+                            <span class="text-gray-600">/mês</span>
+                        </div>
+                    </div>
+                    <ul class="space-y-2 text-sm text-gray-700">
+                        <li>✓ Até 50.000 transações/mês</li>
+                        <li>✓ API avançada + webhooks</li>
+                        <li>✓ Suporte prioritário</li>
+                        <li>✓ Analytics avançados</li>
+                        <li>✓ 3 integrações simultâneas</li>
+                        <li>✓ POC de 90 dias</li>
+                    </ul>
+                </div>
+
+                <!-- Plano Enterprise -->
+                <div class="plan-card p-6 rounded-lg border-2 border-gray-200 bg-white" data-plan="enterprise">
+                    <div class="text-center mb-4">
+                        <h4 class="text-xl font-bold text-gray-800">ENTERPRISE</h4>
+                        <p class="text-sm text-gray-600">Para Super Apps</p>
+                        <div class="mt-2">
+                            <span class="text-3xl font-bold text-blue-600">€25.000</span>
+                            <span class="text-gray-600">/mês</span>
+                        </div>
+                    </div>
+                    <ul class="space-y-2 text-sm text-gray-700">
+                        <li>✓ Transações ilimitadas</li>
+                        <li>✓ API customizada</li>
+                        <li>✓ Suporte dedicado 24/7</li>
+                        <li>✓ Dashboard personalizado</li>
+                        <li>✓ Integrações ilimitadas</li>
+                        <li>✓ POC de 30 dias</li>
+                        <li>✓ Account Manager dedicado</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Configurações Adicionais -->
+        <div class="p-8 border-b">
+            <h3 class="text-2xl font-semibold mb-6 text-gray-800">⚙️ Configurações da Proposta</h3>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Validade da Proposta</label>
+                    <select id="validity" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                        <option value="30">30 dias</option>
+                        <option value="60">60 dias</option>
+                        <option value="90">90 dias</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Desconto Especial (%)</label>
+                    <input type="number" id="discount" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent" placeholder="0" min="0" max="50">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Observações Especiais</label>
+                    <textarea id="notes" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent" rows="3" placeholder="Observações específicas para este cliente..."></textarea>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Data de Início</label>
+                    <input type="date" id="startDate" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                </div>
+            </div>
+        </div>
+
+        <!-- Botões de Ação -->
+        <div class="p-8 bg-gray-50">
+            <div class="flex flex-col sm:flex-row gap-4 justify-center">
+                <button id="generateProposal" class="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-8 rounded-lg transition duration-200 flex items-center justify-center">
+                    <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+                    </svg>
+                    Gerar Proposta HTML
+                </button>
+                <button id="previewProposal" class="bg-green-600 hover:bg-green-700 text-white font-semibold py-3 px-8 rounded-lg transition duration-200 flex items-center justify-center">
+                    <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
+                    </svg>
+                    Visualizar Proposta
+                </button>
+                <button id="exportPDF" class="bg-purple-600 hover:bg-purple-700 text-white font-semibold py-3 px-8 rounded-lg transition duration-200 flex items-center justify-center">
+                    <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                    </svg>
+                    Exportar PDF
+                </button>
+                <button id="manageImages" class="bg-orange-600 hover:bg-orange-700 text-white font-semibold py-3 px-8 rounded-lg transition duration-200 flex items-center justify-center">
+                    <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                    </svg>
+                    Gerenciar Imagens
+                </button>
+                <button id="transcribeMeeting" class="bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-3 px-8 rounded-lg transition duration-200 flex items-center justify-center">
+                    <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z"></path>
+                    </svg>
+                    Transcrever Reunião
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal de Preview -->
+    <div id="previewModal" class="fixed inset-0 bg-black bg-opacity-50 hidden z-50">
+        <div class="flex items-center justify-center min-h-screen p-4">
+            <div class="bg-white rounded-lg max-w-6xl w-full max-h-[90vh] overflow-hidden">
+                <div class="flex justify-between items-center p-4 border-b">
+                    <h3 class="text-xl font-semibold">Preview da Proposta</h3>
+                    <button id="closeModal" class="text-gray-500 hover:text-gray-700">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                        </svg>
+                    </button>
+                </div>
+                <div class="p-4 overflow-y-auto max-h-[calc(90vh-80px)]">
+                    <div id="proposalPreview"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Função para mostrar mensagens de status
+        function showStatus(message, type = 'success') {
+            const statusEl = document.getElementById('statusMessage');
+            statusEl.textContent = message;
+            statusEl.className = `status-message status-${type} show`;
+            
+            setTimeout(() => {
+                statusEl.classList.remove('show');
+            }, 3000);
+        }
+
+        // Dados dos planos
+        const planData = {
+            starter: {
+                name: "STARTER",
+                price: 2500,
+                description: "Para OTAs e Wholesalers",
+                features: [
+                    "Até 10.000 transações/mês",
+                    "API padrão com documentação completa",
+                    "Suporte por e-mail (resposta em 24h)",
+                    "Relatórios básicos de performance",
+                    "1 integração simultânea",
+                    "Setup e onboarding incluído"
+                ],
+                target: "OTAs e Wholesalers"
+            },
+            professional: {
+                name: "PROFESSIONAL", 
+                price: 7500,
+                description: "Para OTAs Globais",
+                features: [
+                    "Até 50.000 transações/mês",
+                    "API avançada + webhooks em tempo real",
+                    "Suporte prioritário (resposta em 4h)",
+                    "Analytics avançados e dashboards",
+                    "3 integrações simultâneas",
+                    "POC de 90 dias incluído",
+                    "Consultoria de integração"
+                ],
+                target: "OTAs Globais"
+            },
+            enterprise: {
+                name: "ENTERPRISE",
+                price: 25000,
+                description: "Para Super Apps",
+                features: [
+                    "Transações ilimitadas",
+                    "API customizada para suas necessidades",
+                    "Suporte dedicado 24/7",
+                    "Dashboard personalizado",
+                    "Integrações ilimitadas",
+                    "POC de 30 dias incluído",
+                    "Account Manager dedicado",
+                    "SLA garantido 99.9%"
+                ],
+                target: "Super Apps"
+            }
+        };
+
+        // Dados por segmento
+        const segmentData = {
+            "super-apps": {
+                name: "Super Apps (APAC)",
+                valueProp: "Acelere sua visão MaaS com integração completa de transporte terrestre",
+                painPoints: [
+                    "Fragmentação técnica de APIs de transporte",
+                    "Complexidade de integração com múltiplos provedores",
+                    "Perda de receita em jornadas intermodais"
+                ],
+                benefits: [
+                    "Time-to-First-Transaction < 90 dias",
+                    "Aumento de 15%+ na receita por passageiro",
+                    "Simplificação operacional completa"
+                ]
+            },
+            "otas": {
+                name: "OTAs Globais",
+                valueProp: "Transforme transporte terrestre de custo operacional em centro de lucro",
+                painPoints: [
+                    "Margens baixas em transporte terrestre",
+                    "Dívida técnica de múltiplas integrações",
+                    "Complexidade de liquidação financeira"
+                ],
+                benefits: [
+                    "Otimização de ARPR (Ancillary Revenue per Passenger)",
+                    "Redução de 70% no tempo de integração",
+                    "Consolidação financeira simplificada"
+                ]
+            },
+            "wholesalers": {
+                name: "Wholesalers & TMCs",
+                valueProp: "Simplifique operações com 'One Contract, One Settlement'",
+                painPoints: [
+                    "Documentação manual complexa",
+                    "Múltiplos contratos e liquidações",
+                    "Falta de padronização operacional"
+                ],
+                benefits: [
+                    "Eliminação de 80% da documentação manual",
+                    "Liquidação consolidada mensal",
+                    "Padronização completa de processos"
+                ]
+            },
+            "gds": {
+                name: "GDS Partners",
+                valueProp: "Expanda cobertura terrestre com qualidade superior",
+                painPoints: [
+                    "Cobertura limitada em transporte terrestre",
+                    "Qualidade inconsistente de dados",
+                    "Integração complexa com sistemas legados"
+                ],
+                benefits: [
+                    "Cobertura completa de transporte terrestre",
+                    "Dados padronizados e confiáveis",
+                    "Integração simplificada via API única"
+                ]
+            }
+        };
+
+        let selectedPlan = null;
+
+        // Event listeners
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('🚀 Gerador de Propostas carregado!');
+            
+            // Seleção de planos
+            document.querySelectorAll('.plan-card').forEach(card => {
+                card.addEventListener('click', function() {
+                    document.querySelectorAll('.plan-card').forEach(c => c.classList.remove('selected'));
+                    this.classList.add('selected');
+                    selectedPlan = this.dataset.plan;
+                    console.log('Plano selecionado:', selectedPlan);
+                    showStatus(`Plano ${planData[selectedPlan].name} selecionado!`, 'success');
+                });
+            });
+
+            // Botões de ação
+            document.getElementById('generateProposal').addEventListener('click', function() {
+                console.log('Botão Gerar Proposta clicado!');
+                generateProposal();
+            });
+            
+            document.getElementById('previewProposal').addEventListener('click', function() {
+                console.log('Botão Preview clicado!');
+                previewProposal();
+            });
+            
+            document.getElementById('exportPDF').addEventListener('click', function() {
+                console.log('Botão PDF clicado!');
+                exportPDF();
+            });
+            
+            document.getElementById('manageImages').addEventListener('click', function() {
+                console.log('Botão Gerenciar Imagens clicado!');
+                window.open('image-manager.html', '_blank');
+            });
+            
+            document.getElementById('transcribeMeeting').addEventListener('click', function() {
+                console.log('Botão Transcrever Reunião clicado!');
+                window.open('meeting-transcriber.html', '_blank');
+            });
+            
+            document.getElementById('closeModal').addEventListener('click', closeModal);
+
+            // Fechar modal clicando fora
+            document.getElementById('previewModal').addEventListener('click', function(e) {
+                if (e.target === this) closeModal();
+            });
+
+            // Definir data padrão
+            const today = new Date();
+            const nextMonth = new Date(today.getFullYear(), today.getMonth() + 1, today.getDate());
+            document.getElementById('startDate').value = nextMonth.toISOString().split('T')[0];
+            
+            // Load meeting data if available
+            loadMeetingData();
+            
+            showStatus('Gerador carregado com sucesso!', 'success');
+        });
+
+        function generateProposal() {
+            console.log('Iniciando geração de proposta...');
+            const formData = getFormData();
+            
+            if (!validateForm(formData)) {
+                console.log('Validação falhou');
+                return;
+            }
+
+            console.log('Dados do formulário:', formData);
+            console.log('Plano selecionado:', selectedPlan);
+
+            const proposalHTML = createProposalHTML(formData);
+            
+            // Criar e baixar arquivo
+            try {
+                const blob = new Blob([proposalHTML], { type: 'text/html;charset=utf-8' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = `proposta-distribusion-${formData.companyName.toLowerCase().replace(/\s+/g, '-')}.html`;
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                URL.revokeObjectURL(url);
+                
+                showStatus('✅ Proposta gerada com sucesso!', 'success');
+                console.log('Proposta gerada e baixada!');
+            } catch (error) {
+                console.error('Erro ao gerar proposta:', error);
+                showStatus('❌ Erro ao gerar proposta. Tente novamente.', 'error');
+            }
+        }
+
+        function previewProposal() {
+            console.log('Iniciando preview...');
+            const formData = getFormData();
+            
+            if (!validateForm(formData)) {
+                console.log('Validação falhou no preview');
+                return;
+            }
+
+            const proposalHTML = createProposalHTML(formData);
+            document.getElementById('proposalPreview').innerHTML = proposalHTML;
+            document.getElementById('previewModal').classList.remove('hidden');
+            
+            showStatus('Preview carregado!', 'success');
+            console.log('Preview carregado com sucesso!');
+        }
+
+        async function exportPDF() {
+            console.log('Iniciando exportação para PDF...');
+            const formData = getFormData();
+            
+            if (!validateForm(formData)) {
+                console.log('Validação falhou no PDF');
+                return;
+            }
+
+            try {
+                showStatus('📄 Gerando PDF...', 'success');
+                
+                // Create proposal HTML
+                const proposalHTML = createProposalHTML(formData);
+                
+                // Create a temporary container for the proposal
+                const tempContainer = document.createElement('div');
+                tempContainer.innerHTML = proposalHTML;
+                tempContainer.style.position = 'absolute';
+                tempContainer.style.left = '-9999px';
+                tempContainer.style.top = '0';
+                tempContainer.style.width = '210mm'; // A4 width
+                tempContainer.style.backgroundColor = 'white';
+                document.body.appendChild(tempContainer);
+
+                // Wait for images to load
+                await new Promise(resolve => setTimeout(resolve, 1000));
+
+                // Convert to canvas
+                const canvas = await html2canvas(tempContainer, {
+                    scale: 2,
+                    useCORS: true,
+                    allowTaint: true,
+                    backgroundColor: '#ffffff',
+                    width: 794, // A4 width in pixels at 96 DPI
+                    height: tempContainer.scrollHeight
+                });
+
+                // Remove temporary container
+                document.body.removeChild(tempContainer);
+
+                // Create PDF
+                const { jsPDF } = window.jspdf;
+                const pdf = new jsPDF('p', 'mm', 'a4');
+                
+                const imgData = canvas.toDataURL('image/png');
+                const imgWidth = 210; // A4 width in mm
+                const pageHeight = 295; // A4 height in mm
+                const imgHeight = (canvas.height * imgWidth) / canvas.width;
+                let heightLeft = imgHeight;
+
+                let position = 0;
+
+                // Add first page
+                pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
+                heightLeft -= pageHeight;
+
+                // Add additional pages if needed
+                while (heightLeft >= 0) {
+                    position = heightLeft - imgHeight;
+                    pdf.addPage();
+                    pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
+                    heightLeft -= pageHeight;
+                }
+
+                // Save PDF
+                const fileName = `proposta-distribusion-${formData.companyName.toLowerCase().replace(/\s+/g, '-')}.pdf`;
+                pdf.save(fileName);
+                
+                showStatus('✅ PDF gerado com sucesso!', 'success');
+                console.log('PDF gerado e baixado!');
+                
+            } catch (error) {
+                console.error('Erro ao gerar PDF:', error);
+                showStatus('❌ Erro ao gerar PDF. Tente novamente.', 'error');
+            }
+        }
+
+        function closeModal() {
+            document.getElementById('previewModal').classList.add('hidden');
+        }
+
+        function getFormData() {
+            return {
+                companyName: document.getElementById('companyName').value,
+                segment: document.getElementById('segment').value,
+                contactName: document.getElementById('contactName').value,
+                contactRole: document.getElementById('contactRole').value,
+                monthlyVolume: document.getElementById('monthlyVolume').value,
+                region: document.getElementById('region').value,
+                validity: document.getElementById('validity').value,
+                discount: document.getElementById('discount').value || 0,
+                notes: document.getElementById('notes').value,
+                startDate: document.getElementById('startDate').value
+            };
+        }
+
+        function validateForm(data) {
+            if (!data.companyName) {
+                showStatus('❌ Por favor, preencha o nome da empresa', 'error');
+                return false;
+            }
+            if (!data.segment) {
+                showStatus('❌ Por favor, selecione o segmento', 'error');
+                return false;
+            }
+            if (!selectedPlan) {
+                showStatus('❌ Por favor, selecione um plano', 'error');
+                return false;
+            }
+            return true;
+        }
+
+        function createProposalHTML(data) {
+            const plan = planData[selectedPlan];
+            const segment = segmentData[data.segment];
+            const finalPrice = plan.price * (1 - data.discount / 100);
+            
+            return `
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Proposta Comercial - ${data.companyName}</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap');
+        body { font-family: 'Inter', sans-serif; }
+        .header-title { color: #2563EB; font-weight: 800; }
+        .icon-list li { display: flex; align-items: center; margin-bottom: 0.75rem; }
+        .icon-list li svg { margin-right: 0.75rem; flex-shrink: 0; }
+    </style>
+</head>
+<body class="bg-gray-50">
+    <div class="max-w-4xl mx-auto bg-white shadow-lg">
+        <!-- Header -->
+        <div class="bg-gradient-to-r from-blue-600 to-blue-800 text-white p-8">
+            <h1 class="text-4xl font-bold mb-2">DISTRIBUSION</h1>
+            <h2 class="text-2xl font-light">Proposta Comercial</h2>
+            <p class="text-blue-100 mt-2">${data.companyName} - ${segment.name}</p>
+        </div>
+
+        <!-- Dados do Cliente -->
+        <div class="p-8 border-b">
+            <h3 class="text-2xl font-semibold mb-4 text-gray-800">📋 Informações do Cliente</h3>
+            <div class="grid grid-cols-2 gap-4 text-gray-700">
+                <div><strong>Empresa:</strong> ${data.companyName}</div>
+                <div><strong>Segmento:</strong> ${segment.name}</div>
+                <div><strong>Contato:</strong> ${data.contactName}</div>
+                <div><strong>Cargo:</strong> ${data.contactRole}</div>
+                <div><strong>Volume Mensal:</strong> ${data.monthlyVolume} transações</div>
+                <div><strong>Região:</strong> ${data.region.toUpperCase()}</div>
+            </div>
+        </div>
+
+        <!-- Proposta de Valor -->
+        <div class="p-8 border-b">
+            <h3 class="text-2xl font-semibold mb-4 text-gray-800">🎯 Nossa Proposta de Valor</h3>
+            <p class="text-lg text-gray-700 mb-6">${segment.valueProp}</p>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                    <h4 class="text-lg font-semibold text-red-600 mb-3">❌ Desafios Atuais</h4>
+                    <ul class="space-y-2 text-gray-700">
+                        ${segment.painPoints.map(point => `<li>• ${point}</li>`).join('')}
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="text-lg font-semibold text-green-600 mb-3">✅ Benefícios com Distribusion</h4>
+                    <ul class="space-y-2 text-gray-700">
+                        ${segment.benefits.map(benefit => `<li>• ${benefit}</li>`).join('')}
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Plano Escolhido -->
+        <div class="p-8 border-b">
+            <h3 class="text-2xl font-semibold mb-4 text-gray-800">📦 Plano ${plan.name}</h3>
+            <div class="bg-blue-50 p-6 rounded-lg">
+                <div class="flex justify-between items-center mb-4">
+                    <div>
+                        <h4 class="text-xl font-bold text-gray-800">${plan.name}</h4>
+                        <p class="text-gray-600">${plan.description}</p>
+                    </div>
+                    <div class="text-right">
+                        ${data.discount > 0 ? `
+                            <div class="text-sm text-gray-500 line-through">€${plan.price.toLocaleString()}/mês</div>
+                            <div class="text-3xl font-bold text-blue-600">€${finalPrice.toLocaleString()}/mês</div>
+                            <div class="text-sm text-green-600">${data.discount}% de desconto</div>
+                        ` : `
+                            <div class="text-3xl font-bold text-blue-600">€${plan.price.toLocaleString()}/mês</div>
+                        `}
+                    </div>
+                </div>
+                
+                <h5 class="font-semibold text-gray-800 mb-3">Incluído no plano:</h5>
+                <ul class="grid grid-cols-1 md:grid-cols-2 gap-2 text-gray-700">
+                    ${plan.features.map(feature => `<li>✓ ${feature}</li>`).join('')}
+                </ul>
+            </div>
+        </div>
+
+        <!-- Cronograma de Implementação -->
+        <div class="p-8 border-b">
+            <h3 class="text-2xl font-semibold mb-4 text-gray-800">📅 Cronograma de Implementação</h3>
+            <div class="grid grid-cols-4 gap-4">
+                <div class="text-center p-4 bg-blue-50 rounded-lg">
+                    <div class="w-10 h-10 bg-blue-500 rounded-full flex items-center justify-center mx-auto mb-2">
+                        <span class="text-white font-bold">1</span>
+                    </div>
+                    <h4 class="font-semibold text-blue-800">Semana 1-2</h4>
+                    <p class="text-sm text-gray-600">Setup e Onboarding</p>
+                </div>
+                <div class="text-center p-4 bg-green-50 rounded-lg">
+                    <div class="w-10 h-10 bg-green-500 rounded-full flex items-center justify-center mx-auto mb-2">
+                        <span class="text-white font-bold">2</span>
+                    </div>
+                    <h4 class="font-semibold text-green-800">Semana 3-4</h4>
+                    <p class="text-sm text-gray-600">Integração API</p>
+                </div>
+                <div class="text-center p-4 bg-yellow-50 rounded-lg">
+                    <div class="w-10 h-10 bg-yellow-500 rounded-full flex items-center justify-center mx-auto mb-2">
+                        <span class="text-white font-bold">3</span>
+                    </div>
+                    <h4 class="font-semibold text-yellow-800">Semana 5-6</h4>
+                    <p class="text-sm text-gray-600">Testes e Validação</p>
+                </div>
+                <div class="text-center p-4 bg-purple-50 rounded-lg">
+                    <div class="w-10 h-10 bg-purple-500 rounded-full flex items-center justify-center mx-auto mb-2">
+                        <span class="text-white font-bold">4</span>
+                    </div>
+                    <h4 class="font-semibold text-purple-800">Semana 7-8</h4>
+                    <p class="text-sm text-gray-600">Go-Live</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Termos e Condições -->
+        <div class="p-8 border-b">
+            <h3 class="text-2xl font-semibold mb-4 text-gray-800">📋 Termos e Condições</h3>
+            <div class="grid grid-cols-2 gap-6 text-gray-700">
+                <div>
+                    <h4 class="font-semibold mb-2">Validade da Proposta</h4>
+                    <p>${data.validity} dias a partir da data de envio</p>
+                </div>
+                <div>
+                    <h4 class="font-semibold mb-2">Data de Início</h4>
+                    <p>${new Date(data.startDate).toLocaleDateString('pt-BR')}</p>
+                </div>
+                <div>
+                    <h4 class="font-semibold mb-2">Forma de Pagamento</h4>
+                    <p>Mensal, antecipado</p>
+                </div>
+                <div>
+                    <h4 class="font-semibold mb-2">Contrato</h4>
+                    <p>Mínimo 12 meses</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Observações -->
+        ${data.notes ? `
+        <div class="p-8 border-b">
+            <h3 class="text-2xl font-semibold mb-4 text-gray-800">📝 Observações Especiais</h3>
+            <p class="text-gray-700">${data.notes}</p>
+        </div>
+        ` : ''}
+
+        <!-- Call to Action -->
+        <div class="p-8 bg-gray-50">
+            <h3 class="text-2xl font-semibold mb-4 text-gray-800">🚀 Próximos Passos</h3>
+            <p class="text-gray-700 mb-6">Estamos prontos para iniciar sua jornada de transformação digital com a Distribusion.</p>
+            
+            <div class="flex flex-col sm:flex-row gap-4">
+                <div class="flex-1">
+                    <h4 class="font-semibold text-gray-800 mb-2">Contato Comercial</h4>
+                    <p class="text-gray-700">Seu Account Manager entrará em contato em até 24h para agendar uma reunião de alinhamento.</p>
+                </div>
+                <div class="flex-1">
+                    <h4 class="font-semibold text-gray-800 mb-2">POC Incluso</h4>
+                    <p class="text-gray-700">Iniciaremos um Proof of Concept de ${selectedPlan === 'enterprise' ? '30' : '90'} dias para validar a integração.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <div class="p-8 bg-blue-600 text-white text-center">
+            <h4 class="text-xl font-bold mb-2">DISTRIBUSION PLATFORM</h4>
+            <p class="text-blue-100">Transformando transporte terrestre em centro de lucro</p>
+            <p class="text-sm text-blue-200 mt-2">Proposta gerada em ${new Date().toLocaleDateString('pt-BR')}</p>
+        </div>
+    </div>
+</body>
+</html>`;
+        }
+
+        function loadMeetingData() {
+            const meetingData = localStorage.getItem('lastMeetingData');
+            if (meetingData) {
+                try {
+                    const data = JSON.parse(meetingData);
+                    
+                    // Fill form with meeting data
+                    if (data.companyName) document.getElementById('companyName').value = data.companyName;
+                    if (data.contactName) document.getElementById('contactName').value = data.contactName;
+                    if (data.monthlyVolume) document.getElementById('monthlyVolume').value = data.monthlyVolume;
+                    
+                    // Add pain points to notes
+                    if (data.painPoints && data.painPoints.length > 0) {
+                        const painPointsText = data.painPoints.join('\n• ');
+                        const currentNotes = document.getElementById('notes').value;
+                        document.getElementById('notes').value = currentNotes + 
+                            (currentNotes ? '\n\n' : '') + 
+                            'Dores identificadas na reunião:\n• ' + painPointsText;
+                    }
+                    
+                    // Add requirements to notes
+                    if (data.requirements && data.requirements.length > 0) {
+                        const requirementsText = data.requirements.join('\n• ');
+                        const currentNotes = document.getElementById('notes').value;
+                        document.getElementById('notes').value = currentNotes + 
+                            (currentNotes ? '\n\n' : '') + 
+                            'Requisitos identificados na reunião:\n• ' + requirementsText;
+                    }
+                    
+                    showStatus('Dados da reunião carregados automaticamente!', 'success');
+                    
+                    // Clear the meeting data after loading
+                    localStorage.removeItem('lastMeetingData');
+                } catch (error) {
+                    console.error('Erro ao carregar dados da reunião:', error);
+                }
+            }
+        }
+    </script>
+</body>
+</html>

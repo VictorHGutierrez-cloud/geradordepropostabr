@@ -1,0 +1,488 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gerenciador de Imagens - Distribusion</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap');
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f7f9fb;
+        }
+        .image-card {
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+        .image-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+        }
+        .image-card.selected {
+            border-color: #2563EB;
+            background-color: #EFF6FF;
+        }
+        .upload-area {
+            border: 2px dashed #cbd5e1;
+            transition: all 0.3s ease;
+        }
+        .upload-area:hover {
+            border-color: #2563EB;
+            background-color: #EFF6FF;
+        }
+        .upload-area.dragover {
+            border-color: #2563EB;
+            background-color: #EFF6FF;
+        }
+    </style>
+</head>
+<body class="p-6">
+    <div class="max-w-6xl mx-auto">
+        <!-- Header -->
+        <div class="bg-gradient-to-r from-blue-600 to-blue-800 text-white p-8 rounded-lg mb-6">
+            <h1 class="text-4xl font-bold mb-2">DISTRIBUSION</h1>
+            <h2 class="text-2xl font-light">Gerenciador de Imagens para Propostas</h2>
+            <p class="text-blue-100 mt-2">Organize e gerencie imagens para suas propostas comerciais</p>
+        </div>
+
+        <!-- Upload Section -->
+        <div class="bg-white rounded-lg shadow-lg p-6 mb-6">
+            <h3 class="text-2xl font-semibold mb-4 text-gray-800">📁 Upload de Imagens</h3>
+            
+            <div id="uploadArea" class="upload-area p-8 text-center rounded-lg mb-4">
+                <div class="mb-4">
+                    <svg class="w-16 h-16 mx-auto text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"></path>
+                    </svg>
+                </div>
+                <p class="text-lg text-gray-600 mb-2">Arraste e solte suas imagens aqui</p>
+                <p class="text-sm text-gray-500 mb-4">ou clique para selecionar arquivos</p>
+                <input type="file" id="fileInput" multiple accept="image/*" class="hidden">
+                <button id="selectFilesBtn" class="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-6 rounded-lg transition duration-200">
+                    Selecionar Arquivos
+                </button>
+            </div>
+
+            <!-- Upload Progress -->
+            <div id="uploadProgress" class="hidden">
+                <div class="bg-gray-200 rounded-full h-2 mb-2">
+                    <div id="progressBar" class="bg-blue-600 h-2 rounded-full transition-all duration-300" style="width: 0%"></div>
+                </div>
+                <p id="progressText" class="text-sm text-gray-600">Preparando upload...</p>
+            </div>
+        </div>
+
+        <!-- Image Gallery -->
+        <div class="bg-white rounded-lg shadow-lg p-6">
+            <div class="flex justify-between items-center mb-6">
+                <h3 class="text-2xl font-semibold text-gray-800">🖼️ Galeria de Imagens</h3>
+                <div class="flex gap-2">
+                    <button id="selectAllBtn" class="bg-gray-600 hover:bg-gray-700 text-white font-semibold py-2 px-4 rounded-lg transition duration-200">
+                        Selecionar Todas
+                    </button>
+                    <button id="deleteSelectedBtn" class="bg-red-600 hover:bg-red-700 text-white font-semibold py-2 px-4 rounded-lg transition duration-200">
+                        Excluir Selecionadas
+                    </button>
+                </div>
+            </div>
+
+            <!-- Filter and Search -->
+            <div class="flex gap-4 mb-6">
+                <input type="text" id="searchInput" placeholder="Buscar imagens..." class="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                <select id="categoryFilter" class="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                    <option value="">Todas as categorias</option>
+                    <option value="logos">Logos</option>
+                    <option value="diagrams">Diagramas</option>
+                    <option value="charts">Gráficos</option>
+                    <option value="screenshots">Screenshots</option>
+                    <option value="other">Outros</option>
+                </select>
+            </div>
+
+            <!-- Image Grid -->
+            <div id="imageGrid" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+                <!-- Images will be dynamically added here -->
+            </div>
+
+            <!-- Empty State -->
+            <div id="emptyState" class="text-center py-12">
+                <svg class="w-24 h-24 mx-auto text-gray-300 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                </svg>
+                <h3 class="text-xl font-semibold text-gray-600 mb-2">Nenhuma imagem encontrada</h3>
+                <p class="text-gray-500">Faça upload de imagens para começar a organizar sua galeria</p>
+            </div>
+        </div>
+
+        <!-- Image Details Modal -->
+        <div id="imageModal" class="fixed inset-0 bg-black bg-opacity-50 hidden z-50">
+            <div class="flex items-center justify-center min-h-screen p-4">
+                <div class="bg-white rounded-lg max-w-4xl w-full max-h-[90vh] overflow-hidden">
+                    <div class="flex justify-between items-center p-4 border-b">
+                        <h3 class="text-xl font-semibold">Detalhes da Imagem</h3>
+                        <button id="closeModal" class="text-gray-500 hover:text-gray-700">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                            </svg>
+                        </button>
+                    </div>
+                    <div class="p-6">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div>
+                                <img id="modalImage" src="" alt="" class="w-full h-64 object-cover rounded-lg">
+                            </div>
+                            <div>
+                                <div class="space-y-4">
+                                    <div>
+                                        <label class="block text-sm font-medium text-gray-700 mb-2">Nome da Imagem</label>
+                                        <input type="text" id="imageName" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                                    </div>
+                                    <div>
+                                        <label class="block text-sm font-medium text-gray-700 mb-2">Categoria</label>
+                                        <select id="imageCategory" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                                            <option value="logos">Logos</option>
+                                            <option value="diagrams">Diagramas</option>
+                                            <option value="charts">Gráficos</option>
+                                            <option value="screenshots">Screenshots</option>
+                                            <option value="other">Outros</option>
+                                        </select>
+                                    </div>
+                                    <div>
+                                        <label class="block text-sm font-medium text-gray-700 mb-2">Descrição</label>
+                                        <textarea id="imageDescription" rows="3" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"></textarea>
+                                    </div>
+                                    <div>
+                                        <label class="block text-sm font-medium text-gray-700 mb-2">Tags (separadas por vírgula)</label>
+                                        <input type="text" id="imageTags" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent" placeholder="ex: logo, empresa, branding">
+                                    </div>
+                                </div>
+                                <div class="flex gap-2 mt-6">
+                                    <button id="saveImageDetails" class="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded-lg transition duration-200">
+                                        Salvar Alterações
+                                    </button>
+                                    <button id="deleteImage" class="bg-red-600 hover:bg-red-700 text-white font-semibold py-2 px-4 rounded-lg transition duration-200">
+                                        Excluir Imagem
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Image storage using localStorage
+        let images = JSON.parse(localStorage.getItem('proposalImages') || '[]');
+        let selectedImages = new Set();
+
+        // DOM elements
+        const uploadArea = document.getElementById('uploadArea');
+        const fileInput = document.getElementById('fileInput');
+        const selectFilesBtn = document.getElementById('selectFilesBtn');
+        const uploadProgress = document.getElementById('uploadProgress');
+        const progressBar = document.getElementById('progressBar');
+        const progressText = document.getElementById('progressText');
+        const imageGrid = document.getElementById('imageGrid');
+        const emptyState = document.getElementById('emptyState');
+        const searchInput = document.getElementById('searchInput');
+        const categoryFilter = document.getElementById('categoryFilter');
+        const selectAllBtn = document.getElementById('selectAllBtn');
+        const deleteSelectedBtn = document.getElementById('deleteSelectedBtn');
+        const imageModal = document.getElementById('imageModal');
+        const closeModal = document.getElementById('closeModal');
+        const modalImage = document.getElementById('modalImage');
+        const imageName = document.getElementById('imageName');
+        const imageCategory = document.getElementById('imageCategory');
+        const imageDescription = document.getElementById('imageDescription');
+        const imageTags = document.getElementById('imageTags');
+        const saveImageDetails = document.getElementById('saveImageDetails');
+        const deleteImage = document.getElementById('deleteImage');
+
+        let currentImageId = null;
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            renderImages();
+            setupEventListeners();
+        });
+
+        function setupEventListeners() {
+            // Upload events
+            selectFilesBtn.addEventListener('click', () => fileInput.click());
+            fileInput.addEventListener('change', handleFileSelect);
+            
+            // Drag and drop
+            uploadArea.addEventListener('dragover', handleDragOver);
+            uploadArea.addEventListener('dragleave', handleDragLeave);
+            uploadArea.addEventListener('drop', handleDrop);
+            uploadArea.addEventListener('click', () => fileInput.click());
+
+            // Search and filter
+            searchInput.addEventListener('input', renderImages);
+            categoryFilter.addEventListener('change', renderImages);
+
+            // Selection
+            selectAllBtn.addEventListener('click', toggleSelectAll);
+            deleteSelectedBtn.addEventListener('click', deleteSelectedImages);
+
+            // Modal
+            closeModal.addEventListener('click', closeImageModal);
+            saveImageDetails.addEventListener('click', saveImageData);
+            deleteImage.addEventListener('click', deleteCurrentImage);
+
+            // Close modal on outside click
+            imageModal.addEventListener('click', (e) => {
+                if (e.target === imageModal) closeImageModal();
+            });
+        }
+
+        function handleDragOver(e) {
+            e.preventDefault();
+            uploadArea.classList.add('dragover');
+        }
+
+        function handleDragLeave(e) {
+            e.preventDefault();
+            uploadArea.classList.remove('dragover');
+        }
+
+        function handleDrop(e) {
+            e.preventDefault();
+            uploadArea.classList.remove('dragover');
+            const files = Array.from(e.dataTransfer.files).filter(file => file.type.startsWith('image/'));
+            uploadFiles(files);
+        }
+
+        function handleFileSelect(e) {
+            const files = Array.from(e.target.files);
+            uploadFiles(files);
+        }
+
+        function uploadFiles(files) {
+            if (files.length === 0) return;
+
+            uploadProgress.classList.remove('hidden');
+            let uploaded = 0;
+
+            files.forEach((file, index) => {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const imageData = {
+                        id: Date.now() + index,
+                        name: file.name,
+                        data: e.target.result,
+                        category: 'other',
+                        description: '',
+                        tags: [],
+                        uploadDate: new Date().toISOString(),
+                        size: file.size
+                    };
+
+                    images.push(imageData);
+                    uploaded++;
+
+                    // Update progress
+                    const progress = (uploaded / files.length) * 100;
+                    progressBar.style.width = progress + '%';
+                    progressText.textContent = `Uploading ${uploaded} of ${files.length} images...`;
+
+                    if (uploaded === files.length) {
+                        saveImages();
+                        renderImages();
+                        uploadProgress.classList.add('hidden');
+                        progressBar.style.width = '0%';
+                        showNotification('Imagens carregadas com sucesso!', 'success');
+                    }
+                };
+                reader.readAsDataURL(file);
+            });
+        }
+
+        function saveImages() {
+            localStorage.setItem('proposalImages', JSON.stringify(images));
+        }
+
+        function renderImages() {
+            const searchTerm = searchInput.value.toLowerCase();
+            const category = categoryFilter.value;
+
+            let filteredImages = images.filter(image => {
+                const matchesSearch = image.name.toLowerCase().includes(searchTerm) ||
+                                    image.description.toLowerCase().includes(searchTerm) ||
+                                    image.tags.some(tag => tag.toLowerCase().includes(searchTerm));
+                const matchesCategory = !category || image.category === category;
+                return matchesSearch && matchesCategory;
+            });
+
+            if (filteredImages.length === 0) {
+                imageGrid.innerHTML = '';
+                emptyState.classList.remove('hidden');
+                return;
+            }
+
+            emptyState.classList.add('hidden');
+            imageGrid.innerHTML = filteredImages.map(image => `
+                <div class="image-card p-4 border-2 border-gray-200 rounded-lg bg-white ${selectedImages.has(image.id) ? 'selected' : ''}" data-id="${image.id}">
+                    <div class="relative">
+                        <img src="${image.data}" alt="${image.name}" class="w-full h-32 object-cover rounded-lg mb-2">
+                        <div class="absolute top-2 right-2">
+                            <input type="checkbox" class="w-4 h-4 text-blue-600 rounded" ${selectedImages.has(image.id) ? 'checked' : ''}>
+                        </div>
+                    </div>
+                    <div class="text-sm">
+                        <h4 class="font-semibold text-gray-800 truncate" title="${image.name}">${image.name}</h4>
+                        <p class="text-gray-500 text-xs">${image.category}</p>
+                        <p class="text-gray-400 text-xs">${formatFileSize(image.size)}</p>
+                    </div>
+                </div>
+            `).join('');
+
+            // Add click events to image cards
+            document.querySelectorAll('.image-card').forEach(card => {
+                card.addEventListener('click', (e) => {
+                    if (e.target.type === 'checkbox') return;
+                    const imageId = parseInt(card.dataset.id);
+                    openImageModal(imageId);
+                });
+
+                const checkbox = card.querySelector('input[type="checkbox"]');
+                checkbox.addEventListener('change', (e) => {
+                    e.stopPropagation();
+                    const imageId = parseInt(card.dataset.id);
+                    if (checkbox.checked) {
+                        selectedImages.add(imageId);
+                        card.classList.add('selected');
+                    } else {
+                        selectedImages.delete(imageId);
+                        card.classList.remove('selected');
+                    }
+                });
+            });
+        }
+
+        function openImageModal(imageId) {
+            const image = images.find(img => img.id === imageId);
+            if (!image) return;
+
+            currentImageId = imageId;
+            modalImage.src = image.data;
+            imageName.value = image.name;
+            imageCategory.value = image.category;
+            imageDescription.value = image.description;
+            imageTags.value = image.tags.join(', ');
+
+            imageModal.classList.remove('hidden');
+        }
+
+        function closeImageModal() {
+            imageModal.classList.add('hidden');
+            currentImageId = null;
+        }
+
+        function saveImageData() {
+            if (!currentImageId) return;
+
+            const image = images.find(img => img.id === currentImageId);
+            if (!image) return;
+
+            image.name = imageName.value;
+            image.category = imageCategory.value;
+            image.description = imageDescription.value;
+            image.tags = imageTags.value.split(',').map(tag => tag.trim()).filter(tag => tag);
+
+            saveImages();
+            renderImages();
+            closeImageModal();
+            showNotification('Dados da imagem salvos!', 'success');
+        }
+
+        function deleteCurrentImage() {
+            if (!currentImageId) return;
+
+            if (confirm('Tem certeza que deseja excluir esta imagem?')) {
+                images = images.filter(img => img.id !== currentImageId);
+                selectedImages.delete(currentImageId);
+                saveImages();
+                renderImages();
+                closeImageModal();
+                showNotification('Imagem excluída!', 'success');
+            }
+        }
+
+        function toggleSelectAll() {
+            const allImages = document.querySelectorAll('.image-card');
+            const allSelected = Array.from(allImages).every(card => selectedImages.has(parseInt(card.dataset.id)));
+
+            if (allSelected) {
+                selectedImages.clear();
+                allImages.forEach(card => {
+                    card.classList.remove('selected');
+                    card.querySelector('input[type="checkbox"]').checked = false;
+                });
+                selectAllBtn.textContent = 'Selecionar Todas';
+            } else {
+                allImages.forEach(card => {
+                    const imageId = parseInt(card.dataset.id);
+                    selectedImages.add(imageId);
+                    card.classList.add('selected');
+                    card.querySelector('input[type="checkbox"]').checked = true;
+                });
+                selectAllBtn.textContent = 'Desselecionar Todas';
+            }
+        }
+
+        function deleteSelectedImages() {
+            if (selectedImages.size === 0) {
+                showNotification('Nenhuma imagem selecionada!', 'error');
+                return;
+            }
+
+            if (confirm(`Tem certeza que deseja excluir ${selectedImages.size} imagem(ns) selecionada(s)?`)) {
+                images = images.filter(img => !selectedImages.has(img.id));
+                selectedImages.clear();
+                saveImages();
+                renderImages();
+                showNotification('Imagens excluídas!', 'success');
+            }
+        }
+
+        function formatFileSize(bytes) {
+            if (bytes === 0) return '0 Bytes';
+            const k = 1024;
+            const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+            const i = Math.floor(Math.log(bytes) / Math.log(k));
+            return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+        }
+
+        function showNotification(message, type = 'success') {
+            const notification = document.createElement('div');
+            notification.className = `fixed top-4 right-4 p-4 rounded-lg text-white font-semibold z-50 ${
+                type === 'success' ? 'bg-green-500' : 'bg-red-500'
+            }`;
+            notification.textContent = message;
+            document.body.appendChild(notification);
+
+            setTimeout(() => {
+                notification.remove();
+            }, 3000);
+        }
+
+        // Export function for use in proposal generator
+        window.getSelectedImages = function() {
+            return images.filter(img => selectedImages.has(img.id));
+        };
+
+        window.getAllImages = function() {
+            return images;
+        };
+
+        window.getImagesByCategory = function(category) {
+            return images.filter(img => img.category === category);
+        };
+    </script>
+</body>
+</html>

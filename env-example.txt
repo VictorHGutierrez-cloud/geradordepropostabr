@@ -1,0 +1,51 @@
+# 🔧 CONFIGURAÇÃO DE AMBIENTE - Sistema de Geração de Propostas
+
+# ==================== BANCO DE DADOS ====================
+DB_HOST=localhost
+DB_PORT=5432
+DB_NAME=propostas_db
+DB_USER=postgres
+DB_PASSWORD=sua_senha_aqui
+
+# ==================== AUTENTICAÇÃO ====================
+JWT_SECRET=sua_chave_secreta_jwt_aqui
+JWT_EXPIRES_IN=24h
+
+# ==================== OPENAI API ====================
+OPENAI_API_KEY=sk-sua_chave_openai_aqui
+
+# ==================== GOOGLE SPEECH (OPCIONAL) ====================
+GOOGLE_APPLICATION_CREDENTIALS=caminho/para/service-account.json
+GOOGLE_PROJECT_ID=seu_project_id
+
+# ==================== AZURE SPEECH (OPCIONAL) ====================
+AZURE_SPEECH_KEY=sua_chave_azure_aqui
+AZURE_SPEECH_REGION=sua_regiao_azure
+
+# ==================== EMAIL (OPCIONAL) ====================
+SENDGRID_API_KEY=sua_chave_sendgrid_aqui
+FROM_EMAIL=noreply@distribusion.com
+
+# ==================== STORAGE ====================
+AWS_ACCESS_KEY_ID=sua_chave_aws_aqui
+AWS_SECRET_ACCESS_KEY=sua_chave_secreta_aws_aqui
+AWS_REGION=us-east-1
+AWS_S3_BUCKET=propostas-distribusion
+
+# ==================== SERVIDOR ====================
+PORT=3000
+NODE_ENV=development
+CORS_ORIGIN=http://localhost:3000
+
+# ==================== RATE LIMITING ====================
+RATE_LIMIT_WINDOW_MS=900000
+RATE_LIMIT_MAX_REQUESTS=100
+
+# ==================== LOGGING ====================
+LOG_LEVEL=info
+LOG_FILE=logs/app.log
+
+# ==================== BACKUP ====================
+BACKUP_ENABLED=true
+BACKUP_SCHEDULE=0 2 * * *
+BACKUP_RETENTION_DAYS=30

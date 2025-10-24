@@ -1,0 +1,73 @@
+# GitHub Pages Configuration
+title: "Distribusion - Sistema de Geração de Propostas"
+description: "Sistema completo para automatizar a criação de propostas comerciais"
+author: "Distribusion Team"
+baseurl: ""
+url: ""
+
+# Build settings
+markdown: kramdown
+highlighter: rouge
+theme: minima
+
+# Exclude from processing
+exclude:
+  - README.md
+  - Gemfile
+  - Gemfile.lock
+  - node_modules
+  - vendor/bundle/
+  - vendor/cache/
+  - vendor/gems/
+  - vendor/ruby/
+
+# Include only these files
+include:
+  - _redirects
+
+# Collections
+collections:
+  posts:
+    output: true
+    permalink: /:categories/:year/:month/:day/:title:output_ext
+
+# Defaults
+defaults:
+  - scope:
+      path: ""
+      type: "pages"
+    values:
+      layout: "default"
+  - scope:
+      path: ""
+      type: "posts"
+    values:
+      layout: "post"
+
+# Plugins
+plugins:
+  - jekyll-feed
+  - jekyll-sitemap
+  - jekyll-seo-tag
+
+# SEO
+seo:
+  type: "WebSite"
+  name: "Distribusion"
+  description: "Sistema de geração de propostas comerciais automatizadas"
+  url: "https://distribusion.github.io/gerador-propostas-distribusion"
+  image: "/assets/logo.png"
+
+# Social
+social:
+  name: "Distribusion"
+  links:
+    - "https://github.com/distribusion"
+    - "https://linkedin.com/company/distribusion"
+
+# Analytics (opcional)
+google_analytics: ""
+
+# Comments (opcional)
+disqus:
+  shortname: ""

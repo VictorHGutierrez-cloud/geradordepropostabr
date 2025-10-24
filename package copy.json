@@ -1,0 +1,23 @@
+{
+  "name": "geradordepropostamcp",
+  "version": "1.0.0",
+  "description": "Sistema MCP para automação do ciclo comercial e geração de propostas",
+  "main": "mcp-server.js",
+  "type": "module",
+  "scripts": {
+    "start": "node mcp-server.js",
+    "dev": "node --watch mcp-server.js"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^0.4.0"
+  },
+  "keywords": [
+    "mcp",
+    "sales",
+    "automation",
+    "proposals",
+    "crm"
+  ],
+  "author": "Gerador de Propostas Team",
+  "license": "MIT"
+}
