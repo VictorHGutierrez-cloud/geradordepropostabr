@@ -344,32 +344,38 @@
             setTimeout(() => statusEl.classList.remove('show'), 3000);
         }
 
-        // Seleção de módulos
-        document.querySelectorAll('.module-checkbox').forEach(checkbox => {
-            checkbox.addEventListener('change', function() {
-                const moduleCard = this.closest('.module-card');
-                const moduleId = moduleCard.dataset.module;
-                
-                if (this.checked) {
-                    selectedModules.add(moduleId);
-                    moduleCard.classList.add('selected');
-                } else {
-                    selectedModules.delete(moduleId);
-                    moduleCard.classList.remove('selected');
-                }
-                
-                calculateTotal();
+        // Função para configurar event listeners
+        function setupEventListeners() {
+            // Seleção de módulos
+            document.querySelectorAll('.module-checkbox').forEach(checkbox => {
+                checkbox.addEventListener('change', function() {
+                    const moduleCard = this.closest('.module-card');
+                    const moduleId = moduleCard.dataset.module;
+                    
+                    if (this.checked) {
+                        selectedModules.add(moduleId);
+                        moduleCard.classList.add('selected');
+                    } else {
+                        selectedModules.delete(moduleId);
+                        moduleCard.classList.remove('selected');
+                    }
+                    
+                    calculateTotal();
+                });
             });
-        });
 
-        // Adicionar event listeners para inputs
-        document.getElementById('employeeCount').addEventListener('input', calculateTotal);
-        document.getElementById('discount').addEventListener('input', calculateTotal);
+            // Adicionar event listeners para inputs
+            document.getElementById('employeeCount').addEventListener('input', calculateTotal);
+            document.getElementById('discount').addEventListener('input', calculateTotal);
+        }
 
         // Função principal de cálculo (baseada no seu exemplo)
         function calculateTotal() {
+            console.log('🧮 calculateTotal chamada!');
             const employeeCount = parseInt(document.getElementById('employeeCount').value) || 0;
             const discount = parseInt(document.getElementById('discount').value) || 0;
+            
+            console.log('👥 Funcionários:', employeeCount, '💰 Desconto:', discount, '%');
             
             if (employeeCount === 0) {
                 // Limpar valores se não há funcionários
@@ -740,6 +746,10 @@
 
         // Event listeners
         document.addEventListener('DOMContentLoaded', function() {
+            // Configurar todos os event listeners
+            setupEventListeners();
+            
+            // Botões principais
             document.getElementById('generateProposal').addEventListener('click', generateProposal);
             document.getElementById('exportPDF').addEventListener('click', exportPDF);
             document.getElementById('clearSelection').addEventListener('click', clearSelection);
