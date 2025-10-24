@@ -1,21 +1,20 @@
-# 🚀 Distribusion - Sistema de Geração de Propostas
+# 🏢 Factorial - Sistema de Geração de Propostas Interno
 
-Um sistema completo para automatizar a criação de propostas comerciais, desde a transcrição de reuniões até a geração de documentos profissionais em PDF.
+Um sistema completo para automatizar a criação de propostas comerciais da Factorial, desde a transcrição de reuniões até a geração de documentos profissionais em PDF.
 
 ## ✨ Funcionalidades Principais
 
 ### 🎤 Transcrição de Reuniões com IA
-- Gravação de áudio em tempo real
-- Upload de arquivos de áudio
+- Upload de transcrições prontas
 - Extração automática de informações do cliente
 - Identificação de dores e requisitos
 - Processamento com IA para análise de conteúdo
 
-### 📄 Gerador de Propostas
-- Templates personalizáveis para diferentes segmentos
+### 📄 Gerador de Propostas Factorial
+- Templates específicos para segmentos (Startups, Pequenas, Médias, Grandes empresas)
 - Preenchimento automático com dados da reunião
-- Seleção de planos (Starter, Professional, Enterprise)
-- Cálculo automático de preços e descontos
+- Seleção de planos Factorial (Starter €2.50, Professional €3.50, Enterprise €4.50)
+- Cálculo automático de preços por funcionário
 - Preview em tempo real
 
 ### 🖼️ Gerenciador de Imagens
@@ -33,43 +32,21 @@ Um sistema completo para automatizar a criação de propostas comerciais, desde 
 
 ## 🛠️ Como Usar
 
-### 1. Configuração no GitHub
-
-#### Passo 1: Criar Repositório
-1. Acesse [GitHub.com](https://github.com)
-2. Clique em "New repository"
-3. Nomeie como `gerador-propostas-distribusion`
-4. Marque como "Public"
-5. Clique em "Create repository"
-
-#### Passo 2: Upload dos Arquivos
-1. Clique em "uploading an existing file"
-2. Arraste todos os arquivos HTML para o repositório
-3. Adicione uma mensagem de commit: "Sistema de geração de propostas"
-4. Clique em "Commit changes"
-
-#### Passo 3: Configurar GitHub Pages
-1. Vá para "Settings" do repositório
-2. Role até "Pages" no menu lateral
-3. Em "Source", selecione "Deploy from a branch"
-4. Escolha "main" branch
-5. Clique em "Save"
-6. Aguarde alguns minutos para o deploy
-
-#### Passo 4: Acessar o Site
-- Seu site estará disponível em: `https://seu-usuario.github.io/gerador-propostas-distribusion`
+### 1. Acesso ao Sistema
+- Acesse: `https://victorhgutierrez-cloud.github.io/geradordepropostabr/`
+- Ou abra localmente o arquivo `index.html`
 
 ### 2. Fluxo de Trabalho
 
-#### Opção A: Reunião → Proposta
+#### Opção A: Transcrição → Proposta
 1. **Transcrever Reunião**
    - Acesse "Transcrever Reunião"
-   - Grave a reunião ou faça upload de áudio
+   - Cole a transcrição pronta
    - Aguarde o processamento com IA
    - Revise as informações extraídas
 
 2. **Gerar Proposta**
-   - Acesse "Gerar Proposta"
+   - Acesse "Gerar Proposta Factorial"
    - Os dados da reunião serão preenchidos automaticamente
    - Selecione o plano apropriado
    - Personalize conforme necessário
@@ -77,7 +54,7 @@ Um sistema completo para automatizar a criação de propostas comerciais, desde 
 
 #### Opção B: Proposta Direta
 1. **Gerar Proposta**
-   - Acesse "Gerar Proposta"
+   - Acesse "Gerar Proposta Factorial"
    - Preencha manualmente os dados do cliente
    - Selecione o plano
    - Gere e baixe o PDF
@@ -91,13 +68,16 @@ Um sistema completo para automatizar a criação de propostas comerciais, desde 
 ## 📁 Estrutura de Arquivos
 
 ```
-gerador-propostas-distribusion/
-├── index.html                    # Página principal
-├── proposal-generator-fixed.html # Gerador de propostas
-├── meeting-transcriber.html      # Transcritor de reuniões
-├── image-manager.html           # Gerenciador de imagens
-├── package.json                 # Configurações do projeto
-└── README.md                    # Este arquivo
+geradordepropostabr/
+├── index.html                           # Página principal
+├── factorial-proposal-generator.html    # Gerador de propostas Factorial
+├── proposal-generator-fixed.html        # Gerador de propostas genérico
+├── meeting-transcriber.html             # Transcritor de reuniões
+├── image-manager.html                   # Gerenciador de imagens
+├── package.json                         # Configurações do projeto
+├── SOLUCAO-FACTORIAL.md                 # Solução específica para Factorial
+├── PLANO-FACTORIAL.md                   # Plano de implementação
+└── README.md                            # Este arquivo
 ```
 
 ## 🔧 Tecnologias Utilizadas
@@ -111,30 +91,35 @@ gerador-propostas-distribusion/
 - **html2canvas** - Conversão HTML para imagem
 - **LocalStorage** - Armazenamento local de dados
 
-## 🎯 Segmentos de Mercado
+## 🎯 Segmentos Factorial
 
 O sistema está otimizado para diferentes segmentos:
 
-### 🏢 Super Apps (APAC)
-- Grab, Gojek, WeChat Pay
-- Foco em MaaS (Mobility as a Service)
-- POC de 30 dias
+### 🚀 Startups (1-50 funcionários)
+- Preço: €2.50/funcionário/mês
+- Foco em automação básica de RH
+- Setup e onboarding incluído
 
-### 🌍 OTAs Globais
-- Booking.com, Expedia
-- Otimização de ARPR
-- POC de 90 dias
+### 🏢 Pequenas Empresas (51-200 funcionários)
+- Preço: €3.50/funcionário/mês
+- Gestão de RH completa
+- Relatórios avançados
 
-### 🏪 Wholesalers & TMCs
-- Especialistas em FIT/Group
-- Simplificação operacional
-- "One Contract, One Settlement"
+### 🏭 Médias Empresas (201-1000 funcionários)
+- Preço: €4.50/funcionário/mês
+- Integrações avançadas
+- Suporte prioritário
+
+### 🌍 Grandes Empresas (1000+ funcionários)
+- Preço: €4.50/funcionário/mês
+- Funcionários ilimitados
+- Account Manager dedicado
 
 ## 💡 Dicas de Uso
 
-### Para Vendedores
+### Para Vendedores Factorial
 1. **Prepare-se para a reunião**: Tenha uma lista de perguntas-chave
-2. **Use o transcritor**: Grave todas as reuniões importantes
+2. **Use o transcritor**: Cole a transcrição pronta
 3. **Revise os dados**: Sempre confirme as informações extraídas
 4. **Personalize**: Ajuste a proposta conforme necessário
 5. **Teste o PDF**: Verifique se tudo está correto antes de enviar
@@ -151,7 +136,7 @@ O sistema está otimizado para diferentes segmentos:
 **Solução**: Verifique se todas as bibliotecas carregaram corretamente. Recarregue a página.
 
 ### Problema: Transcrição não funciona
-**Solução**: Verifique as permissões do microfone no navegador.
+**Solução**: Certifique-se de que a transcrição foi colada corretamente.
 
 ### Problema: Imagens não aparecem
 **Solução**: Certifique-se de que as imagens foram carregadas no gerenciador.
@@ -178,8 +163,8 @@ Para dúvidas ou problemas:
 
 ## 📄 Licença
 
-Este projeto é de uso interno da Distribusion. Todos os direitos reservados.
+Este projeto é de uso interno da Factorial. Todos os direitos reservados.
 
 ---
 
-**Desenvolvido com ❤️ para automatizar e otimizar o processo de vendas da Distribusion.**
+**Desenvolvido com ❤️ para automatizar e otimizar o processo de vendas da Factorial.**
