@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Factorial - Gerador de Propostas</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap');
+        body { font-family: 'Inter', sans-serif; }
+        .factorial-brand { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); }
+    </style>
+</head>
+<body class="bg-gray-100 min-h-screen flex items-center justify-center">
+    <div class="max-w-4xl mx-auto bg-white shadow-lg rounded-lg overflow-hidden">
+        <!-- Header -->
+        <div class="factorial-brand text-white p-8 text-center">
+            <h1 class="text-4xl font-bold mb-2">FACTORIAL</h1>
+            <h2 class="text-2xl font-light">Gerador de Propostas Executivas</h2>
+            <p class="text-purple-100 mt-2">Sistema de seleção de módulos e cálculo automático</p>
+        </div>
+
+        <!-- Main Content -->
+        <div class="p-8">
+            <div class="text-center mb-8">
+                <h3 class="text-2xl font-semibold text-gray-800 mb-4">🎯 Escolha sua ferramenta:</h3>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <!-- Gerador de Propostas -->
+                <a href="proposal-generator.html" class="block p-6 bg-blue-600 text-white rounded-lg shadow-lg hover:bg-blue-700 transition duration-300 transform hover:scale-105">
+                    <div class="text-center">
+                        <div class="text-4xl mb-4">📊</div>
+                        <h2 class="text-2xl font-semibold mb-2">Gerador de Propostas</h2>
+                        <p class="text-blue-100">Selecione módulos, calcule preços e gere propostas executivas</p>
+                        <div class="mt-4 text-sm text-blue-200">
+                            ✅ Seleção por caixinhas<br>
+                            ✅ Cálculo automático<br>
+                            ✅ Exportação PDF<br>
+                            ✅ Resumo executivo
+                        </div>
+                    </div>
+                </a>
+
+                <!-- Transcritor de Reuniões -->
+                <a href="meeting-transcriber.html" class="block p-6 bg-green-600 text-white rounded-lg shadow-lg hover:bg-green-700 transition duration-300 transform hover:scale-105">
+                    <div class="text-center">
+                        <div class="text-4xl mb-4">🎤</div>
+                        <h2 class="text-2xl font-semibold mb-2">Transcritor de Reuniões</h2>
+                        <p class="text-green-100">Cole transcrições e extraia dados automaticamente</p>
+                        <div class="mt-4 text-sm text-green-200">
+                            ✅ IA simulada<br>
+                            ✅ Extração de dados<br>
+                            ✅ Integração automática<br>
+                            ✅ Dados para propostas
+                        </div>
+                    </div>
+                </a>
+            </div>
+
+            <!-- Features -->
+            <div class="mt-12">
+                <h3 class="text-2xl font-semibold text-gray-800 mb-6 text-center">🚀 Funcionalidades Principais</h3>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <div class="text-center p-4 bg-gray-50 rounded-lg">
+                        <div class="text-3xl mb-3">📦</div>
+                        <h4 class="font-semibold text-gray-800 mb-2">Módulos Factorial</h4>
+                        <p class="text-sm text-gray-600">Core, Avançados, Premium e Serviços de Implementação</p>
+                    </div>
+                    <div class="text-center p-4 bg-gray-50 rounded-lg">
+                        <div class="text-3xl mb-3">💰</div>
+                        <h4 class="font-semibold text-gray-800 mb-2">Cálculo Automático</h4>
+                        <p class="text-sm text-gray-600">Preços em tempo real com desconto e resumo executivo</p>
+                    </div>
+                    <div class="text-center p-4 bg-gray-50 rounded-lg">
+                        <div class="text-3xl mb-3">📄</div>
+                        <h4 class="font-semibold text-gray-800 mb-2">Exportação</h4>
+                        <p class="text-sm text-gray-600">HTML e PDF prontos para enviar ao cliente</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Quick Start -->
+            <div class="mt-12 bg-blue-50 p-6 rounded-lg">
+                <h3 class="text-xl font-semibold text-blue-800 mb-4">⚡ Como usar:</h3>
+                <div class="grid grid-cols-1 md:grid-cols-4 gap-4 text-sm">
+                    <div class="text-center">
+                        <div class="w-8 h-8 bg-blue-600 text-white rounded-full flex items-center justify-center mx-auto mb-2 font-bold">1</div>
+                        <p class="text-blue-700">Preencha dados do cliente</p>
+                    </div>
+                    <div class="text-center">
+                        <div class="w-8 h-8 bg-blue-600 text-white rounded-full flex items-center justify-center mx-auto mb-2 font-bold">2</div>
+                        <p class="text-blue-700">Selecione módulos desejados</p>
+                    </div>
+                    <div class="text-center">
+                        <div class="w-8 h-8 bg-blue-600 text-white rounded-full flex items-center justify-center mx-auto mb-2 font-bold">3</div>
+                        <p class="text-blue-700">Veja cálculo automático</p>
+                    </div>
+                    <div class="text-center">
+                        <div class="w-8 h-8 bg-blue-600 text-white rounded-full flex items-center justify-center mx-auto mb-2 font-bold">4</div>
+                        <p class="text-blue-700">Exporte proposta em PDF</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <div class="factorial-brand text-white p-6 text-center">
+            <p class="text-purple-100">Desenvolvido para automatizar e otimizar o processo de vendas da Factorial</p>
+            <p class="text-sm text-purple-200 mt-2">Sistema funcional com cálculo automático e exportação PDF</p>
+        </div>
+    </div>
+
+    <script>
+        // Adicionar animação de entrada
+        document.addEventListener('DOMContentLoaded', function() {
+            const cards = document.querySelectorAll('a[href]');
+            cards.forEach((card, index) => {
+                card.style.opacity = '0';
+                card.style.transform = 'translateY(20px)';
+                setTimeout(() => {
+                    card.style.transition = 'all 0.5s ease';
+                    card.style.opacity = '1';
+                    card.style.transform = 'translateY(0)';
+                }, index * 200);
+            });
+        });
+    </script>
+</body>
+</html>

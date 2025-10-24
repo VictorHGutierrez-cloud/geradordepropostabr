@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Factorial - Transcritor de Reuniões</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap');
+        body { font-family: 'Inter', sans-serif; background-color: #f7f9fb; }
+        .factorial-brand { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); }
+        .status-message { position: fixed; top: 20px; right: 20px; padding: 15px 20px; border-radius: 8px; color: white; font-weight: bold; z-index: 1000; opacity: 0; transition: opacity 0.3s ease; }
+        .status-message.show { opacity: 1; }
+        .status-success { background-color: #10B981; }
+        .status-error { background-color: #EF4444; }
+    </style>
+</head>
+<body class="p-6">
+    <!-- Status Messages -->
+    <div id="statusMessage" class="status-message"></div>
+
+    <div class="max-w-4xl mx-auto bg-white shadow-lg rounded-lg overflow-hidden">
+        <!-- Header -->
+        <div class="factorial-brand text-white p-8">
+            <h1 class="text-4xl font-bold mb-2">FACTORIAL</h1>
+            <h2 class="text-2xl font-light">Transcritor de Reuniões</h2>
+            <p class="text-purple-100 mt-2">Cole sua transcrição e extraia os dados automaticamente</p>
+        </div>
+
+        <!-- Formulário -->
+        <div class="p-8">
+            <h3 class="text-2xl font-semibold mb-6 text-gray-800">📝 Cole sua Transcrição</h3>
+            
+            <div class="mb-6">
+                <label class="block text-sm font-medium text-gray-700 mb-2">Transcrição da Reunião</label>
+                <textarea id="transcription" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent" rows="10" placeholder="Cole aqui a transcrição da sua reunião..."></textarea>
+            </div>
+
+            <div class="flex justify-center mb-8">
+                <button id="processTranscription" class="bg-purple-600 hover:bg-purple-700 text-white font-semibold py-3 px-8 rounded-lg transition duration-200">
+                    🤖 Processar com IA
+                </button>
+            </div>
+
+            <!-- Resultados -->
+            <div id="results" class="hidden">
+                <h3 class="text-2xl font-semibold mb-6 text-gray-800">📊 Dados Extraídos</h3>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+                    <div class="bg-gray-50 p-6 rounded-lg">
+                        <h4 class="text-lg font-semibold text-gray-800 mb-4">Informações Básicas</h4>
+                        <div class="space-y-3">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700">Nome da Empresa</label>
+                                <input type="text" id="extractedCompany" class="w-full px-3 py-2 border border-gray-300 rounded-lg mt-1">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700">Contato</label>
+                                <input type="text" id="extractedContact" class="w-full px-3 py-2 border border-gray-300 rounded-lg mt-1">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700">Número de Funcionários</label>
+                                <input type="number" id="extractedEmployees" class="w-full px-3 py-2 border border-gray-300 rounded-lg mt-1">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="bg-gray-50 p-6 rounded-lg">
+                        <h4 class="text-lg font-semibold text-gray-800 mb-4">Análise da Reunião</h4>
+                        <div class="space-y-3">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700">Dores Identificadas</label>
+                                <textarea id="extractedPainPoints" class="w-full px-3 py-2 border border-gray-300 rounded-lg mt-1" rows="3"></textarea>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700">Requisitos</label>
+                                <textarea id="extractedRequirements" class="w-full px-3 py-2 border border-gray-300 rounded-lg mt-1" rows="3"></textarea>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="flex justify-center gap-4">
+                    <button id="generateProposal" class="bg-green-600 hover:bg-green-700 text-white font-semibold py-3 px-8 rounded-lg transition duration-200">
+                        📄 Gerar Proposta
+                    </button>
+                    <button id="clearData" class="bg-gray-600 hover:bg-gray-700 text-white font-semibold py-3 px-8 rounded-lg transition duration-200">
+                        🗑️ Limpar
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Função para mostrar mensagens
+        function showStatus(message, type = 'success') {
+            const statusEl = document.getElementById('statusMessage');
+            statusEl.textContent = message;
+            statusEl.className = `status-message status-${type} show`;
+            setTimeout(() => statusEl.classList.remove('show'), 3000);
+        }
+
+        // Processar transcrição
+        function processTranscription() {
+            const transcription = document.getElementById('transcription').value;
+            
+            if (!transcription.trim()) {
+                showStatus('❌ Por favor, cole a transcrição da reunião', 'error');
+                return;
+            }
+
+            showStatus('🤖 Processando transcrição...', 'success');
+
+            // Simular processamento com IA
+            setTimeout(() => {
+                const extractedData = extractDataFromTranscription(transcription);
+                
+                // Preencher campos
+                document.getElementById('extractedCompany').value = extractedData.companyName;
+                document.getElementById('extractedContact').value = extractedData.contactName;
+                document.getElementById('extractedEmployees').value = extractedData.employeeCount;
+                document.getElementById('extractedPainPoints').value = extractedData.painPoints.join('\n• ');
+                document.getElementById('extractedRequirements').value = extractedData.requirements.join('\n• ');
+                
+                // Mostrar resultados
+                document.getElementById('results').classList.remove('hidden');
+                
+                showStatus('✅ Dados extraídos com sucesso!', 'success');
+            }, 2000);
+        }
+
+        // Extrair dados da transcrição (simulação de IA)
+        function extractDataFromTranscription(text) {
+            // Extrair nome da empresa
+            const companyPatterns = [
+                /empresa\s+([A-Z][a-z]+(?:\s+[A-Z][a-z]+)*)/i,
+                /([A-Z][a-z]+(?:\s+[A-Z][a-z]+)*)\s+é\s+uma/i,
+                /trabalhamos\s+na\s+([A-Z][a-z]+(?:\s+[A-Z][a-z]+)*)/i
+            ];
+            
+            let companyName = "Empresa Cliente";
+            for (const pattern of companyPatterns) {
+                const match = text.match(pattern);
+                if (match) {
+                    companyName = match[1];
+                    break;
+                }
+            }
+
+            // Extrair nome do contato
+            const contactPatterns = [
+                /meu\s+nome\s+é\s+([A-Z][a-z]+(?:\s+[A-Z][a-z]+)*)/i,
+                /sou\s+([A-Z][a-z]+(?:\s+[A-Z][a-z]+)*)/i,
+                /([A-Z][a-z]+(?:\s+[A-Z][a-z]+)*),\s+responsável/i
+            ];
+            
+            let contactName = "Contato Cliente";
+            for (const pattern of contactPatterns) {
+                const match = text.match(pattern);
+                if (match) {
+                    contactName = match[1];
+                    break;
+                }
+            }
+
+            // Extrair número de funcionários
+            const employeePatterns = [
+                /(\d+)\s+funcionários/i,
+                /(\d+)\s+colaboradores/i,
+                /equipe\s+de\s+(\d+)/i,
+                /(\d+)\s+pessoas/i
+            ];
+            
+            let employeeCount = 50; // Default
+            for (const pattern of employeePatterns) {
+                const match = text.match(pattern);
+                if (match) {
+                    employeeCount = parseInt(match[1]);
+                    break;
+                }
+            }
+
+            // Extrair dores
+            const painPoints = [];
+            const painKeywords = [
+                'problema', 'dificuldade', 'desafio', 'dor', 'problemas',
+                'lento', 'demorado', 'complicado', 'difícil', 'manual'
+            ];
+            
+            const sentences = text.split(/[.!?]+/);
+            sentences.forEach(sentence => {
+                if (painKeywords.some(keyword => sentence.toLowerCase().includes(keyword))) {
+                    painPoints.push(sentence.trim());
+                }
+            });
+
+            // Extrair requisitos
+            const requirements = [];
+            const reqKeywords = [
+                'precisamos', 'queremos', 'necessitamos', 'requisito',
+                'funcionalidade', 'feature', 'integração', 'relatório'
+            ];
+            
+            sentences.forEach(sentence => {
+                if (reqKeywords.some(keyword => sentence.toLowerCase().includes(keyword))) {
+                    requirements.push(sentence.trim());
+                }
+            });
+
+            return {
+                companyName,
+                contactName,
+                employeeCount,
+                painPoints: painPoints.slice(0, 3), // Máximo 3
+                requirements: requirements.slice(0, 3) // Máximo 3
+            };
+        }
+
+        // Gerar proposta
+        function generateProposal() {
+            const data = {
+                companyName: document.getElementById('extractedCompany').value,
+                contactName: document.getElementById('extractedContact').value,
+                employeeCount: parseInt(document.getElementById('extractedEmployees').value) || 0,
+                painPoints: document.getElementById('extractedPainPoints').value,
+                requirements: document.getElementById('extractedRequirements').value
+            };
+
+            // Salvar dados no localStorage
+            localStorage.setItem('lastMeetingData', JSON.stringify(data));
+            
+            showStatus('✅ Dados salvos! Redirecionando para gerador de propostas...', 'success');
+            
+            // Redirecionar para gerador de propostas
+            setTimeout(() => {
+                window.location.href = 'proposal-generator.html';
+            }, 1500);
+        }
+
+        // Limpar dados
+        function clearData() {
+            document.getElementById('transcription').value = '';
+            document.getElementById('extractedCompany').value = '';
+            document.getElementById('extractedContact').value = '';
+            document.getElementById('extractedEmployees').value = '';
+            document.getElementById('extractedPainPoints').value = '';
+            document.getElementById('extractedRequirements').value = '';
+            document.getElementById('results').classList.add('hidden');
+            
+            showStatus('🗑️ Dados limpos!', 'success');
+        }
+
+        // Event listeners
+        document.addEventListener('DOMContentLoaded', function() {
+            document.getElementById('processTranscription').addEventListener('click', processTranscription);
+            document.getElementById('generateProposal').addEventListener('click', generateProposal);
+            document.getElementById('clearData').addEventListener('click', clearData);
+            
+            showStatus('Transcritor carregado! Cole sua transcrição e clique em "Processar com IA"', 'success');
+        });
+    </script>
+</body>
+</html>

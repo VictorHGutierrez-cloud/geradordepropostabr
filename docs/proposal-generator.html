@@ -1,0 +1,768 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Factorial - Gerador de Propostas</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap');
+        body { font-family: 'Inter', sans-serif; background-color: #f7f9fb; }
+        .factorial-brand { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); }
+        .module-card { transition: all 0.3s ease; cursor: pointer; }
+        .module-card:hover { transform: translateY(-2px); box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15); }
+        .module-card.selected { 
+            border-color: #2563EB;
+            background-color: #EFF6FF;
+            transform: scale(1.02);
+            box-shadow: 0 8px 25px rgba(37, 99, 235, 0.2);
+        }
+        .status-message { position: fixed; top: 20px; right: 20px; padding: 15px 20px; border-radius: 8px; color: white; font-weight: bold; z-index: 1000; opacity: 0; transition: opacity 0.3s ease; }
+        .status-message.show { opacity: 1; }
+        .status-success { background-color: #10B981; }
+        .status-error { background-color: #EF4444; }
+    </style>
+</head>
+<body class="p-6">
+    <!-- Status Messages -->
+    <div id="statusMessage" class="status-message"></div>
+
+    <div class="max-w-6xl mx-auto bg-white shadow-lg rounded-lg overflow-hidden">
+        <!-- Header -->
+        <div class="factorial-brand text-white p-8">
+            <h1 class="text-4xl font-bold mb-2">FACTORIAL</h1>
+            <h2 class="text-2xl font-light">Gerador de Propostas Executivas</h2>
+            <p class="text-purple-100 mt-2">Selecione os módulos e gere sua proposta</p>
+        </div>
+
+        <!-- Formulário Básico -->
+        <div class="p-8 border-b">
+            <h3 class="text-2xl font-semibold mb-6 text-gray-800">📋 Informações do Cliente</h3>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Nome da Empresa</label>
+                    <input type="text" id="companyName" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent" placeholder="Ex: TechCorp">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Contato Principal</label>
+                    <input type="text" id="contactName" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent" placeholder="Nome do tomador de decisão">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Cargo</label>
+                    <input type="text" id="contactRole" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent" placeholder="Ex: CEO, CTO, HR Manager">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Número de Funcionários</label>
+                    <input type="number" id="employeeCount" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent" placeholder="Ex: 150">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Região</label>
+                    <select id="region" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent">
+                        <option value="">Selecione a região</option>
+                        <option value="brasil">Brasil</option>
+                        <option value="mexico">México</option>
+                        <option value="espanha">Espanha</option>
+                        <option value="franca">França</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Desconto (%)</label>
+                    <input type="number" id="discount" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent" placeholder="0" min="0" max="50">
+                </div>
+            </div>
+        </div>
+
+        <!-- Seleção de Módulos -->
+        <div class="p-8 border-b">
+            <h3 class="text-2xl font-semibold mb-6 text-gray-800">🎯 Selecione os Módulos Factorial</h3>
+            
+            <!-- Módulos Core -->
+            <div class="mb-8">
+                <h4 class="text-lg font-semibold text-gray-800 mb-4">📦 Módulos Core (Obrigatórios)</h4>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div class="module-card p-4 rounded-lg border-2 border-gray-200 bg-white" data-module="core-hr" data-price="2.50">
+                        <div class="flex items-center">
+                            <input type="checkbox" class="mr-3" checked disabled>
+                            <div class="flex-1">
+                                <h5 class="font-semibold text-gray-800">Gestão de RH Básica</h5>
+                                <p class="text-sm text-gray-600">€2.50/funcionário/mês</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="module-card p-4 rounded-lg border-2 border-gray-200 bg-white" data-module="core-time" data-price="1.00">
+                        <div class="flex items-center">
+                            <input type="checkbox" class="mr-3" checked disabled>
+                            <div class="flex-1">
+                                <h5 class="font-semibold text-gray-800">Controle de Ponto</h5>
+                                <p class="text-sm text-gray-600">€1.00/funcionário/mês</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                </div>
+
+            <!-- Módulos Avançados -->
+            <div class="mb-8">
+                <h4 class="text-lg font-semibold text-gray-800 mb-4">🚀 Módulos Avançados</h4>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div class="module-card p-4 rounded-lg border-2 border-gray-200 bg-white" data-module="advanced-reports" data-price="0.50">
+                        <div class="flex items-center">
+                            <input type="checkbox" class="mr-3 module-checkbox">
+                            <div class="flex-1">
+                                <h5 class="font-semibold text-gray-800">Relatórios Avançados</h5>
+                                <p class="text-sm text-gray-600">€0.50/funcionário/mês</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="module-card p-4 rounded-lg border-2 border-gray-200 bg-white" data-module="integrations" data-price="1.50">
+                        <div class="flex items-center">
+                            <input type="checkbox" class="mr-3 module-checkbox">
+                            <div class="flex-1">
+                                <h5 class="font-semibold text-gray-800">Integrações</h5>
+                                <p class="text-sm text-gray-600">€1.50/funcionário/mês</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="module-card p-4 rounded-lg border-2 border-gray-200 bg-white" data-module="analytics" data-price="1.00">
+                        <div class="flex items-center">
+                            <input type="checkbox" class="mr-3 module-checkbox">
+                            <div class="flex-1">
+                                <h5 class="font-semibold text-gray-800">Analytics & BI</h5>
+                                <p class="text-sm text-gray-600">€1.00/funcionário/mês</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="module-card p-4 rounded-lg border-2 border-gray-200 bg-white" data-module="mobile-app" data-price="0.75">
+                        <div class="flex items-center">
+                            <input type="checkbox" class="mr-3 module-checkbox">
+                            <div class="flex-1">
+                                <h5 class="font-semibold text-gray-800">App Mobile</h5>
+                                <p class="text-sm text-gray-600">€0.75/funcionário/mês</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                </div>
+
+            <!-- Módulos Premium -->
+            <div class="mb-8">
+                <h4 class="text-lg font-semibold text-gray-800 mb-4">💎 Módulos Premium</h4>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div class="module-card p-4 rounded-lg border-2 border-gray-200 bg-white" data-module="ai-insights" data-price="2.00">
+                        <div class="flex items-center">
+                            <input type="checkbox" class="mr-3 module-checkbox">
+                            <div class="flex-1">
+                                <h5 class="font-semibold text-gray-800">IA & Insights</h5>
+                                <p class="text-sm text-gray-600">€2.00/funcionário/mês</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="module-card p-4 rounded-lg border-2 border-gray-200 bg-white" data-module="custom-reports" data-price="1.25">
+                        <div class="flex items-center">
+                            <input type="checkbox" class="mr-3 module-checkbox">
+                            <div class="flex-1">
+                                <h5 class="font-semibold text-gray-800">Relatórios Personalizados</h5>
+                                <p class="text-sm text-gray-600">€1.25/funcionário/mês</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="module-card p-4 rounded-lg border-2 border-gray-200 bg-white" data-module="api-access" data-price="0.50">
+                        <div class="flex items-center">
+                            <input type="checkbox" class="mr-3 module-checkbox">
+                            <div class="flex-1">
+                                <h5 class="font-semibold text-gray-800">API Access</h5>
+                                <p class="text-sm text-gray-600">€0.50/funcionário/mês</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="module-card p-4 rounded-lg border-2 border-gray-200 bg-white" data-module="white-label" data-price="3.00">
+                        <div class="flex items-center">
+                            <input type="checkbox" class="mr-3 module-checkbox">
+                            <div class="flex-1">
+                                <h5 class="font-semibold text-gray-800">White Label</h5>
+                                <p class="text-sm text-gray-600">€3.00/funcionário/mês</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Serviços de Implementação -->
+        <div class="p-8 border-b">
+            <h3 class="text-2xl font-semibold mb-6 text-gray-800">🛠️ Serviços de Implementação</h3>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div class="module-card p-4 rounded-lg border-2 border-gray-200 bg-white" data-module="setup" data-price="500">
+                    <div class="flex items-center">
+                        <input type="checkbox" class="mr-3 module-checkbox">
+                        <div class="flex-1">
+                            <h5 class="font-semibold text-gray-800">Setup Inicial</h5>
+                            <p class="text-sm text-gray-600">€500 (valor único)</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="module-card p-4 rounded-lg border-2 border-gray-200 bg-white" data-module="migration" data-price="1000">
+                    <div class="flex items-center">
+                        <input type="checkbox" class="mr-3 module-checkbox">
+                        <div class="flex-1">
+                            <h5 class="font-semibold text-gray-800">Migração de Dados</h5>
+                            <p class="text-sm text-gray-600">€1.000 (valor único)</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="module-card p-4 rounded-lg border-2 border-gray-200 bg-white" data-module="training" data-price="750">
+                    <div class="flex items-center">
+                        <input type="checkbox" class="mr-3 module-checkbox">
+                        <div class="flex-1">
+                            <h5 class="font-semibold text-gray-800">Treinamento da Equipe</h5>
+                            <p class="text-sm text-gray-600">€750 (valor único)</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="module-card p-4 rounded-lg border-2 border-gray-200 bg-white" data-module="consulting" data-price="2000">
+                    <div class="flex items-center">
+                        <input type="checkbox" class="mr-3 module-checkbox">
+                        <div class="flex-1">
+                            <h5 class="font-semibold text-gray-800">Consultoria Estratégica</h5>
+                            <p class="text-sm text-gray-600">€2.000 (valor único)</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Resumo Executivo -->
+        <div class="p-8 bg-gray-50">
+            <h3 class="text-2xl font-semibold mb-6 text-gray-800">💰 Resumo Executivo</h3>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <!-- Resumo Mensal -->
+                <div class="bg-white p-6 rounded-lg border">
+                    <h4 class="text-lg font-semibold text-gray-800 mb-4">📊 Custo Mensal</h4>
+                    <div class="space-y-3">
+                        <div class="flex justify-between">
+                            <span class="text-gray-600">Módulos Selecionados:</span>
+                            <span id="selectedModules" class="font-semibold">€0.00/mês</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span class="text-gray-600">Por Funcionário:</span>
+                            <span id="pricePerEmployee" class="font-semibold">€0.00/mês</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span class="text-gray-600">Total Mensal:</span>
+                            <span id="totalMonthly" class="font-semibold text-xl text-blue-600">€0.00/mês</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span class="text-gray-600">Total Anual:</span>
+                            <span id="totalYearly" class="font-semibold text-xl text-green-600">€0.00/ano</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Resumo Implementação -->
+                <div class="bg-white p-6 rounded-lg border">
+                    <h4 class="text-lg font-semibold text-gray-800 mb-4">🛠️ Custo de Implementação</h4>
+                    <div class="space-y-3">
+                        <div class="flex justify-between">
+                            <span class="text-gray-600">Serviços Selecionados:</span>
+                            <span id="selectedServices" class="font-semibold">€0.00</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span class="text-gray-600">Desconto:</span>
+                            <span id="discountAmount" class="font-semibold text-red-600">€0.00</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span class="text-gray-600">Total Implementação:</span>
+                            <span id="totalImplementation" class="font-semibold text-xl text-purple-600">€0.00</span>
+                        </div>
+                        <div class="flex justify-between border-t pt-3">
+                            <span class="text-gray-800 font-semibold">TOTAL GERAL:</span>
+                            <span id="totalGeneral" class="font-bold text-2xl text-red-600">€0.00</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Botões -->
+            <div class="flex flex-col sm:flex-row gap-4 justify-center mt-8">
+                <button id="generateProposal" class="bg-purple-600 hover:bg-purple-700 text-white font-semibold py-3 px-8 rounded-lg transition duration-200">
+                    📄 Gerar Proposta Executiva
+                </button>
+                <button id="exportPDF" class="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-8 rounded-lg transition duration-200">
+                    📋 Exportar PDF
+                </button>
+                <button id="clearSelection" class="bg-gray-600 hover:bg-gray-700 text-white font-semibold py-3 px-8 rounded-lg transition duration-200">
+                    🗑️ Limpar Seleção
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal de Preview -->
+    <div id="previewModal" class="fixed inset-0 bg-black bg-opacity-50 hidden z-50">
+        <div class="flex items-center justify-center min-h-screen p-4">
+            <div class="bg-white rounded-lg max-w-6xl w-full max-h-[90vh] overflow-hidden">
+                <div class="flex justify-between items-center p-4 border-b">
+                    <h3 class="text-xl font-semibold">Preview da Proposta Executiva</h3>
+                    <button id="closeModal" class="text-gray-500 hover:text-gray-700">✕</button>
+                </div>
+                <div class="p-4 overflow-y-auto max-h-[calc(90vh-80px)]">
+                    <div id="proposalPreview"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Dados dos módulos
+        const modules = {
+            'core-hr': { name: 'Gestão de RH Básica', price: 2.50, type: 'monthly' },
+            'core-time': { name: 'Controle de Ponto', price: 1.00, type: 'monthly' },
+            'advanced-reports': { name: 'Relatórios Avançados', price: 0.50, type: 'monthly' },
+            'integrations': { name: 'Integrações', price: 1.50, type: 'monthly' },
+            'analytics': { name: 'Analytics & BI', price: 1.00, type: 'monthly' },
+            'mobile-app': { name: 'App Mobile', price: 0.75, type: 'monthly' },
+            'ai-insights': { name: 'IA & Insights', price: 2.00, type: 'monthly' },
+            'custom-reports': { name: 'Relatórios Personalizados', price: 1.25, type: 'monthly' },
+            'api-access': { name: 'API Access', price: 0.50, type: 'monthly' },
+            'white-label': { name: 'White Label', price: 3.00, type: 'monthly' },
+            'setup': { name: 'Setup Inicial', price: 500, type: 'one-time' },
+            'migration': { name: 'Migração de Dados', price: 1000, type: 'one-time' },
+            'training': { name: 'Treinamento da Equipe', price: 750, type: 'one-time' },
+            'consulting': { name: 'Consultoria Estratégica', price: 2000, type: 'one-time' }
+        };
+
+        let selectedModules = new Set(['core-hr', 'core-time']); // Módulos obrigatórios
+
+        // Função para mostrar mensagens
+        function showStatus(message, type = 'success') {
+            const statusEl = document.getElementById('statusMessage');
+            statusEl.textContent = message;
+            statusEl.className = `status-message status-${type} show`;
+            setTimeout(() => statusEl.classList.remove('show'), 3000);
+        }
+
+        // Função para configurar event listeners
+        function setupEventListeners() {
+            // Seleção de módulos
+            document.querySelectorAll('.module-checkbox').forEach(checkbox => {
+                checkbox.addEventListener('change', function() {
+                    const moduleCard = this.closest('.module-card');
+                    const moduleId = moduleCard.dataset.module;
+                    
+                    if (this.checked) {
+                        selectedModules.add(moduleId);
+                        moduleCard.classList.add('selected');
+                    } else {
+                        selectedModules.delete(moduleId);
+                        moduleCard.classList.remove('selected');
+                    }
+                    
+                    calculateTotal();
+                });
+            });
+
+            // Adicionar event listeners para inputs
+            document.getElementById('employeeCount').addEventListener('input', calculateTotal);
+            document.getElementById('discount').addEventListener('input', calculateTotal);
+        }
+
+        // Função principal de cálculo (baseada no seu exemplo)
+        function calculateTotal() {
+            console.log('🧮 calculateTotal chamada!');
+            const employeeCount = parseInt(document.getElementById('employeeCount').value) || 0;
+            const discount = parseInt(document.getElementById('discount').value) || 0;
+            
+            console.log('👥 Funcionários:', employeeCount, '💰 Desconto:', discount, '%');
+            
+            if (employeeCount === 0) {
+                // Limpar valores se não há funcionários
+                document.getElementById('selectedModules').textContent = '€0.00/mês';
+                document.getElementById('pricePerEmployee').textContent = '€0.00/mês';
+                document.getElementById('totalMonthly').textContent = '€0.00/mês';
+                document.getElementById('totalYearly').textContent = '€0.00/ano';
+                document.getElementById('selectedServices').textContent = '€0.00';
+                document.getElementById('discountAmount').textContent = '€0.00';
+                document.getElementById('totalImplementation').textContent = '€0.00';
+                document.getElementById('totalGeneral').textContent = '€0.00';
+                return;
+            }
+            
+            // Calcular custos mensais
+            let monthlyCost = 0;
+            let oneTimeCost = 0;
+            let selectedModulesList = [];
+            let selectedServicesList = [];
+            
+            selectedModules.forEach(moduleId => {
+                const module = modules[moduleId];
+                if (module.type === 'monthly') {
+                    monthlyCost += module.price;
+                    selectedModulesList.push(module.name);
+                } else {
+                    oneTimeCost += module.price;
+                    selectedServicesList.push(module.name);
+                }
+            });
+            
+            // Aplicar desconto
+            const finalMonthlyCost = monthlyCost * (1 - discount / 100);
+            const totalMonthly = finalMonthlyCost * employeeCount;
+            const totalYearly = totalMonthly * 12;
+            const finalOneTimeCost = oneTimeCost * (1 - discount / 100);
+            const discountAmount = (monthlyCost + oneTimeCost) * (discount / 100);
+            const totalGeneral = totalYearly + finalOneTimeCost;
+            
+            // Atualizar interface com animação
+            updateValueWithAnimation('selectedModules', `€${finalMonthlyCost.toFixed(2)}/mês`);
+            updateValueWithAnimation('pricePerEmployee', `€${finalMonthlyCost.toFixed(2)}/mês`);
+            updateValueWithAnimation('totalMonthly', `€${totalMonthly.toFixed(2)}/mês`);
+            updateValueWithAnimation('totalYearly', `€${totalYearly.toFixed(2)}/ano`);
+            updateValueWithAnimation('selectedServices', `€${oneTimeCost.toFixed(2)}`);
+            updateValueWithAnimation('discountAmount', `-€${discountAmount.toFixed(2)}`);
+            updateValueWithAnimation('totalImplementation', `€${finalOneTimeCost.toFixed(2)}`);
+            updateValueWithAnimation('totalGeneral', `€${totalGeneral.toFixed(2)}`);
+            
+            // Mostrar status
+            if (selectedModules.size > 2) { // Mais que os obrigatórios
+                showStatus(`✅ ${selectedModules.size} módulos selecionados - Total: €${totalGeneral.toFixed(2)}`, 'success');
+            }
+        }
+
+        // Função para animar mudanças de valores
+        function updateValueWithAnimation(elementId, newValue) {
+            const element = document.getElementById(elementId);
+            if (element) {
+                element.style.transform = 'scale(1.1)';
+                element.style.transition = 'all 0.3s ease';
+                element.textContent = newValue;
+                setTimeout(() => {
+                    element.style.transform = 'scale(1)';
+                }, 300);
+            }
+        }
+
+        // Gerar proposta
+        function generateProposal() {
+            const formData = getFormData();
+            if (!validateForm(formData)) return;
+
+            const proposalHTML = createProposalHTML(formData);
+            
+            // Criar e baixar arquivo
+                const blob = new Blob([proposalHTML], { type: 'text/html;charset=utf-8' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+            a.download = `proposta-executiva-factorial-${formData.companyName.toLowerCase().replace(/\s+/g, '-')}.html`;
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                URL.revokeObjectURL(url);
+                
+            showStatus('✅ Proposta executiva gerada com sucesso!', 'success');
+        }
+
+        // Exportar PDF
+        async function exportPDF() {
+            const formData = getFormData();
+            if (!validateForm(formData)) return;
+
+            try {
+                showStatus('📄 Gerando PDF...', 'success');
+                
+                const proposalHTML = createProposalHTML(formData);
+                const tempContainer = document.createElement('div');
+                tempContainer.innerHTML = proposalHTML;
+                tempContainer.style.position = 'absolute';
+                tempContainer.style.left = '-9999px';
+                tempContainer.style.top = '0';
+                tempContainer.style.width = '210mm';
+                tempContainer.style.backgroundColor = 'white';
+                document.body.appendChild(tempContainer);
+
+                await new Promise(resolve => setTimeout(resolve, 1000));
+
+                const canvas = await html2canvas(tempContainer, {
+                    scale: 2,
+                    useCORS: true,
+                    allowTaint: true,
+                    backgroundColor: '#ffffff',
+                    width: 794,
+                    height: tempContainer.scrollHeight
+                });
+
+                document.body.removeChild(tempContainer);
+
+                const { jsPDF } = window.jspdf;
+                const pdf = new jsPDF('p', 'mm', 'a4');
+                
+                const imgData = canvas.toDataURL('image/png');
+                const imgWidth = 210;
+                const pageHeight = 295;
+                const imgHeight = (canvas.height * imgWidth) / canvas.width;
+                let heightLeft = imgHeight;
+                let position = 0;
+
+                pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
+                heightLeft -= pageHeight;
+
+                while (heightLeft >= 0) {
+                    position = heightLeft - imgHeight;
+                    pdf.addPage();
+                    pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
+                    heightLeft -= pageHeight;
+                }
+
+                const fileName = `proposta-executiva-factorial-${formData.companyName.toLowerCase().replace(/\s+/g, '-')}.pdf`;
+                pdf.save(fileName);
+                
+                showStatus('✅ PDF gerado com sucesso!', 'success');
+                
+            } catch (error) {
+                console.error('Erro ao gerar PDF:', error);
+                showStatus('❌ Erro ao gerar PDF. Tente novamente.', 'error');
+            }
+        }
+
+        // Limpar seleção
+        function clearSelection() {
+            selectedModules.clear();
+            selectedModules.add('core-hr');
+            selectedModules.add('core-time');
+            
+            document.querySelectorAll('.module-checkbox').forEach(checkbox => {
+                checkbox.checked = false;
+                checkbox.closest('.module-card').classList.remove('selected');
+            });
+            
+            document.getElementById('employeeCount').value = '';
+            document.getElementById('discount').value = '';
+            
+            calculateTotal();
+            showStatus('🗑️ Seleção limpa!', 'success');
+        }
+
+        // Obter dados do formulário
+        function getFormData() {
+            return {
+                companyName: document.getElementById('companyName').value,
+                contactName: document.getElementById('contactName').value,
+                contactRole: document.getElementById('contactRole').value,
+                employeeCount: parseInt(document.getElementById('employeeCount').value) || 0,
+                region: document.getElementById('region').value,
+                discount: parseInt(document.getElementById('discount').value) || 0,
+                selectedModules: Array.from(selectedModules)
+            };
+        }
+
+        // Validar formulário
+        function validateForm(data) {
+            if (!data.companyName) {
+                showStatus('❌ Por favor, preencha o nome da empresa', 'error');
+                return false;
+            }
+            if (!data.employeeCount || data.employeeCount <= 0) {
+                showStatus('❌ Por favor, informe o número de funcionários', 'error');
+                return false;
+            }
+            return true;
+        }
+
+        // Criar HTML da proposta
+        function createProposalHTML(data) {
+            const employeeCount = data.employeeCount;
+            const discount = data.discount;
+            
+            // Calcular custos
+            let monthlyCost = 0;
+            let oneTimeCost = 0;
+            let selectedModulesList = [];
+            let selectedServicesList = [];
+            
+            data.selectedModules.forEach(moduleId => {
+                const module = modules[moduleId];
+                if (module.type === 'monthly') {
+                    monthlyCost += module.price;
+                    selectedModulesList.push(module.name);
+                } else {
+                    oneTimeCost += module.price;
+                    selectedServicesList.push(module.name);
+                }
+            });
+            
+            const finalMonthlyCost = monthlyCost * (1 - discount / 100);
+            const totalMonthly = finalMonthlyCost * employeeCount;
+            const totalYearly = totalMonthly * 12;
+            const finalOneTimeCost = oneTimeCost * (1 - discount / 100);
+            const totalGeneral = totalYearly + finalOneTimeCost;
+            
+            return `
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Proposta Executiva Factorial - ${data.companyName}</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap');
+        body { font-family: 'Inter', sans-serif; }
+        .factorial-brand { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); }
+    </style>
+</head>
+<body class="bg-gray-50">
+    <div class="max-w-4xl mx-auto bg-white shadow-lg">
+        <!-- Header -->
+        <div class="factorial-brand text-white p-8">
+            <h1 class="text-4xl font-bold mb-2">FACTORIAL</h1>
+            <h2 class="text-2xl font-light">Proposta Executiva</h2>
+            <p class="text-purple-100 mt-2">${data.companyName} - ${data.region.toUpperCase()}</p>
+        </div>
+
+        <!-- Dados do Cliente -->
+        <div class="p-8 border-b">
+            <h3 class="text-2xl font-semibold mb-4 text-gray-800">📋 Informações do Cliente</h3>
+            <div class="grid grid-cols-2 gap-4 text-gray-700">
+                <div><strong>Empresa:</strong> ${data.companyName}</div>
+                <div><strong>Contato:</strong> ${data.contactName}</div>
+                <div><strong>Cargo:</strong> ${data.contactRole}</div>
+                <div><strong>Funcionários:</strong> ${data.employeeCount}</div>
+                <div><strong>Região:</strong> ${data.region.toUpperCase()}</div>
+                <div><strong>Data:</strong> ${new Date().toLocaleDateString('pt-BR')}</div>
+            </div>
+        </div>
+
+        <!-- Módulos Selecionados -->
+        <div class="p-8 border-b">
+            <h3 class="text-2xl font-semibold mb-4 text-gray-800">🎯 Módulos Selecionados</h3>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                    <h4 class="text-lg font-semibold text-gray-800 mb-2">Módulos Mensais</h4>
+                    <ul class="space-y-1 text-gray-700">
+                        ${selectedModulesList.map(module => `<li>✓ ${module}</li>`).join('')}
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="text-lg font-semibold text-gray-800 mb-2">Serviços de Implementação</h4>
+                    <ul class="space-y-1 text-gray-700">
+                        ${selectedServicesList.length > 0 ? selectedServicesList.map(service => `<li>✓ ${service}</li>`).join('') : '<li>Nenhum serviço selecionado</li>'}
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Resumo Financeiro -->
+        <div class="p-8 border-b">
+            <h3 class="text-2xl font-semibold mb-4 text-gray-800">💰 Resumo Financeiro</h3>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+            <div class="bg-blue-50 p-6 rounded-lg">
+                    <h4 class="text-lg font-semibold text-blue-800 mb-4">Custos Mensais</h4>
+                    <div class="space-y-2 text-gray-700">
+                        <div class="flex justify-between">
+                            <span>Preço por funcionário:</span>
+                            <span class="font-semibold">€${finalMonthlyCost.toFixed(2)}/mês</span>
+                    </div>
+                        <div class="flex justify-between">
+                            <span>Total mensal:</span>
+                            <span class="font-semibold">€${totalMonthly.toFixed(2)}/mês</span>
+                    </div>
+                        <div class="flex justify-between">
+                            <span>Total anual:</span>
+                            <span class="font-semibold text-blue-600">€${totalYearly.toFixed(2)}/ano</span>
+        </div>
+                    </div>
+                </div>
+                <div class="bg-green-50 p-6 rounded-lg">
+                    <h4 class="text-lg font-semibold text-green-800 mb-4">Custos de Implementação</h4>
+                    <div class="space-y-2 text-gray-700">
+                        <div class="flex justify-between">
+                            <span>Serviços selecionados:</span>
+                            <span class="font-semibold">€${oneTimeCost.toFixed(2)}</span>
+                    </div>
+                        ${discount > 0 ? `
+                        <div class="flex justify-between">
+                            <span>Desconto (${discount}%):</span>
+                            <span class="font-semibold text-red-600">-€${(oneTimeCost * discount / 100).toFixed(2)}</span>
+                </div>
+                        ` : ''}
+                        <div class="flex justify-between">
+                            <span>Total implementação:</span>
+                            <span class="font-semibold text-green-600">€${finalOneTimeCost.toFixed(2)}</span>
+                </div>
+                    </div>
+                </div>
+            </div>
+            <div class="mt-6 bg-red-50 p-6 rounded-lg">
+                <div class="flex justify-between items-center">
+                    <span class="text-xl font-semibold text-red-800">TOTAL GERAL (Primeiro Ano):</span>
+                    <span class="text-3xl font-bold text-red-600">€${totalGeneral.toFixed(2)}</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Próximos Passos -->
+        <div class="p-8 bg-gray-50">
+            <h3 class="text-2xl font-semibold mb-4 text-gray-800">🚀 Próximos Passos</h3>
+            <p class="text-gray-700 mb-6">Estamos prontos para implementar a solução Factorial na ${data.companyName}.</p>
+            
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div class="text-center p-4 bg-white rounded-lg">
+                    <div class="w-12 h-12 bg-purple-500 rounded-full flex items-center justify-center mx-auto mb-3">
+                        <span class="text-white font-bold">1</span>
+                    </div>
+                    <h4 class="font-semibold text-gray-800 mb-2">Aprovação</h4>
+                    <p class="text-sm text-gray-600">Aprovação da proposta em até 7 dias</p>
+                </div>
+                <div class="text-center p-4 bg-white rounded-lg">
+                    <div class="w-12 h-12 bg-blue-500 rounded-full flex items-center justify-center mx-auto mb-3">
+                        <span class="text-white font-bold">2</span>
+                    </div>
+                    <h4 class="font-semibold text-gray-800 mb-2">Implementação</h4>
+                    <p class="text-sm text-gray-600">Início em 2 semanas após aprovação</p>
+                </div>
+                <div class="text-center p-4 bg-white rounded-lg">
+                    <div class="w-12 h-12 bg-green-500 rounded-full flex items-center justify-center mx-auto mb-3">
+                        <span class="text-white font-bold">3</span>
+                    </div>
+                    <h4 class="font-semibold text-gray-800 mb-2">Go-Live</h4>
+                    <p class="text-sm text-gray-600">Sistema funcionando em 4 semanas</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <div class="p-8 factorial-brand text-white text-center">
+            <h4 class="text-xl font-bold mb-2">FACTORIAL</h4>
+            <p class="text-purple-100">Transformando a gestão de RH em empresas modernas</p>
+            <p class="text-sm text-purple-200 mt-2">Proposta gerada em ${new Date().toLocaleDateString('pt-BR')}</p>
+        </div>
+    </div>
+</body>
+</html>`;
+        }
+
+        // Event listeners
+        document.addEventListener('DOMContentLoaded', function() {
+            // Configurar todos os event listeners
+            setupEventListeners();
+            
+            // Botões principais
+            document.getElementById('generateProposal').addEventListener('click', generateProposal);
+            document.getElementById('exportPDF').addEventListener('click', exportPDF);
+            document.getElementById('clearSelection').addEventListener('click', clearSelection);
+            
+            // Marcar módulos obrigatórios como selecionados
+            document.querySelectorAll('[data-module="core-hr"], [data-module="core-time"]').forEach(card => {
+                card.classList.add('selected');
+            });
+            
+            // Calcular valores iniciais
+            calculateTotal();
+            showStatus('🎯 Sistema carregado! Selecione os módulos e veja o cálculo automático!', 'success');
+        });
+    </script>
+</body>
+</html>
