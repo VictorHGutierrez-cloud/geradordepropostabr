@@ -3,109 +3,42 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Factorial - Gerador de Propostas Interno</title>
-    <!-- Load Tailwind CSS -->
+    <title>Factorial - Gerador de Propostas</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Load Chart.js for data visualization -->
-    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.3/dist/chart.umd.min.js"></script>
-    <!-- Lucide icons for professional visuals -->
-    <script src="https://unpkg.com/lucide@latest"></script>
-    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap');
-        body {
-            font-family: 'Inter', sans-serif;
-            background-color: #f7f9fb;
-        }
-        .proposal-container {
-            max-width: 1200px;
-            margin: 0 auto;
-            background: white;
-            border-radius: 12px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-            overflow: hidden;
-        }
-        .header-title {
-            color: #2563EB;
-            font-weight: 800;
-        }
-        .plan-card {
-            transition: all 0.3s ease;
-            cursor: pointer;
-        }
-        .plan-card:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
-        }
-        .plan-card.selected {
-            border-color: #2563EB;
-            background-color: #EFF6FF;
-        }
-        .icon-list li {
-            display: flex;
-            align-items: center;
-            margin-bottom: 0.75rem;
-            font-size: 1.125rem;
-        }
-        .icon-list li svg {
-            margin-right: 0.75rem;
-            flex-shrink: 0;
-        }
-        .status-message {
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            padding: 15px 20px;
-            border-radius: 8px;
-            color: white;
-            font-weight: bold;
-            z-index: 1000;
-            opacity: 0;
-            transition: opacity 0.3s ease;
-        }
-        .status-message.show {
-            opacity: 1;
-        }
-        .status-success {
-            background-color: #10B981;
-        }
-        .status-error {
-            background-color: #EF4444;
-        }
-        .factorial-brand {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        }
+        body { font-family: 'Inter', sans-serif; background-color: #f7f9fb; }
+        .factorial-brand { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); }
+        .plan-card { transition: all 0.3s ease; cursor: pointer; }
+        .plan-card:hover { transform: translateY(-2px); box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15); }
+        .plan-card.selected { border-color: #2563EB; background-color: #EFF6FF; }
+        .status-message { position: fixed; top: 20px; right: 20px; padding: 15px 20px; border-radius: 8px; color: white; font-weight: bold; z-index: 1000; opacity: 0; transition: opacity 0.3s ease; }
+        .status-message.show { opacity: 1; }
+        .status-success { background-color: #10B981; }
+        .status-error { background-color: #EF4444; }
     </style>
 </head>
 <body class="p-6">
     <!-- Status Messages -->
     <div id="statusMessage" class="status-message"></div>
 
-    <div class="proposal-container">
+    <div class="max-w-4xl mx-auto bg-white shadow-lg rounded-lg overflow-hidden">
         <!-- Header -->
         <div class="factorial-brand text-white p-8">
             <h1 class="text-4xl font-bold mb-2">FACTORIAL</h1>
-            <h2 class="text-2xl font-light">Gerador de Propostas Interno</h2>
-            <p class="text-purple-100 mt-2">Ferramenta exclusiva para equipe de vendas</p>
+            <h2 class="text-2xl font-light">Gerador de Propostas</h2>
+            <p class="text-purple-100 mt-2">Sistema interno para equipe de vendas</p>
         </div>
 
-        <!-- Formulário de Dados do Cliente -->
-        <div class="p-8 border-b">
+        <!-- Formulário -->
+        <div class="p-8">
             <h3 class="text-2xl font-semibold mb-6 text-gray-800">📋 Dados do Cliente</h3>
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
                 <div>
                     <label class="block text-sm font-medium text-gray-700 mb-2">Nome da Empresa</label>
-                    <input type="text" id="companyName" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent" placeholder="Ex: TechCorp, StartupXYZ">
-                </div>
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-2">Segmento</label>
-                    <select id="segment" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent">
-                        <option value="">Selecione o segmento</option>
-                        <option value="startups">Startups (1-50 funcionários)</option>
-                        <option value="pequenas">Pequenas Empresas (51-200 funcionários)</option>
-                        <option value="medias">Médias Empresas (201-1000 funcionários)</option>
-                        <option value="grandes">Grandes Empresas (1000+ funcionários)</option>
-                    </select>
+                    <input type="text" id="companyName" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent" placeholder="Ex: TechCorp">
                 </div>
                 <div>
                     <label class="block text-sm font-medium text-gray-700 mb-2">Contato Principal</label>
@@ -113,7 +46,7 @@
                 </div>
                 <div>
                     <label class="block text-sm font-medium text-gray-700 mb-2">Cargo</label>
-                    <input type="text" id="contactRole" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent" placeholder="Ex: CEO, CTO, HR Manager, Finance Director">
+                    <input type="text" id="contactRole" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent" placeholder="Ex: CEO, CTO, HR Manager">
                 </div>
                 <div>
                     <label class="block text-sm font-medium text-gray-700 mb-2">Número de Funcionários</label>
@@ -127,93 +60,104 @@
                         <option value="mexico">México</option>
                         <option value="espanha">Espanha</option>
                         <option value="franca">França</option>
-                        <option value="outros">Outros</option>
-                    </select>
-                </div>
-            </div>
-        </div>
-
-        <!-- Seleção de Plano Factorial -->
-        <div class="p-8 border-b">
-            <h3 class="text-2xl font-semibold mb-6 text-gray-800">🎯 Escolha o Plano Factorial</h3>
-            <div id="plansContainer" class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                <!-- Planos serão carregados dinamicamente -->
-            </div>
-        </div>
-
-        <!-- Configurações Adicionais -->
-        <div class="p-8 border-b">
-            <h3 class="text-2xl font-semibold mb-6 text-gray-800">⚙️ Configurações da Proposta</h3>
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-2">Validade da Proposta</label>
-                    <select id="validity" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent">
-                        <option value="30">30 dias</option>
-                        <option value="60">60 dias</option>
-                        <option value="90">90 dias</option>
                     </select>
                 </div>
                 <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-2">Desconto Especial (%)</label>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Desconto (%)</label>
                     <input type="number" id="discount" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent" placeholder="0" min="0" max="50">
                 </div>
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-2">Observações Especiais</label>
-                    <textarea id="notes" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent" rows="3" placeholder="Observações específicas para este cliente..."></textarea>
+            </div>
+
+            <!-- Planos -->
+            <h3 class="text-2xl font-semibold mb-6 text-gray-800">🎯 Escolha o Plano Factorial</h3>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+                <div class="plan-card p-6 rounded-lg border-2 border-gray-200 bg-white" data-plan="starter">
+                    <div class="text-center mb-4">
+                        <h4 class="text-xl font-bold text-gray-800">STARTER</h4>
+                        <p class="text-sm text-gray-600">Para pequenas empresas</p>
+                        <div class="mt-2">
+                            <span class="text-3xl font-bold text-purple-600">€2.50</span>
+                            <span class="text-gray-600">/funcionário/mês</span>
+                        </div>
+                    </div>
+                    <ul class="space-y-2 text-sm text-gray-700">
+                        <li>✓ Até 50 funcionários</li>
+                        <li>✓ Gestão de RH básica</li>
+                        <li>✓ Controle de ponto</li>
+                        <li>✓ Relatórios básicos</li>
+                        <li>✓ Suporte por email</li>
+                    </ul>
                 </div>
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-2">Data de Início</label>
-                    <input type="date" id="startDate" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent">
+
+                <div class="plan-card p-6 rounded-lg border-2 border-gray-200 bg-white" data-plan="professional">
+                    <div class="text-center mb-4">
+                        <h4 class="text-xl font-bold text-gray-800">PROFESSIONAL</h4>
+                        <p class="text-sm text-gray-600">Para empresas em crescimento</p>
+                        <div class="mt-2">
+                            <span class="text-3xl font-bold text-purple-600">€3.50</span>
+                            <span class="text-gray-600">/funcionário/mês</span>
+                        </div>
+                    </div>
+                    <ul class="space-y-2 text-sm text-gray-700">
+                        <li>✓ Até 200 funcionários</li>
+                        <li>✓ Gestão de RH completa</li>
+                        <li>✓ Controle de ponto avançado</li>
+                        <li>✓ Relatórios avançados</li>
+                        <li>✓ Integrações</li>
+                        <li>✓ Suporte prioritário</li>
+                    </ul>
+                </div>
+
+                <div class="plan-card p-6 rounded-lg border-2 border-gray-200 bg-white" data-plan="enterprise">
+                    <div class="text-center mb-4">
+                        <h4 class="text-xl font-bold text-gray-800">ENTERPRISE</h4>
+                        <p class="text-sm text-gray-600">Para grandes empresas</p>
+                        <div class="mt-2">
+                            <span class="text-3xl font-bold text-purple-600">€4.50</span>
+                            <span class="text-gray-600">/funcionário/mês</span>
+                        </div>
+                    </div>
+                    <ul class="space-y-2 text-sm text-gray-700">
+                        <li>✓ Funcionários ilimitados</li>
+                        <li>✓ Gestão de RH completa</li>
+                        <li>✓ Controle de ponto avançado</li>
+                        <li>✓ Relatórios personalizados</li>
+                        <li>✓ Integrações ilimitadas</li>
+                        <li>✓ Suporte dedicado</li>
+                        <li>✓ Account Manager</li>
+                    </ul>
                 </div>
             </div>
-        </div>
 
-        <!-- Resumo da Proposta -->
-        <div class="p-8 border-b bg-gray-50">
-            <h3 class="text-2xl font-semibold mb-4 text-gray-800">💰 Resumo da Proposta</h3>
-            <div id="proposalSummary" class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                <div class="bg-white p-4 rounded-lg border">
-                    <h4 class="font-semibold text-gray-800">Plano Selecionado</h4>
-                    <p id="selectedPlanName" class="text-purple-600 font-bold">Nenhum plano selecionado</p>
-                </div>
-                <div class="bg-white p-4 rounded-lg border">
-                    <h4 class="font-semibold text-gray-800">Preço por Funcionário</h4>
-                    <p id="pricePerEmployee" class="text-green-600 font-bold">€0.00/mês</p>
-                </div>
-                <div class="bg-white p-4 rounded-lg border">
-                    <h4 class="font-semibold text-gray-800">Total Mensal</h4>
-                    <p id="totalMonthly" class="text-blue-600 font-bold text-xl">€0.00/mês</p>
+            <!-- Resumo -->
+            <div class="bg-gray-50 p-6 rounded-lg mb-8">
+                <h3 class="text-xl font-semibold mb-4 text-gray-800">💰 Resumo da Proposta</h3>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <div class="bg-white p-4 rounded-lg border">
+                        <h4 class="font-semibold text-gray-800">Plano Selecionado</h4>
+                        <p id="selectedPlanName" class="text-purple-600 font-bold">Nenhum plano selecionado</p>
+                    </div>
+                    <div class="bg-white p-4 rounded-lg border">
+                        <h4 class="font-semibold text-gray-800">Preço por Funcionário</h4>
+                        <p id="pricePerEmployee" class="text-green-600 font-bold">€0.00/mês</p>
+                    </div>
+                    <div class="bg-white p-4 rounded-lg border">
+                        <h4 class="font-semibold text-gray-800">Total Mensal</h4>
+                        <p id="totalMonthly" class="text-blue-600 font-bold text-xl">€0.00/mês</p>
+                    </div>
                 </div>
             </div>
-        </div>
 
-        <!-- Botões de Ação -->
-        <div class="p-8 bg-gray-50">
+            <!-- Botões -->
             <div class="flex flex-col sm:flex-row gap-4 justify-center">
-                <button id="generateProposal" class="bg-purple-600 hover:bg-purple-700 text-white font-semibold py-3 px-8 rounded-lg transition duration-200 flex items-center justify-center">
-                    <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
-                    </svg>
-                    Gerar Proposta Factorial
+                <button id="generateProposal" class="bg-purple-600 hover:bg-purple-700 text-white font-semibold py-3 px-8 rounded-lg transition duration-200">
+                    📄 Gerar Proposta HTML
                 </button>
-                <button id="previewProposal" class="bg-green-600 hover:bg-green-700 text-white font-semibold py-3 px-8 rounded-lg transition duration-200 flex items-center justify-center">
-                    <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
-                    </svg>
-                    Visualizar Proposta
+                <button id="exportPDF" class="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-8 rounded-lg transition duration-200">
+                    📋 Exportar PDF
                 </button>
-                <button id="exportPDF" class="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-8 rounded-lg transition duration-200 flex items-center justify-center">
-                    <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
-                    </svg>
-                    Exportar PDF
-                </button>
-                <button id="transcribeMeeting" class="bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-3 px-8 rounded-lg transition duration-200 flex items-center justify-center">
-                    <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z"></path>
-                    </svg>
-                    Transcrever Reunião
+                <button id="transcribeMeeting" class="bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-3 px-8 rounded-lg transition duration-200">
+                    🎤 Transcrever Reunião
                 </button>
             </div>
         </div>
@@ -225,11 +169,7 @@
             <div class="bg-white rounded-lg max-w-6xl w-full max-h-[90vh] overflow-hidden">
                 <div class="flex justify-between items-center p-4 border-b">
                     <h3 class="text-xl font-semibold">Preview da Proposta Factorial</h3>
-                    <button id="closeModal" class="text-gray-500 hover:text-gray-700">
-                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
-                        </svg>
-                    </button>
+                    <button id="closeModal" class="text-gray-500 hover:text-gray-700">✕</button>
                 </div>
                 <div class="p-4 overflow-y-auto max-h-[calc(90vh-80px)]">
                     <div id="proposalPreview"></div>
@@ -239,199 +179,126 @@
     </div>
 
     <script>
-        // Variáveis globais
-        let plansData = {};
-        let selectedPlan = null;
-        const API_BASE = window.location.origin;
+        // Dados dos planos
+        const plans = {
+            starter: { name: "STARTER", price: 2.50, description: "Para pequenas empresas" },
+            professional: { name: "PROFESSIONAL", price: 3.50, description: "Para empresas em crescimento" },
+            enterprise: { name: "ENTERPRISE", price: 4.50, description: "Para grandes empresas" }
+        };
 
-        // Função para mostrar mensagens de status
+        let selectedPlan = null;
+
+        // Função para mostrar mensagens
         function showStatus(message, type = 'success') {
             const statusEl = document.getElementById('statusMessage');
             statusEl.textContent = message;
             statusEl.className = `status-message status-${type} show`;
-            
-            setTimeout(() => {
-                statusEl.classList.remove('show');
-            }, 3000);
+            setTimeout(() => statusEl.classList.remove('show'), 3000);
         }
 
-        // Carregar dados dos planos
-        async function loadPlans() {
-            try {
-                const response = await fetch(`${API_BASE}/api/plans`);
-                plansData = await response.json();
-                renderPlans();
-                showStatus('Planos carregados com sucesso!', 'success');
-            } catch (error) {
-                console.error('Erro ao carregar planos:', error);
-                showStatus('Erro ao carregar planos', 'error');
-            }
-        }
-
-        // Renderizar planos
-        function renderPlans() {
-            const container = document.getElementById('plansContainer');
-            container.innerHTML = '';
-
-            Object.entries(plansData).forEach(([key, plan]) => {
-                const planCard = document.createElement('div');
-                planCard.className = 'plan-card p-6 rounded-lg border-2 border-gray-200 bg-white';
-                planCard.dataset.plan = key;
-                
-                planCard.innerHTML = `
-                    <div class="text-center mb-4">
-                        <h4 class="text-xl font-bold text-gray-800">${plan.name}</h4>
-                        <p class="text-sm text-gray-600">${plan.description}</p>
-                        <div class="mt-2">
-                            <span class="text-3xl font-bold text-purple-600">€${plan.price.toFixed(2)}</span>
-                            <span class="text-gray-600">/funcionário/mês</span>
-                        </div>
-                    </div>
-                    <ul class="space-y-2 text-sm text-gray-700">
-                        ${plan.features.map(feature => `<li>✓ ${feature}</li>`).join('')}
-                    </ul>
-                `;
-                
-                planCard.addEventListener('click', () => selectPlan(key));
-                container.appendChild(planCard);
+        // Seleção de planos
+        document.querySelectorAll('.plan-card').forEach(card => {
+            card.addEventListener('click', function() {
+                document.querySelectorAll('.plan-card').forEach(c => c.classList.remove('selected'));
+                this.classList.add('selected');
+                selectedPlan = this.dataset.plan;
+                updateSummary();
+                showStatus(`Plano ${plans[selectedPlan].name} selecionado!`, 'success');
             });
-        }
+        });
 
-        // Selecionar plano
-        function selectPlan(planKey) {
-            document.querySelectorAll('.plan-card').forEach(card => {
-                card.classList.remove('selected');
-            });
-            
-            document.querySelector(`[data-plan="${planKey}"]`).classList.add('selected');
-            selectedPlan = planKey;
-            
-            updateProposalSummary();
-            showStatus(`Plano ${plansData[planKey].name} selecionado!`, 'success');
-        }
-
-        // Atualizar resumo da proposta
-        async function updateProposalSummary() {
+        // Atualizar resumo
+        function updateSummary() {
             if (!selectedPlan) return;
             
             const employeeCount = parseInt(document.getElementById('employeeCount').value) || 0;
             const discount = parseInt(document.getElementById('discount').value) || 0;
+            const plan = plans[selectedPlan];
             
-            try {
-                const response = await fetch(`${API_BASE}/api/calculate-price`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ plan: selectedPlan, employeeCount, discount })
-                });
-                
-                const data = await response.json();
-                
-                document.getElementById('selectedPlanName').textContent = data.plan.name;
-                document.getElementById('pricePerEmployee').textContent = `€${data.finalPrice.toFixed(2)}/mês`;
-                document.getElementById('totalMonthly').textContent = `€${data.totalMonthly.toFixed(2)}/mês`;
-                
-            } catch (error) {
-                console.error('Erro ao calcular preço:', error);
-            }
+            const finalPrice = plan.price * (1 - discount / 100);
+            const totalMonthly = finalPrice * employeeCount;
+            
+            document.getElementById('selectedPlanName').textContent = plan.name;
+            document.getElementById('pricePerEmployee').textContent = `€${finalPrice.toFixed(2)}/mês`;
+            document.getElementById('totalMonthly').textContent = `€${totalMonthly.toFixed(2)}/mês`;
         }
 
-        // Gerar proposta
-        async function generateProposal() {
+        // Gerar proposta HTML
+        function generateProposal() {
             const formData = getFormData();
-            
-            if (!validateForm(formData)) {
-                return;
-            }
+            if (!validateForm(formData)) return;
 
-            try {
-                showStatus('📄 Gerando proposta...', 'success');
-                
-                const response = await fetch(`${API_BASE}/api/generate-proposal`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(formData)
-                });
-                
-                const { html } = await response.json();
+            const proposalHTML = createProposalHTML(formData);
             
             // Criar e baixar arquivo
-                const blob = new Blob([html], { type: 'text/html;charset=utf-8' });
-                const url = URL.createObjectURL(blob);
-                const a = document.createElement('a');
-                a.href = url;
-                a.download = `proposta-factorial-${formData.companyName.toLowerCase().replace(/\s+/g, '-')}.html`;
-                document.body.appendChild(a);
-                a.click();
-                document.body.removeChild(a);
-                URL.revokeObjectURL(url);
-                
-                showStatus('✅ Proposta Factorial gerada com sucesso!', 'success');
-                
-            } catch (error) {
-                console.error('Erro ao gerar proposta:', error);
-                showStatus('❌ Erro ao gerar proposta. Tente novamente.', 'error');
-            }
-        }
-
-        // Preview da proposta
-        async function previewProposal() {
-            const formData = getFormData();
+            const blob = new Blob([proposalHTML], { type: 'text/html;charset=utf-8' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `proposta-factorial-${formData.companyName.toLowerCase().replace(/\s+/g, '-')}.html`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
             
-            if (!validateForm(formData)) {
-                return;
-            }
-
-            try {
-                const response = await fetch(`${API_BASE}/api/generate-proposal`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(formData)
-                });
-                
-                const { html } = await response.json();
-                document.getElementById('proposalPreview').innerHTML = html;
-            document.getElementById('previewModal').classList.remove('hidden');
-            
-            showStatus('Preview carregado!', 'success');
-                
-            } catch (error) {
-                console.error('Erro ao gerar preview:', error);
-                showStatus('❌ Erro ao gerar preview', 'error');
-            }
+            showStatus('✅ Proposta gerada com sucesso!', 'success');
         }
 
         // Exportar PDF
         async function exportPDF() {
             const formData = getFormData();
-            
-            if (!validateForm(formData)) {
-                return;
-            }
+            if (!validateForm(formData)) return;
 
             try {
                 showStatus('📄 Gerando PDF...', 'success');
                 
-                const response = await fetch(`${API_BASE}/api/generate-pdf`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ proposalData: formData })
+                const proposalHTML = createProposalHTML(formData);
+                const tempContainer = document.createElement('div');
+                tempContainer.innerHTML = proposalHTML;
+                tempContainer.style.position = 'absolute';
+                tempContainer.style.left = '-9999px';
+                tempContainer.style.top = '0';
+                tempContainer.style.width = '210mm';
+                tempContainer.style.backgroundColor = 'white';
+                document.body.appendChild(tempContainer);
+
+                await new Promise(resolve => setTimeout(resolve, 1000));
+
+                const canvas = await html2canvas(tempContainer, {
+                    scale: 2,
+                    useCORS: true,
+                    allowTaint: true,
+                    backgroundColor: '#ffffff',
+                    width: 794,
+                    height: tempContainer.scrollHeight
                 });
+
+                document.body.removeChild(tempContainer);
+
+                const { jsPDF } = window.jspdf;
+                const pdf = new jsPDF('p', 'mm', 'a4');
                 
-                if (response.ok) {
-                    const blob = await response.blob();
-                    const url = URL.createObjectURL(blob);
-                    const a = document.createElement('a');
-                    a.href = url;
-                    a.download = `proposta-factorial-${formData.companyName.toLowerCase().replace(/\s+/g, '-')}.pdf`;
-                    document.body.appendChild(a);
-                    a.click();
-                    document.body.removeChild(a);
-                    URL.revokeObjectURL(url);
-                    
-                    showStatus('✅ PDF gerado com sucesso!', 'success');
-                } else {
-                    throw new Error('Erro na resposta do servidor');
+                const imgData = canvas.toDataURL('image/png');
+                const imgWidth = 210;
+                const pageHeight = 295;
+                const imgHeight = (canvas.height * imgWidth) / canvas.width;
+                let heightLeft = imgHeight;
+                let position = 0;
+
+                pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
+                heightLeft -= pageHeight;
+
+                while (heightLeft >= 0) {
+                    position = heightLeft - imgHeight;
+                    pdf.addPage();
+                    pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
+                    heightLeft -= pageHeight;
                 }
+
+                const fileName = `proposta-factorial-${formData.companyName.toLowerCase().replace(/\s+/g, '-')}.pdf`;
+                pdf.save(fileName);
+                
+                showStatus('✅ PDF gerado com sucesso!', 'success');
                 
             } catch (error) {
                 console.error('Erro ao gerar PDF:', error);
@@ -443,16 +310,12 @@
         function getFormData() {
             return {
                 companyName: document.getElementById('companyName').value,
-                segment: document.getElementById('segment').value,
                 contactName: document.getElementById('contactName').value,
                 contactRole: document.getElementById('contactRole').value,
                 employeeCount: parseInt(document.getElementById('employeeCount').value) || 0,
                 region: document.getElementById('region').value,
-                plan: selectedPlan,
-                validity: document.getElementById('validity').value,
                 discount: parseInt(document.getElementById('discount').value) || 0,
-                notes: document.getElementById('notes').value,
-                startDate: document.getElementById('startDate').value
+                plan: selectedPlan
             };
         }
 
@@ -460,10 +323,6 @@
         function validateForm(data) {
             if (!data.companyName) {
                 showStatus('❌ Por favor, preencha o nome da empresa', 'error');
-                return false;
-            }
-            if (!data.segment) {
-                showStatus('❌ Por favor, selecione o segmento', 'error');
                 return false;
             }
             if (!selectedPlan) {
@@ -477,42 +336,113 @@
             return true;
         }
 
-        // Fechar modal
-        function closeModal() {
-            document.getElementById('previewModal').classList.add('hidden');
+        // Criar HTML da proposta
+        function createProposalHTML(data) {
+            const plan = plans[data.plan];
+            const finalPrice = plan.price * (1 - data.discount / 100);
+            const totalMonthly = finalPrice * data.employeeCount;
+            
+            return `
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Proposta Comercial Factorial - ${data.companyName}</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap');
+        body { font-family: 'Inter', sans-serif; }
+        .factorial-brand { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); }
+    </style>
+</head>
+<body class="bg-gray-50">
+    <div class="max-w-4xl mx-auto bg-white shadow-lg">
+        <!-- Header -->
+        <div class="factorial-brand text-white p-8">
+            <h1 class="text-4xl font-bold mb-2">FACTORIAL</h1>
+            <h2 class="text-2xl font-light">Proposta Comercial</h2>
+            <p class="text-purple-100 mt-2">${data.companyName}</p>
+        </div>
+
+        <!-- Dados do Cliente -->
+        <div class="p-8 border-b">
+            <h3 class="text-2xl font-semibold mb-4 text-gray-800">📋 Informações do Cliente</h3>
+            <div class="grid grid-cols-2 gap-4 text-gray-700">
+                <div><strong>Empresa:</strong> ${data.companyName}</div>
+                <div><strong>Contato:</strong> ${data.contactName}</div>
+                <div><strong>Cargo:</strong> ${data.contactRole}</div>
+                <div><strong>Funcionários:</strong> ${data.employeeCount}</div>
+                <div><strong>Região:</strong> ${data.region.toUpperCase()}</div>
+                <div><strong>Data:</strong> ${new Date().toLocaleDateString('pt-BR')}</div>
+            </div>
+        </div>
+
+        <!-- Plano Escolhido -->
+        <div class="p-8 border-b">
+            <h3 class="text-2xl font-semibold mb-4 text-gray-800">📦 Plano ${plan.name}</h3>
+            <div class="bg-purple-50 p-6 rounded-lg">
+                <div class="flex justify-between items-center mb-4">
+                    <div>
+                        <h4 class="text-xl font-bold text-gray-800">${plan.name}</h4>
+                        <p class="text-gray-600">${plan.description}</p>
+                    </div>
+                    <div class="text-right">
+                        ${data.discount > 0 ? `
+                            <div class="text-sm text-gray-500 line-through">€${plan.price.toFixed(2)}/funcionário/mês</div>
+                            <div class="text-3xl font-bold text-purple-600">€${finalPrice.toFixed(2)}/funcionário/mês</div>
+                            <div class="text-sm text-green-600">${data.discount}% de desconto</div>
+                        ` : `
+                            <div class="text-3xl font-bold text-purple-600">€${plan.price.toFixed(2)}/funcionário/mês</div>
+                        `}
+                        <div class="text-lg font-semibold text-gray-800 mt-2">
+                            Total: €${totalMonthly.toFixed(2)}/mês
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Próximos Passos -->
+        <div class="p-8 bg-gray-50">
+            <h3 class="text-2xl font-semibold mb-4 text-gray-800">🚀 Próximos Passos</h3>
+            <p class="text-gray-700 mb-6">Estamos prontos para transformar a gestão de RH da ${data.companyName} com a Factorial.</p>
+            
+            <div class="flex flex-col sm:flex-row gap-4">
+                <div class="flex-1">
+                    <h4 class="font-semibold text-gray-800 mb-2">Contato Comercial</h4>
+                    <p class="text-gray-700">Seu Account Manager entrará em contato em até 24h para agendar uma reunião de alinhamento.</p>
+                </div>
+                <div class="flex-1">
+                    <h4 class="font-semibold text-gray-800 mb-2">Implementação Inclusa</h4>
+                    <p class="text-gray-700">Iniciaremos a implementação em 4 semanas com suporte completo da nossa equipe.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <div class="p-8 factorial-brand text-white text-center">
+            <h4 class="text-xl font-bold mb-2">FACTORIAL</h4>
+            <p class="text-purple-100">Transformando a gestão de RH em empresas modernas</p>
+            <p class="text-sm text-purple-200 mt-2">Proposta gerada em ${new Date().toLocaleDateString('pt-BR')}</p>
+        </div>
+    </div>
+</body>
+</html>`;
         }
 
         // Event listeners
         document.addEventListener('DOMContentLoaded', function() {
-            console.log('🚀 Gerador Factorial carregado!');
-            
-            // Carregar planos
-            loadPlans();
-            
-            // Botões de ação
             document.getElementById('generateProposal').addEventListener('click', generateProposal);
-            document.getElementById('previewProposal').addEventListener('click', previewProposal);
             document.getElementById('exportPDF').addEventListener('click', exportPDF);
             document.getElementById('transcribeMeeting').addEventListener('click', function() {
-                window.open('/meeting-transcriber', '_blank');
+                window.open('meeting-transcriber.html', '_blank');
             });
-            document.getElementById('closeModal').addEventListener('click', closeModal);
-
-            // Fechar modal clicando fora
-            document.getElementById('previewModal').addEventListener('click', function(e) {
-                if (e.target === this) closeModal();
-            });
-
-            // Atualizar resumo quando campos mudarem
-            document.getElementById('employeeCount').addEventListener('input', updateProposalSummary);
-            document.getElementById('discount').addEventListener('input', updateProposalSummary);
             
-            // Definir data padrão
-            const today = new Date();
-            const nextMonth = new Date(today.getFullYear(), today.getMonth() + 1, today.getDate());
-            document.getElementById('startDate').value = nextMonth.toISOString().split('T')[0];
+            document.getElementById('employeeCount').addEventListener('input', updateSummary);
+            document.getElementById('discount').addEventListener('input', updateSummary);
             
-            showStatus('Gerador Factorial carregado com sucesso!', 'success');
+            showStatus('Sistema carregado com sucesso!', 'success');
         });
     </script>
 </body>

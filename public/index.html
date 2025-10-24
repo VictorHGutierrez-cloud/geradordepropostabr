@@ -3,854 +3,143 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Factorial - Gerador de Propostas Interno</title>
-    <!-- Load Tailwind CSS -->
+    <title>Factorial - Sistema de Propostas</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Load Chart.js for data visualization -->
-    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.3/dist/chart.umd.min.js"></script>
-    <!-- Lucide icons for professional visuals -->
-    <script src="https://unpkg.com/lucide@latest"></script>
-    <!-- jsPDF for PDF generation -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-    <!-- html2canvas for HTML to canvas conversion -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
-    
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap');
-        body {
-            font-family: 'Inter', sans-serif;
-            background-color: #f7f9fb;
-        }
-        .proposal-container {
-            max-width: 1200px;
-            margin: 0 auto;
-            background: white;
-            border-radius: 12px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-            overflow: hidden;
-        }
-        .header-title {
-            color: #2563EB;
-            font-weight: 800;
-        }
-        .plan-card {
-            transition: all 0.3s ease;
-            cursor: pointer;
-        }
-        .plan-card:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
-        }
-        .plan-card.selected {
-            border-color: #2563EB;
-            background-color: #EFF6FF;
-        }
-        .icon-list li {
-            display: flex;
-            align-items: center;
-            margin-bottom: 0.75rem;
-            font-size: 1.125rem;
-        }
-        .icon-list li svg {
-            margin-right: 0.75rem;
-            flex-shrink: 0;
-        }
-        .status-message {
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            padding: 15px 20px;
-            border-radius: 8px;
-            color: white;
-            font-weight: bold;
-            z-index: 1000;
-            opacity: 0;
-            transition: opacity 0.3s ease;
-        }
-        .status-message.show {
-            opacity: 1;
-        }
-        .status-success {
-            background-color: #10B981;
-        }
-        .status-error {
-            background-color: #EF4444;
-        }
-        .factorial-brand {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        }
+        body { font-family: 'Inter', sans-serif; background-color: #f7f9fb; }
+        .factorial-brand { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); }
+        .card { transition: all 0.3s ease; }
+        .card:hover { transform: translateY(-4px); box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1); }
     </style>
 </head>
-<body class="p-6">
-    <!-- Status Messages -->
-    <div id="statusMessage" class="status-message"></div>
+<body class="min-h-screen">
+    <!-- Header -->
+    <div class="factorial-brand text-white py-16">
+        <div class="max-w-6xl mx-auto px-6 text-center">
+            <h1 class="text-5xl font-bold mb-4">FACTORIAL</h1>
+            <h2 class="text-2xl font-light mb-2">Sistema de Geração de Propostas</h2>
+            <p class="text-purple-100 text-lg">Ferramenta interna para equipe de vendas</p>
+        </div>
+    </div>
 
-    <div class="proposal-container">
-        <!-- Header -->
-        <div class="factorial-brand text-white p-8">
-            <h1 class="text-4xl font-bold mb-2">FACTORIAL</h1>
-            <h2 class="text-2xl font-light">Gerador de Propostas Interno</h2>
-            <p class="text-purple-100 mt-2">Ferramenta exclusiva para equipe de vendas</p>
+    <!-- Main Content -->
+    <div class="max-w-6xl mx-auto px-6 py-16">
+        <div class="text-center mb-12">
+            <h3 class="text-3xl font-bold text-gray-800 mb-4">Escolha uma Ferramenta</h3>
+            <p class="text-gray-600 text-lg">Sistema completo para automatizar o processo de vendas</p>
         </div>
 
-        <!-- Formulário de Dados do Cliente -->
-        <div class="p-8 border-b">
-            <h3 class="text-2xl font-semibold mb-6 text-gray-800">📋 Dados do Cliente</h3>
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-2">Nome da Empresa</label>
-                    <input type="text" id="companyName" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent" placeholder="Ex: TechCorp, StartupXYZ">
+        <!-- Cards -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            <!-- Transcritor -->
+            <div class="card bg-white rounded-xl shadow-lg p-8 text-center">
+                <div class="w-16 h-16 bg-indigo-100 rounded-full flex items-center justify-center mx-auto mb-6">
+                    <span class="text-2xl">🎤</span>
                 </div>
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-2">Segmento</label>
-                    <select id="segment" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent">
-                        <option value="">Selecione o segmento</option>
-                        <option value="startups">Startups (1-50 funcionários)</option>
-                        <option value="pequenas">Pequenas Empresas (51-200 funcionários)</option>
-                        <option value="medias">Médias Empresas (201-1000 funcionários)</option>
-                        <option value="grandes">Grandes Empresas (1000+ funcionários)</option>
-                    </select>
+                <h4 class="text-xl font-bold text-gray-800 mb-4">Transcritor de Reuniões</h4>
+                <p class="text-gray-600 mb-6">Cole sua transcrição e extraia automaticamente os dados do cliente</p>
+                <a href="meeting-transcriber.html" class="bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-3 px-6 rounded-lg transition duration-200 inline-block">
+                    Usar Transcritor
+                </a>
+            </div>
+
+            <!-- Gerador de Propostas -->
+            <div class="card bg-white rounded-xl shadow-lg p-8 text-center">
+                <div class="w-16 h-16 bg-purple-100 rounded-full flex items-center justify-center mx-auto mb-6">
+                    <span class="text-2xl">📄</span>
                 </div>
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-2">Contato Principal</label>
-                    <input type="text" id="contactName" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent" placeholder="Nome do tomador de decisão">
+                <h4 class="text-xl font-bold text-gray-800 mb-4">Gerador de Propostas</h4>
+                <p class="text-gray-600 mb-6">Crie propostas profissionais da Factorial com preços automáticos</p>
+                <a href="proposal-generator.html" class="bg-purple-600 hover:bg-purple-700 text-white font-semibold py-3 px-6 rounded-lg transition duration-200 inline-block">
+                    Gerar Proposta
+                </a>
+            </div>
+
+            <!-- Gerenciador de Imagens -->
+            <div class="card bg-white rounded-xl shadow-lg p-8 text-center">
+                <div class="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-6">
+                    <span class="text-2xl">🖼️</span>
                 </div>
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-2">Cargo</label>
-                    <input type="text" id="contactRole" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent" placeholder="Ex: CEO, CTO, HR Manager, Finance Director">
+                <h4 class="text-xl font-bold text-gray-800 mb-4">Gerenciador de Imagens</h4>
+                <p class="text-gray-600 mb-6">Organize e gerencie imagens para suas propostas</p>
+                <a href="image-manager.html" class="bg-green-600 hover:bg-green-700 text-white font-semibold py-3 px-6 rounded-lg transition duration-200 inline-block">
+                    Gerenciar Imagens
+                </a>
+            </div>
+        </div>
+
+        <!-- Fluxo de Trabalho -->
+        <div class="mt-16 bg-white rounded-xl shadow-lg p-8">
+            <h3 class="text-2xl font-bold text-gray-800 mb-8 text-center">🔄 Fluxo de Trabalho</h3>
+            
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div class="text-center">
+                    <div class="w-12 h-12 bg-indigo-600 text-white rounded-full flex items-center justify-center mx-auto mb-4 text-xl font-bold">1</div>
+                    <h4 class="text-lg font-semibold text-gray-800 mb-2">Transcrever Reunião</h4>
+                    <p class="text-gray-600">Cole a transcrição da reunião e extraia os dados do cliente automaticamente</p>
                 </div>
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-2">Número de Funcionários</label>
-                    <input type="number" id="employeeCount" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent" placeholder="Ex: 150">
+                
+                <div class="text-center">
+                    <div class="w-12 h-12 bg-purple-600 text-white rounded-full flex items-center justify-center mx-auto mb-4 text-xl font-bold">2</div>
+                    <h4 class="text-lg font-semibold text-gray-800 mb-2">Gerar Proposta</h4>
+                    <p class="text-gray-600">Crie uma proposta profissional com preços calculados automaticamente</p>
                 </div>
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-2">Região</label>
-                    <select id="region" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent">
-                        <option value="">Selecione a região</option>
-                        <option value="brasil">Brasil</option>
-                        <option value="mexico">México</option>
-                        <option value="espanha">Espanha</option>
-                        <option value="franca">França</option>
-                        <option value="outros">Outros</option>
-                    </select>
+                
+                <div class="text-center">
+                    <div class="w-12 h-12 bg-green-600 text-white rounded-full flex items-center justify-center mx-auto mb-4 text-xl font-bold">3</div>
+                    <h4 class="text-lg font-semibold text-gray-800 mb-2">Exportar PDF</h4>
+                    <p class="text-gray-600">Baixe a proposta em PDF e envie para o cliente</p>
                 </div>
             </div>
         </div>
 
-        <!-- Seleção de Plano Factorial -->
-        <div class="p-8 border-b">
-            <h3 class="text-2xl font-semibold mb-6 text-gray-800">🎯 Escolha o Plano Factorial</h3>
+        <!-- Planos Factorial -->
+        <div class="mt-16 bg-white rounded-xl shadow-lg p-8">
+            <h3 class="text-2xl font-bold text-gray-800 mb-8 text-center">💰 Planos Factorial</h3>
+            
             <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                <!-- Plano Starter -->
-                <div class="plan-card p-6 rounded-lg border-2 border-gray-200 bg-white" data-plan="starter">
-                    <div class="text-center mb-4">
-                        <h4 class="text-xl font-bold text-gray-800">STARTER</h4>
-                        <p class="text-sm text-gray-600">Para pequenas empresas</p>
-                        <div class="mt-2">
-                            <span class="text-3xl font-bold text-purple-600">€2.50</span>
-                            <span class="text-gray-600">/funcionário/mês</span>
-                        </div>
-                    </div>
-                    <ul class="space-y-2 text-sm text-gray-700">
+                <div class="bg-purple-50 p-6 rounded-lg border-2 border-purple-200">
+                    <h4 class="text-xl font-bold text-purple-800 mb-2">STARTER</h4>
+                    <p class="text-purple-600 font-bold text-2xl mb-4">€2.50/funcionário/mês</p>
+                    <ul class="text-gray-700 space-y-2">
                         <li>✓ Até 50 funcionários</li>
                         <li>✓ Gestão de RH básica</li>
                         <li>✓ Controle de ponto</li>
                         <li>✓ Relatórios básicos</li>
-                        <li>✓ Suporte por email</li>
                     </ul>
                 </div>
-
-                <!-- Plano Professional -->
-                <div class="plan-card p-6 rounded-lg border-2 border-gray-200 bg-white" data-plan="professional">
-                    <div class="text-center mb-4">
-                        <h4 class="text-xl font-bold text-gray-800">PROFESSIONAL</h4>
-                        <p class="text-sm text-gray-600">Para empresas em crescimento</p>
-                        <div class="mt-2">
-                            <span class="text-3xl font-bold text-purple-600">€3.50</span>
-                            <span class="text-gray-600">/funcionário/mês</span>
-                        </div>
-                    </div>
-                    <ul class="space-y-2 text-sm text-gray-700">
+                
+                <div class="bg-blue-50 p-6 rounded-lg border-2 border-blue-200">
+                    <h4 class="text-xl font-bold text-blue-800 mb-2">PROFESSIONAL</h4>
+                    <p class="text-blue-600 font-bold text-2xl mb-4">€3.50/funcionário/mês</p>
+                    <ul class="text-gray-700 space-y-2">
                         <li>✓ Até 200 funcionários</li>
                         <li>✓ Gestão de RH completa</li>
-                        <li>✓ Controle de ponto avançado</li>
                         <li>✓ Relatórios avançados</li>
                         <li>✓ Integrações</li>
-                        <li>✓ Suporte prioritário</li>
                     </ul>
                 </div>
-
-                <!-- Plano Enterprise -->
-                <div class="plan-card p-6 rounded-lg border-2 border-gray-200 bg-white" data-plan="enterprise">
-                    <div class="text-center mb-4">
-                        <h4 class="text-xl font-bold text-gray-800">ENTERPRISE</h4>
-                        <p class="text-sm text-gray-600">Para grandes empresas</p>
-                        <div class="mt-2">
-                            <span class="text-3xl font-bold text-purple-600">€4.50</span>
-                            <span class="text-gray-600">/funcionário/mês</span>
-                        </div>
-                    </div>
-                    <ul class="space-y-2 text-sm text-gray-700">
+                
+                <div class="bg-green-50 p-6 rounded-lg border-2 border-green-200">
+                    <h4 class="text-xl font-bold text-green-800 mb-2">ENTERPRISE</h4>
+                    <p class="text-green-600 font-bold text-2xl mb-4">€4.50/funcionário/mês</p>
+                    <ul class="text-gray-700 space-y-2">
                         <li>✓ Funcionários ilimitados</li>
-                        <li>✓ Gestão de RH completa</li>
-                        <li>✓ Controle de ponto avançado</li>
                         <li>✓ Relatórios personalizados</li>
                         <li>✓ Integrações ilimitadas</li>
-                        <li>✓ Suporte dedicado</li>
                         <li>✓ Account Manager</li>
                     </ul>
                 </div>
             </div>
         </div>
-
-        <!-- Configurações Adicionais -->
-        <div class="p-8 border-b">
-            <h3 class="text-2xl font-semibold mb-6 text-gray-800">⚙️ Configurações da Proposta</h3>
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-2">Validade da Proposta</label>
-                    <select id="validity" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent">
-                        <option value="30">30 dias</option>
-                        <option value="60">60 dias</option>
-                        <option value="90">90 dias</option>
-                    </select>
-                </div>
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-2">Desconto Especial (%)</label>
-                    <input type="number" id="discount" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent" placeholder="0" min="0" max="50">
-                </div>
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-2">Observações Especiais</label>
-                    <textarea id="notes" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent" rows="3" placeholder="Observações específicas para este cliente..."></textarea>
-                </div>
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-2">Data de Início</label>
-                    <input type="date" id="startDate" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent">
-                </div>
-            </div>
-        </div>
-
-        <!-- Botões de Ação -->
-        <div class="p-8 bg-gray-50">
-            <div class="flex flex-col sm:flex-row gap-4 justify-center">
-                <button id="generateProposal" class="bg-purple-600 hover:bg-purple-700 text-white font-semibold py-3 px-8 rounded-lg transition duration-200 flex items-center justify-center">
-                    <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
-                    </svg>
-                    Gerar Proposta Factorial
-                </button>
-                <button id="previewProposal" class="bg-green-600 hover:bg-green-700 text-white font-semibold py-3 px-8 rounded-lg transition duration-200 flex items-center justify-center">
-                    <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
-                    </svg>
-                    Visualizar Proposta
-                </button>
-                <button id="exportPDF" class="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-8 rounded-lg transition duration-200 flex items-center justify-center">
-                    <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
-                    </svg>
-                    Exportar PDF
-                </button>
-                <button id="transcribeMeeting" class="bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-3 px-8 rounded-lg transition duration-200 flex items-center justify-center">
-                    <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z"></path>
-                    </svg>
-                    Transcrever Reunião
-                </button>
-            </div>
-        </div>
     </div>
 
-    <!-- Modal de Preview -->
-    <div id="previewModal" class="fixed inset-0 bg-black bg-opacity-50 hidden z-50">
-        <div class="flex items-center justify-center min-h-screen p-4">
-            <div class="bg-white rounded-lg max-w-6xl w-full max-h-[90vh] overflow-hidden">
-                <div class="flex justify-between items-center p-4 border-b">
-                    <h3 class="text-xl font-semibold">Preview da Proposta Factorial</h3>
-                    <button id="closeModal" class="text-gray-500 hover:text-gray-700">
-                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
-                        </svg>
-                    </button>
-                </div>
-                <div class="p-4 overflow-y-auto max-h-[calc(90vh-80px)]">
-                    <div id="proposalPreview"></div>
-                </div>
-            </div>
+    <!-- Footer -->
+    <div class="factorial-brand text-white py-8">
+        <div class="max-w-6xl mx-auto px-6 text-center">
+            <p class="text-purple-100">Sistema interno da Factorial - Desenvolvido para otimizar o processo de vendas</p>
         </div>
     </div>
-
-    <script>
-        // Função para mostrar mensagens de status
-        function showStatus(message, type = 'success') {
-            const statusEl = document.getElementById('statusMessage');
-            statusEl.textContent = message;
-            statusEl.className = `status-message status-${type} show`;
-            
-            setTimeout(() => {
-                statusEl.classList.remove('show');
-            }, 3000);
-        }
-
-        // Dados dos planos Factorial
-        const planData = {
-            starter: {
-                name: "STARTER",
-                price: 2.50,
-                description: "Para pequenas empresas",
-                features: [
-                    "Até 50 funcionários",
-                    "Gestão de RH básica",
-                    "Controle de ponto",
-                    "Relatórios básicos",
-                    "Suporte por email",
-                    "Setup e onboarding incluído"
-                ],
-                target: "Pequenas Empresas"
-            },
-            professional: {
-                name: "PROFESSIONAL", 
-                price: 3.50,
-                description: "Para empresas em crescimento",
-                features: [
-                    "Até 200 funcionários",
-                    "Gestão de RH completa",
-                    "Controle de ponto avançado",
-                    "Relatórios avançados",
-                    "Integrações",
-                    "Suporte prioritário",
-                    "Consultoria de implementação"
-                ],
-                target: "Empresas em Crescimento"
-            },
-            enterprise: {
-                name: "ENTERPRISE",
-                price: 4.50,
-                description: "Para grandes empresas",
-                features: [
-                    "Funcionários ilimitados",
-                    "Gestão de RH completa",
-                    "Controle de ponto avançado",
-                    "Relatórios personalizados",
-                    "Integrações ilimitadas",
-                    "Suporte dedicado",
-                    "Account Manager",
-                    "SLA garantido 99.9%"
-                ],
-                target: "Grandes Empresas"
-            }
-        };
-
-        // Dados por segmento Factorial
-        const segmentData = {
-            "startups": {
-                name: "Startups (1-50 funcionários)",
-                valueProp: "Simplifique a gestão de RH desde o início com uma solução completa e escalável",
-                painPoints: [
-                    "Processos manuais de RH consomem muito tempo",
-                    "Falta de visibilidade sobre performance da equipe",
-                    "Dificuldade para controlar custos de folha de pagamento"
-                ],
-                benefits: [
-                    "Automação de 80% dos processos de RH",
-                    "Economia de 10h/semana em tarefas administrativas",
-                    "Controle total sobre custos e performance"
-                ]
-            },
-            "pequenas": {
-                name: "Pequenas Empresas (51-200 funcionários)",
-                valueProp: "Escale sua gestão de RH com processos automatizados e relatórios avançados",
-                painPoints: [
-                    "Crescimento rápido sem estrutura de RH adequada",
-                    "Compliance e legalidade complexos",
-                    "Falta de dados para tomada de decisão"
-                ],
-                benefits: [
-                    "Compliance automático com legislação",
-                    "Relatórios em tempo real para decisões estratégicas",
-                    "Redução de 60% no tempo de processos"
-                ]
-            },
-            "medias": {
-                name: "Médias Empresas (201-1000 funcionários)",
-                valueProp: "Otimize operações de RH com integrações avançadas e analytics",
-                painPoints: [
-                    "Múltiplos sistemas desconectados",
-                    "Falta de visibilidade entre departamentos",
-                    "Custos operacionais elevados"
-                ],
-                benefits: [
-                    "Integração completa com sistemas existentes",
-                    "Visibilidade 360° da organização",
-                    "Redução de 40% nos custos operacionais"
-                ]
-            },
-            "grandes": {
-                name: "Grandes Empresas (1000+ funcionários)",
-                valueProp: "Transforme RH em centro estratégico com IA e analytics avançados",
-                painPoints: [
-                    "Complexidade operacional extrema",
-                    "Falta de insights estratégicos",
-                    "Necessidade de personalização"
-                ],
-                benefits: [
-                    "IA para insights estratégicos",
-                    "Personalização completa",
-                    "ROI de 300%+ em 12 meses"
-                ]
-            }
-        };
-
-        let selectedPlan = null;
-
-        // Event listeners
-        document.addEventListener('DOMContentLoaded', function() {
-            console.log('🚀 Gerador Factorial carregado!');
-            
-            // Seleção de planos
-            document.querySelectorAll('.plan-card').forEach(card => {
-                card.addEventListener('click', function() {
-                    document.querySelectorAll('.plan-card').forEach(c => c.classList.remove('selected'));
-                    this.classList.add('selected');
-                    selectedPlan = this.dataset.plan;
-                    console.log('Plano selecionado:', selectedPlan);
-                    showStatus(`Plano ${planData[selectedPlan].name} selecionado!`, 'success');
-                });
-            });
-
-            // Botões de ação
-            document.getElementById('generateProposal').addEventListener('click', function() {
-                console.log('Botão Gerar Proposta clicado!');
-                generateProposal();
-            });
-            
-            document.getElementById('previewProposal').addEventListener('click', function() {
-                console.log('Botão Preview clicado!');
-                previewProposal();
-            });
-            
-            document.getElementById('exportPDF').addEventListener('click', function() {
-                console.log('Botão PDF clicado!');
-                exportPDF();
-            });
-            
-            document.getElementById('transcribeMeeting').addEventListener('click', function() {
-                console.log('Botão Transcrever Reunião clicado!');
-                window.open('meeting-transcriber.html', '_blank');
-            });
-            
-            document.getElementById('closeModal').addEventListener('click', closeModal);
-
-            // Fechar modal clicando fora
-            document.getElementById('previewModal').addEventListener('click', function(e) {
-                if (e.target === this) closeModal();
-            });
-
-            // Definir data padrão
-            const today = new Date();
-            const nextMonth = new Date(today.getFullYear(), today.getMonth() + 1, today.getDate());
-            document.getElementById('startDate').value = nextMonth.toISOString().split('T')[0];
-            
-            // Load meeting data if available
-            loadMeetingData();
-            
-            showStatus('Gerador Factorial carregado com sucesso!', 'success');
-        });
-
-        function generateProposal() {
-            console.log('Iniciando geração de proposta...');
-            const formData = getFormData();
-            
-            if (!validateForm(formData)) {
-                console.log('Validação falhou');
-                return;
-            }
-
-            console.log('Dados do formulário:', formData);
-            console.log('Plano selecionado:', selectedPlan);
-
-            const proposalHTML = createProposalHTML(formData);
-            
-            // Criar e baixar arquivo
-            try {
-                const blob = new Blob([proposalHTML], { type: 'text/html;charset=utf-8' });
-                const url = URL.createObjectURL(blob);
-                const a = document.createElement('a');
-                a.href = url;
-                a.download = `proposta-factorial-${formData.companyName.toLowerCase().replace(/\s+/g, '-')}.html`;
-                document.body.appendChild(a);
-                a.click();
-                document.body.removeChild(a);
-                URL.revokeObjectURL(url);
-                
-                showStatus('✅ Proposta Factorial gerada com sucesso!', 'success');
-                console.log('Proposta gerada e baixada!');
-            } catch (error) {
-                console.error('Erro ao gerar proposta:', error);
-                showStatus('❌ Erro ao gerar proposta. Tente novamente.', 'error');
-            }
-        }
-
-        function previewProposal() {
-            console.log('Iniciando preview...');
-            const formData = getFormData();
-            
-            if (!validateForm(formData)) {
-                console.log('Validação falhou no preview');
-                return;
-            }
-
-            const proposalHTML = createProposalHTML(formData);
-            document.getElementById('proposalPreview').innerHTML = proposalHTML;
-            document.getElementById('previewModal').classList.remove('hidden');
-            
-            showStatus('Preview carregado!', 'success');
-            console.log('Preview carregado com sucesso!');
-        }
-
-        async function exportPDF() {
-            console.log('Iniciando exportação para PDF...');
-            const formData = getFormData();
-            
-            if (!validateForm(formData)) {
-                console.log('Validação falhou no PDF');
-                return;
-            }
-
-            try {
-                showStatus('📄 Gerando PDF...', 'success');
-                
-                // Create proposal HTML
-                const proposalHTML = createProposalHTML(formData);
-                
-                // Create a temporary container for the proposal
-                const tempContainer = document.createElement('div');
-                tempContainer.innerHTML = proposalHTML;
-                tempContainer.style.position = 'absolute';
-                tempContainer.style.left = '-9999px';
-                tempContainer.style.top = '0';
-                tempContainer.style.width = '210mm'; // A4 width
-                tempContainer.style.backgroundColor = 'white';
-                document.body.appendChild(tempContainer);
-
-                // Wait for images to load
-                await new Promise(resolve => setTimeout(resolve, 1000));
-
-                // Convert to canvas
-                const canvas = await html2canvas(tempContainer, {
-                    scale: 2,
-                    useCORS: true,
-                    allowTaint: true,
-                    backgroundColor: '#ffffff',
-                    width: 794, // A4 width in pixels at 96 DPI
-                    height: tempContainer.scrollHeight
-                });
-
-                // Remove temporary container
-                document.body.removeChild(tempContainer);
-
-                // Create PDF
-                const { jsPDF } = window.jspdf;
-                const pdf = new jsPDF('p', 'mm', 'a4');
-                
-                const imgData = canvas.toDataURL('image/png');
-                const imgWidth = 210; // A4 width in mm
-                const pageHeight = 295; // A4 height in mm
-                const imgHeight = (canvas.height * imgWidth) / canvas.width;
-                let heightLeft = imgHeight;
-
-                let position = 0;
-
-                // Add first page
-                pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
-                heightLeft -= pageHeight;
-
-                // Add additional pages if needed
-                while (heightLeft >= 0) {
-                    position = heightLeft - imgHeight;
-                    pdf.addPage();
-                    pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
-                    heightLeft -= pageHeight;
-                }
-
-                // Save PDF
-                const fileName = `proposta-factorial-${formData.companyName.toLowerCase().replace(/\s+/g, '-')}.pdf`;
-                pdf.save(fileName);
-                
-                showStatus('✅ PDF gerado com sucesso!', 'success');
-                console.log('PDF gerado e baixado!');
-                
-            } catch (error) {
-                console.error('Erro ao gerar PDF:', error);
-                showStatus('❌ Erro ao gerar PDF. Tente novamente.', 'error');
-            }
-        }
-
-        function closeModal() {
-            document.getElementById('previewModal').classList.add('hidden');
-        }
-
-        function getFormData() {
-            return {
-                companyName: document.getElementById('companyName').value,
-                segment: document.getElementById('segment').value,
-                contactName: document.getElementById('contactName').value,
-                contactRole: document.getElementById('contactRole').value,
-                employeeCount: document.getElementById('employeeCount').value,
-                region: document.getElementById('region').value,
-                validity: document.getElementById('validity').value,
-                discount: document.getElementById('discount').value || 0,
-                notes: document.getElementById('notes').value,
-                startDate: document.getElementById('startDate').value
-            };
-        }
-
-        function validateForm(data) {
-            if (!data.companyName) {
-                showStatus('❌ Por favor, preencha o nome da empresa', 'error');
-                return false;
-            }
-            if (!data.segment) {
-                showStatus('❌ Por favor, selecione o segmento', 'error');
-                return false;
-            }
-            if (!selectedPlan) {
-                showStatus('❌ Por favor, selecione um plano', 'error');
-                return false;
-            }
-            return true;
-        }
-
-        function createProposalHTML(data) {
-            const plan = planData[selectedPlan];
-            const segment = segmentData[data.segment];
-            const finalPrice = plan.price * (1 - data.discount / 100);
-            const totalMonthly = finalPrice * data.employeeCount;
-            
-            return `
-<!DOCTYPE html>
-<html lang="pt-BR">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Proposta Comercial Factorial - ${data.companyName}</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://unpkg.com/lucide@latest"></script>
-    <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap');
-        body { font-family: 'Inter', sans-serif; }
-        .header-title { color: #2563EB; font-weight: 800; }
-        .icon-list li { display: flex; align-items: center; margin-bottom: 0.75rem; }
-        .icon-list li svg { margin-right: 0.75rem; flex-shrink: 0; }
-        .factorial-brand { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); }
-    </style>
-</head>
-<body class="bg-gray-50">
-    <div class="max-w-4xl mx-auto bg-white shadow-lg">
-        <!-- Header -->
-        <div class="factorial-brand text-white p-8">
-            <h1 class="text-4xl font-bold mb-2">FACTORIAL</h1>
-            <h2 class="text-2xl font-light">Proposta Comercial</h2>
-            <p class="text-purple-100 mt-2">${data.companyName} - ${segment.name}</p>
-        </div>
-
-        <!-- Dados do Cliente -->
-        <div class="p-8 border-b">
-            <h3 class="text-2xl font-semibold mb-4 text-gray-800">📋 Informações do Cliente</h3>
-            <div class="grid grid-cols-2 gap-4 text-gray-700">
-                <div><strong>Empresa:</strong> ${data.companyName}</div>
-                <div><strong>Segmento:</strong> ${segment.name}</div>
-                <div><strong>Contato:</strong> ${data.contactName}</div>
-                <div><strong>Cargo:</strong> ${data.contactRole}</div>
-                <div><strong>Funcionários:</strong> ${data.employeeCount}</div>
-                <div><strong>Região:</strong> ${data.region.toUpperCase()}</div>
-            </div>
-        </div>
-
-        <!-- Proposta de Valor -->
-        <div class="p-8 border-b">
-            <h3 class="text-2xl font-semibold mb-4 text-gray-800">🎯 Nossa Proposta de Valor</h3>
-            <p class="text-lg text-gray-700 mb-6">${segment.valueProp}</p>
-            
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div>
-                    <h4 class="text-lg font-semibold text-red-600 mb-3">❌ Desafios Atuais</h4>
-                    <ul class="space-y-2 text-gray-700">
-                        ${segment.painPoints.map(point => `<li>• ${point}</li>`).join('')}
-                    </ul>
-                </div>
-                <div>
-                    <h4 class="text-lg font-semibold text-green-600 mb-3">✅ Benefícios com Factorial</h4>
-                    <ul class="space-y-2 text-gray-700">
-                        ${segment.benefits.map(benefit => `<li>• ${benefit}</li>`).join('')}
-                    </ul>
-                </div>
-            </div>
-        </div>
-
-        <!-- Plano Escolhido -->
-        <div class="p-8 border-b">
-            <h3 class="text-2xl font-semibold mb-4 text-gray-800">📦 Plano ${plan.name}</h3>
-            <div class="bg-purple-50 p-6 rounded-lg">
-                <div class="flex justify-between items-center mb-4">
-                    <div>
-                        <h4 class="text-xl font-bold text-gray-800">${plan.name}</h4>
-                        <p class="text-gray-600">${plan.description}</p>
-                    </div>
-                    <div class="text-right">
-                        ${data.discount > 0 ? `
-                            <div class="text-sm text-gray-500 line-through">€${plan.price.toFixed(2)}/funcionário/mês</div>
-                            <div class="text-3xl font-bold text-purple-600">€${finalPrice.toFixed(2)}/funcionário/mês</div>
-                            <div class="text-sm text-green-600">${data.discount}% de desconto</div>
-                        ` : `
-                            <div class="text-3xl font-bold text-purple-600">€${plan.price.toFixed(2)}/funcionário/mês</div>
-                        `}
-                        <div class="text-lg font-semibold text-gray-800 mt-2">
-                            Total: €${totalMonthly.toFixed(2)}/mês
-                        </div>
-                    </div>
-                </div>
-                
-                <h5 class="font-semibold text-gray-800 mb-3">Incluído no plano:</h5>
-                <ul class="grid grid-cols-1 md:grid-cols-2 gap-2 text-gray-700">
-                    ${plan.features.map(feature => `<li>✓ ${feature}</li>`).join('')}
-                </ul>
-            </div>
-        </div>
-
-        <!-- Cronograma de Implementação -->
-        <div class="p-8 border-b">
-            <h3 class="text-2xl font-semibold mb-4 text-gray-800">📅 Cronograma de Implementação</h3>
-            <div class="grid grid-cols-4 gap-4">
-                <div class="text-center p-4 bg-purple-50 rounded-lg">
-                    <div class="w-10 h-10 bg-purple-500 rounded-full flex items-center justify-center mx-auto mb-2">
-                        <span class="text-white font-bold">1</span>
-                    </div>
-                    <h4 class="font-semibold text-purple-800">Semana 1</h4>
-                    <p class="text-sm text-gray-600">Setup e Configuração</p>
-                </div>
-                <div class="text-center p-4 bg-green-50 rounded-lg">
-                    <div class="w-10 h-10 bg-green-500 rounded-full flex items-center justify-center mx-auto mb-2">
-                        <span class="text-white font-bold">2</span>
-                    </div>
-                    <h4 class="font-semibold text-green-800">Semana 2</h4>
-                    <p class="text-sm text-gray-600">Migração de Dados</p>
-                </div>
-                <div class="text-center p-4 bg-yellow-50 rounded-lg">
-                    <div class="w-10 h-10 bg-yellow-500 rounded-full flex items-center justify-center mx-auto mb-2">
-                        <span class="text-white font-bold">3</span>
-                    </div>
-                    <h4 class="font-semibold text-yellow-800">Semana 3</h4>
-                    <p class="text-sm text-gray-600">Treinamento da Equipe</p>
-                </div>
-                <div class="text-center p-4 bg-blue-50 rounded-lg">
-                    <div class="w-10 h-10 bg-blue-500 rounded-full flex items-center justify-center mx-auto mb-2">
-                        <span class="text-white font-bold">4</span>
-                    </div>
-                    <h4 class="font-semibold text-blue-800">Semana 4</h4>
-                    <p class="text-sm text-gray-600">Go-Live</p>
-                </div>
-            </div>
-        </div>
-
-        <!-- Termos e Condições -->
-        <div class="p-8 border-b">
-            <h3 class="text-2xl font-semibold mb-4 text-gray-800">📋 Termos e Condições</h3>
-            <div class="grid grid-cols-2 gap-6 text-gray-700">
-                <div>
-                    <h4 class="font-semibold mb-2">Validade da Proposta</h4>
-                    <p>${data.validity} dias a partir da data de envio</p>
-                </div>
-                <div>
-                    <h4 class="font-semibold mb-2">Data de Início</h4>
-                    <p>${new Date(data.startDate).toLocaleDateString('pt-BR')}</p>
-                </div>
-                <div>
-                    <h4 class="font-semibold mb-2">Forma de Pagamento</h4>
-                    <p>Mensal, antecipado</p>
-                </div>
-                <div>
-                    <h4 class="font-semibold mb-2">Contrato</h4>
-                    <p>Mínimo 12 meses</p>
-                </div>
-            </div>
-        </div>
-
-        <!-- Observações -->
-        ${data.notes ? `
-        <div class="p-8 border-b">
-            <h3 class="text-2xl font-semibold mb-4 text-gray-800">📝 Observações Especiais</h3>
-            <p class="text-gray-700">${data.notes}</p>
-        </div>
-        ` : ''}
-
-        <!-- Call to Action -->
-        <div class="p-8 bg-gray-50">
-            <h3 class="text-2xl font-semibold mb-4 text-gray-800">🚀 Próximos Passos</h3>
-            <p class="text-gray-700 mb-6">Estamos prontos para transformar a gestão de RH da ${data.companyName} com a Factorial.</p>
-            
-            <div class="flex flex-col sm:flex-row gap-4">
-                <div class="flex-1">
-                    <h4 class="font-semibold text-gray-800 mb-2">Contato Comercial</h4>
-                    <p class="text-gray-700">Seu Account Manager entrará em contato em até 24h para agendar uma reunião de alinhamento.</p>
-                </div>
-                <div class="flex-1">
-                    <h4 class="font-semibold text-gray-800 mb-2">Implementação Inclusa</h4>
-                    <p class="text-gray-700">Iniciaremos a implementação em 4 semanas com suporte completo da nossa equipe.</p>
-                </div>
-            </div>
-        </div>
-
-        <!-- Footer -->
-        <div class="p-8 factorial-brand text-white text-center">
-            <h4 class="text-xl font-bold mb-2">FACTORIAL</h4>
-            <p class="text-purple-100">Transformando a gestão de RH em empresas modernas</p>
-            <p class="text-sm text-purple-200 mt-2">Proposta gerada em ${new Date().toLocaleDateString('pt-BR')}</p>
-        </div>
-    </div>
-</body>
-</html>`;
-        }
-
-        function loadMeetingData() {
-            const meetingData = localStorage.getItem('lastMeetingData');
-            if (meetingData) {
-                try {
-                    const data = JSON.parse(meetingData);
-                    
-                    // Fill form with meeting data
-                    if (data.companyName) document.getElementById('companyName').value = data.companyName;
-                    if (data.contactName) document.getElementById('contactName').value = data.contactName;
-                    if (data.employeeCount) document.getElementById('employeeCount').value = data.employeeCount;
-                    
-                    // Add pain points to notes
-                    if (data.painPoints && data.painPoints.length > 0) {
-                        const painPointsText = data.painPoints.join('\n• ');
-                        const currentNotes = document.getElementById('notes').value;
-                        document.getElementById('notes').value = currentNotes + 
-                            (currentNotes ? '\n\n' : '') + 
-                            'Dores identificadas na reunião:\n• ' + painPointsText;
-                    }
-                    
-                    // Add requirements to notes
-                    if (data.requirements && data.requirements.length > 0) {
-                        const requirementsText = data.requirements.join('\n• ');
-                        const currentNotes = document.getElementById('notes').value;
-                        document.getElementById('notes').value = currentNotes + 
-                            (currentNotes ? '\n\n' : '') + 
-                            'Requisitos identificados na reunião:\n• ' + requirementsText;
-                    }
-                    
-                    showStatus('Dados da reunião carregados automaticamente!', 'success');
-                    
-                    // Clear the meeting data after loading
-                    localStorage.removeItem('lastMeetingData');
-                } catch (error) {
-                    console.error('Erro ao carregar dados da reunião:', error);
-                }
-            }
-        }
-    </script>
 </body>
 </html>
