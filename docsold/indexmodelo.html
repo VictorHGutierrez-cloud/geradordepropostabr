@@ -1,0 +1,1780 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Factorial Finance | Plataforma de Compliance Fiscal para Portugal</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
+    <!-- Enhanced CSS Framework -->
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.2/dist/gsap.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.2/dist/ScrollTrigger.min.js"></script>
+    
+    <!-- Factorial Font: Fira Sans -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Sans:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --brand-radical: #FF355E;
+            --brand-viridian: #07A2AD;
+            --brand-sunbeam: #FFB940;
+            --brand-tangerine: #FF9153;
+            --brand-midnight: #25253D;
+            --bg-primary: #ffffff;
+            --bg-secondary: #f8fafc;
+            --text-primary: #0f172a;
+            --text-secondary: #475569;
+        }
+        
+        body {
+            font-family: 'Fira Sans', sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            overflow-x: hidden;
+        }
+        
+        .hero-gradient {
+            background: linear-gradient(135deg, var(--brand-radical) 0%, var(--brand-tangerine) 50%, var(--brand-sunbeam) 100%);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .hero-gradient h1,
+        .hero-gradient p {
+            opacity: 1;
+        }
+        
+        .radical-red-box-title {
+            background: #FF355E !important;
+            border: none !important;
+            border-radius: 20px !important;
+            padding: 25px 35px !important;
+            margin: 15px 0 !important;
+            box-shadow: 0 0 25px rgba(255, 53, 94, 0.4), 0 0 50px rgba(255, 53, 94, 0.15) !important;
+        }
+        
+        .lesson-card {
+            background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
+            border: 1px solid #e2e8f0;
+            border-radius: 20px;
+            padding: 2rem;
+            margin: 1rem 0;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+            transition: all 0.3s ease;
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        .lesson-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+        }
+        
+        .holographic-card {
+            background: var(--bg-secondary);
+            border: 1px solid #e2e8f0;
+            border-radius: 15px;
+            padding: 1.5rem;
+            transition: all 0.3s ease;
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        .holographic-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+        }
+        
+        .cyber-text {
+            color: var(--brand-radical);
+            font-weight: 800;
+        }
+        
+        .neon-text {
+            color: var(--brand-radical);
+            font-weight: 700;
+        }
+        
+        .gradient-text {
+            background: linear-gradient(135deg, var(--brand-sunbeam), var(--brand-tangerine));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .floating {
+            animation: float 6s ease-in-out infinite;
+            opacity: 1;
+        }
+        
+        @keyframes float {
+            0%, 100% { 
+                transform: translateY(0px) rotateY(0deg); 
+                opacity: 1;
+            }
+            50% { 
+                transform: translateY(-20px) rotateY(180deg); 
+                opacity: 0.8;
+            }
+        }
+        
+        .card-hover {
+            transition: all 0.3s ease;
+        }
+        
+        .card-hover:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, var(--brand-radical) 0%, var(--brand-tangerine) 100%);
+            transition: all 0.3s ease;
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(255, 53, 94, 0.3);
+        }
+        
+        .nav-link {
+            position: relative;
+            transition: all 0.3s ease;
+        }
+        
+        .nav-link:hover {
+            color: var(--brand-radical);
+        }
+        
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: -5px;
+            left: 0;
+            background: linear-gradient(135deg, var(--brand-radical) 0%, var(--brand-tangerine) 100%);
+            transition: width 0.3s ease;
+        }
+        
+        .nav-link:hover::after {
+            width: 100%;
+        }
+        
+        .mobile-menu {
+            transform: translateX(100%);
+            transition: transform 0.3s ease;
+        }
+        
+        .mobile-menu.open {
+            transform: translateX(0);
+        }
+        
+        .roi-card {
+            background: linear-gradient(135deg, var(--brand-radical) 0%, var(--brand-tangerine) 100%);
+            color: white;
+        }
+        
+        .bundle-card {
+            border: 2px solid #e5e7eb;
+            transition: all 0.3s ease;
+        }
+        
+        .bundle-card:hover {
+            border-color: var(--brand-radical);
+            box-shadow: 0 10px 30px rgba(255, 53, 94, 0.1);
+        }
+        
+        .bundle-card.featured {
+            border-color: var(--brand-radical);
+            background: linear-gradient(135deg, #f8fafc 0%, #ffe0e6 100%);
+        }
+        
+        /* Acessibilidade do dropdown no card ROI */
+        .roi-card select {
+            background-color: rgba(255, 255, 255, 0.2) !important;
+            color: #ffffff !important;
+        }
+        .roi-card select option {
+            background-color: #C41F3A !important; /* um pouco mais escuro que o radical */
+            color: #ffffff !important;
+        }
+
+        /* Forçar texto escuro nos inputs do micro-form dentro do ROI card */
+        .roi-card .bg-white input,
+        .roi-card .bg-white select,
+        .roi-card .bg-white textarea {
+            color: #111827 !important; /* text-gray-900 */
+            background-color: #ffffff !important;
+        }
+        .roi-card .bg-white input::placeholder,
+        .roi-card .bg-white textarea::placeholder {
+            color: #6b7280 !important; /* text-gray-500 */
+            opacity: 1;
+        }
+
+        /* Dark Mode Toggle */
+        .dark-mode-toggle {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 1000;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 50px;
+            padding: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .dark-mode-toggle:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: scale(1.1);
+        }
+        
+        /* Dark Mode Styles */
+        .dark {
+            --bg-primary: #1a1a2e;
+            --bg-secondary: #16213e;
+            --text-primary: #e94560;
+            --text-secondary: #b8b8d1;
+        }
+        
+        .dark .holographic-card {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .dark .lesson-card {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        /* Loading Animation Styles */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .animate-fade-in {
+            animation: fadeIn 1s ease-out;
+        }
+        
+        .animate-fade-in-delay {
+            animation: fadeIn 1s ease-out 0.5s both;
+        }
+        
+        .floating-unicorn {
+            position: absolute;
+            font-size: 2rem;
+            animation: floatUnicorn 8s ease-in-out infinite;
+            opacity: 0.7;
+        }
+        
+        @keyframes floatUnicorn {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            25% { transform: translateY(-20px) rotate(5deg); }
+            50% { transform: translateY(-10px) rotate(-3deg); }
+            75% { transform: translateY(-15px) rotate(2deg); }
+        }
+    </style>
+</head>
+<body class="bg-gray-50">
+    <!-- Dark Mode Toggle -->
+    <div class="dark-mode-toggle" onclick="toggleDarkMode()">
+        <span id="dark-mode-icon">🌙</span>
+    </div>
+
+    <!-- Loading Animation / Contra-capa -->
+    <div id="loading-animation" class="fixed inset-0 bg-gradient-to-br from-indigo-900 via-purple-800 to-pink-700 flex items-center justify-center z-50">
+        <!-- Floating Unicorns -->
+        <div class="absolute inset-0 overflow-hidden">
+            <div class="floating-unicorn" style="top: 10%; left: 10%; animation-delay: 0s;">🦄</div>
+            <div class="floating-unicorn" style="top: 20%; right: 15%; animation-delay: 1s;">🦄</div>
+            <div class="floating-unicorn" style="bottom: 30%; left: 20%; animation-delay: 2s;">🦄</div>
+            <div class="floating-unicorn" style="bottom: 15%; right: 10%; animation-delay: 1.5s;">🦄</div>
+            <div class="floating-unicorn" style="top: 50%; left: 5%; animation-delay: 0.5s;">🦄</div>
+            <div class="floating-unicorn" style="top: 60%; right: 5%; animation-delay: 2.5s;">🦄</div>
+        </div>
+        
+        <div class="text-center relative z-10">
+            <div class="mb-8">
+                <div class="w-24 h-24 mx-auto mb-8 bg-gradient-to-br from-pink-400 to-purple-500 rounded-full flex items-center justify-center animate-pulse shadow-2xl">
+                    <span class="text-5xl">💰</span>
+                </div>
+                <h1 class="text-5xl md:text-7xl font-bold text-white mb-6 animate-fade-in bg-gradient-to-r from-pink-300 to-purple-300 bg-clip-text text-transparent">
+                    Factorial Finance em Portugal!🚀
+                </h1>
+                <p class="text-2xl md:text-3xl text-pink-200 animate-fade-in-delay font-medium">
+                    Soluções para Mitigação de Riscos Fiscais e Laborais
+                </p>
+            </div>
+            <div class="flex justify-center space-x-3 mb-8">
+                <div class="w-4 h-4 bg-pink-400 rounded-full animate-bounce shadow-lg"></div>
+                <div class="w-4 h-4 bg-purple-400 rounded-full animate-bounce shadow-lg" style="animation-delay: 0.1s"></div>
+                <div class="w-4 h-4 bg-indigo-400 rounded-full animate-bounce shadow-lg" style="animation-delay: 0.2s"></div>
+            </div>
+            
+            <!-- Botão para iniciar a experiência -->
+            <div class="animate-fade-in-delay">
+                <button onclick="startExperience()" class="bg-gradient-to-r from-pink-500 to-purple-600 hover:from-pink-600 hover:to-purple-700 text-white font-bold py-4 px-8 rounded-full text-xl shadow-2xl transform hover:scale-105 transition-all duration-300 hover:shadow-pink-500/25">
+                    🚀 Começar sua Experiência
+                </button>
+                <p class="text-pink-200 text-sm mt-4 opacity-80">
+                    Clique no botão quando para descobrir nas soluções da Factorial RH
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Navigation -->
+    <nav class="bg-white shadow-lg sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                <!-- Logo -->
+                <div class="flex items-center">
+                    <div class="flex-shrink-0">
+                        <h1 class="text-2xl font-bold text-gray-900">Factorial <span style="color: #FF355E;">Finance</span></h1>
+                    </div>
+                </div>
+                
+                <!-- Desktop Menu -->
+                <div class="hidden md:block">
+                    <div class="ml-10 flex items-baseline space-x-8">
+                        <a href="#home" class="nav-link text-gray-700 hover:text-purple-600 px-3 py-2 text-sm font-medium">Home</a>
+                        <a href="#bundles" class="nav-link text-gray-700 hover:text-purple-600 px-3 py-2 text-sm font-medium">Bundles</a>
+                        <a href="#calculator" class="nav-link text-gray-700 hover:text-purple-600 px-3 py-2 text-sm font-medium">ROI Calculator</a>
+                        <a href="#compliance" class="nav-link text-gray-700 hover:text-purple-600 px-3 py-2 text-sm font-medium">Compliance</a>
+                        <a href="#integrations" class="nav-link text-gray-700 hover:text-purple-600 px-3 py-2 text-sm font-medium">Integrations</a>
+                        <a href="#success" class="nav-link text-gray-700 hover:text-purple-600 px-3 py-2 text-sm font-medium">Success Stories</a>
+                    </div>
+                </div>
+                
+                <!-- CTA Button -->
+                <div class="hidden md:block">
+                    <button class="btn-primary text-white px-6 py-2 rounded-lg font-medium">
+                        Schedule Demo
+                    </button>
+                </div>
+                
+                <!-- Mobile menu button -->
+                <div class="md:hidden">
+                    <button id="mobile-menu-button" class="text-gray-700 hover:text-purple-600 focus:outline-none">
+                        <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Mobile Menu -->
+        <div id="mobile-menu" class="mobile-menu md:hidden fixed inset-y-0 right-0 w-64 bg-white shadow-xl z-50">
+            <div class="px-4 py-6">
+                <div class="flex items-center justify-between mb-8">
+                    <h2 class="text-xl font-bold text-gray-900">Menu</h2>
+                    <button id="close-mobile-menu" class="text-gray-500 hover:text-gray-700">
+                        <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                        </svg>
+                    </button>
+                </div>
+                <nav class="space-y-4">
+                    <a href="#home" class="block text-gray-700 hover:text-purple-600 py-2">Home</a>
+                    <a href="#bundles" class="block text-gray-700 hover:text-purple-600 py-2">Bundles</a>
+                    <a href="#calculator" class="block text-gray-700 hover:text-purple-600 py-2">ROI Calculator</a>
+                    <a href="#compliance" class="block text-gray-700 hover:text-purple-600 py-2">Compliance</a>
+                    <a href="#integrations" class="block text-gray-700 hover:text-purple-600 py-2">Integrations</a>
+                    <a href="#success" class="block text-gray-700 hover:text-purple-600 py-2">Success Stories</a>
+                    <button class="btn-primary text-white px-6 py-2 rounded-lg font-medium w-full mt-4">
+                        Schedule Demo
+                    </button>
+                </nav>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section id="home" class="min-h-screen flex items-center relative overflow-hidden" style="background: linear-gradient(135deg, #ffffff 0%, #ffe8ee 100%);">
+        <div class="max-w-7xl mx-auto px-6 w-full grid grid-cols-1 lg:grid-cols-2 gap-10 items-center">
+            <!-- Left: Text -->
+            <div class="z-10">
+                <h1 class="text-4xl md:text-6xl font-bold mb-4 text-gray-900">Plataforma de Mitigação de Riscos Fiscais e Laborais</h1>
+                <p class="text-lg md:text-2xl text-gray-700 mb-6">Elimine 100% do risco de Tributação Autónoma e otimize a gestão financeira em minutos.</p>
+                <div class="flex flex-col sm:flex-row gap-4">
+                    <button onclick="document.getElementById('calculator').scrollIntoView()" class="px-8 py-4 rounded-lg font-bold text-white text-lg" style="background:#E63946;">
+                        🧮 Calcular Economia 
+                    </button>
+                    <button onclick="window.open('https://www.youtube.com/watch?v=eb4LTCYXcng', '_blank')" class="px-8 py-4 rounded-lg font-bold text-gray-900 text-lg border border-gray-300 bg-white hover:bg-gray-50">
+                        ▶️ Case de Sucesso em Portugal 
+                    </button>
+            </div>
+            </div>
+            <!-- Right: Dashboard Mockup -->
+            <div class="relative hidden lg:block">
+                <div class="bg-white rounded-2xl shadow-2xl p-4 border border-gray-200">
+                    <div class="w-[560px] h-[340px] rounded-xl overflow-hidden">
+                        <img src="images/logos/dashboard-mockup.png" alt="Factorial Dashboard - ROI e Gestão Financeira" class="w-full h-full object-cover rounded-xl">
+                </div>
+            </div>
+            </div>
+        </div>
+
+        <!-- Floating Background Elements -->
+        <div class="absolute top-0 left-0 w-full h-full pointer-events-none overflow-hidden">
+            <div class="absolute floating" style="top:8%; left:12%; animation-delay:0s;">
+                <div class="w-24 h-24 bg-gradient-to-br from-blue-400/20 to-purple-500/20 backdrop-blur-sm rounded-3xl transform rotate-12 border border-white/20"></div>
+            </div>
+            <div class="absolute floating" style="top:18%; left:75%; animation-delay:1.2s;">
+                <div class="w-20 h-20 bg-gradient-to-br from-pink-400/15 backdrop-blur-sm rounded-full border border-white/15" style="background: linear-gradient(135deg, rgba(255, 53, 94, 0.15), rgba(255, 53, 94, 0.15));"></div>
+            </div>
+            <div class="absolute floating" style="top:42%; left:18%; animation-delay:2.4s;">
+                <div class="w-16 h-16 bg-gradient-to-br from-green-400/20 to-blue-500/20 backdrop-blur-sm transform rotate-45 border border-white/20"></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Bundles Section -->
+    <section id="bundles" class="py-20 relative z-10" style="background: var(--bg-primary);">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="text-center mb-16">
+                <h2 class="text-4xl md:text-5xl font-bold mb-6" style="color: var(--text-primary);">
+                    <span class="cyber-text">🛡️ ESCOLHAS SUAS</span>
+                    <br>
+                    <span class="gradient-text">Funcionalidades Personalizadas</span>
+                </h2>
+                <p class="text-xl max-w-4xl mx-auto leading-relaxed" style="color: var(--text-secondary);">
+                    Soluções de Contabilidade Analítica e Mitigação de Riscos Fiscais para empresas portuguesas
+                </p>
+            </div>
+            
+            <div class="flex flex-col md:flex-row lg:flex-nowrap gap-8 items-stretch">
+                <!-- Módulo 1: Gestão de Projetos -->
+                <div class="holographic-card card-hover flex-1 flex flex-col">
+                    <div class="text-center mb-6">
+                        <div class="w-16 h-16 bg-gradient-to-r from-purple-500 to-blue-500 rounded-full flex items-center justify-center text-white text-2xl font-bold mx-auto mb-4">1</div>
+                        <h3 class="text-2xl font-bold mb-2" style="color: var(--text-primary);">Gestão de Projetos</h3>
+                        <p class="mb-4" style="color: var(--text-secondary);">Transforme a gestão de projetos para decisões ágeis e eficientes</p>
+                        </div>
+                    <ul class="space-y-3 flex-1">
+                        <li class="flex items-center text-sm">
+                            <svg class="w-5 h-5 text-green-500 mr-3" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
+                            </svg>
+                            Organize e faça gestão completa de projetos e subprojetos
+                        </li>
+                        <li class="flex items-center text-sm">
+                            <svg class="w-5 h-5 text-green-500 mr-3" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
+                            </svg>
+                            Associe tempo e despesas; monitorize horas e custos por colaborador
+                        </li>
+                        <li class="flex items-center text-sm">
+                            <svg class="w-5 h-5 text-green-500 mr-3" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
+                            </svg>
+                            Defina gestor/diretor do projeto, prazos, orçamento e divisas (Enterprise)
+                        </li>
+                        <li class="flex items-center text-sm">
+                            <svg class="w-5 h-5 text-green-500 mr-3" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
+                            </svg>
+                            Insights na visão geral de projetos; API para integrações
+                        </li>
+                    </ul>
+                </div>
+                
+                <!-- Módulo 2: Despesas -->
+                <div class="holographic-card featured card-hover w-full max-w-sm">
+                    <div class="text-center mb-6">
+                        <div class="w-16 h-16 bg-gradient-to-r from-purple-500 to-blue-500 rounded-full flex items-center justify-center text-white text-2xl font-bold mx-auto mb-4">2</div>
+                        <h3 class="text-2xl font-bold mb-2" style="color: var(--text-primary);">Despesas</h3>
+                        <p class="mb-4" style="color: var(--text-secondary);">Centralize e acompanhe despesas com fluxos de aprovação e OCR</p>
+                        </div>
+                    <ul class="space-y-3 flex-1">
+                        <li class="flex items-center text-sm">
+                            <svg class="w-5 h-5 text-green-500 mr-3" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
+                            </svg>
+                            Acompanhamento de despesas em tempo real; insights e relatórios
+                        </li>
+                        <li class="flex items-center text-sm">
+                            <svg class="w-5 h-5 text-green-500 mr-3" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
+                            </svg>
+                            Leitura inteligente (OCR) e fluxos de aprovação com múltiplas etapas
+                        </li>
+                        <li class="flex items-center text-sm">
+                            <svg class="w-5 h-5 text-green-500 mr-3" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
+                            </svg>
+                            Políticas ilimitadas, múltiplas aprovações e regras automáticas (Enterprise)
+                        </li>
+                        <li class="flex items-center text-sm">
+                            <svg class="w-5 h-5 text-green-500 mr-3" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
+                            </svg>
+                            Reembolso via Recibo de Vencimento; subcategorias/IVA/centros de custo
+                        </li>
+                    </ul>
+                </div>
+                
+                <!-- Módulo 3: Gestão de Softwares (SaaS) -->
+                <div class="holographic-card card-hover flex-1 flex flex-col">
+                    <div class="text-center mb-6">
+                        <div class="w-16 h-16 bg-gradient-to-r from-purple-500 to-blue-500 rounded-full flex items-center justify-center text-white text-2xl font-bold mx-auto mb-4">3</div>
+                        <h3 class="text-2xl font-bold mb-2" style="color: var(--text-primary);">Gestão de Softwares</h3>
+                        <p class="mb-4" style="color: var(--text-secondary);">Controle de custos de SaaS, aprovações e relatórios</p>
+                        </div>
+                    <ul class="space-y-3 flex-1">
+                        <li class="flex items-center text-sm">
+                            <svg class="w-5 h-5 text-green-500 mr-3" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
+                            </svg>
+                            Notificações de renovação, painel e relatórios de custos
+                        </li>
+                        <li class="flex items-center text-sm">
+                            <svg class="w-5 h-5 text-green-500 mr-3" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
+                            </svg>
+                            Fluxos de aprovação e pagamentos de subscrições SaaS
+                        </li>
+                        <li class="flex items-center text-sm">
+                            <svg class="w-5 h-5 text-green-500 mr-3" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
+                            </svg>
+                            Monitorização de uso, exportações e alertas de revogação de acesso
+                        </li>
+                    </ul>
+                </div>
+                
+                <!-- Módulo 4: Requisições de compra (Procurement) -->
+                <div class="holographic-card card-hover flex-1 flex flex-col">
+                    <div class="text-center mb-6">
+                        <div class="w-16 h-16 bg-gradient-to-r from-purple-500 to-blue-500 rounded-full flex items-center justify-center text-white text-2xl font-bold mx-auto mb-4">4</div>
+                        <h3 class="text-2xl font-bold mb-2" style="color: var(--text-primary);">Requisições de compra</h3>
+                        <p class="mb-4" style="color: var(--text-secondary);">Controle de gastos com processos de aprovação guiados</p>
+                        </div>
+                    <ul class="space-y-3 flex-1">
+                        <li class="flex items-center text-sm">
+                            <svg class="w-5 h-5 text-green-500 mr-3" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
+                            </svg>
+                            Centralize todas as requisições; exporte e organize fornecedores
+                        </li>
+                        <li class="flex items-center text-sm">
+                            <svg class="w-5 h-5 text-green-500 mr-3" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
+                            </svg>
+                            Construa fluxos de aprovação específicos por tipo de pedido
+                        </li>
+                        <li class="flex items-center text-sm">
+                            <svg class="w-5 h-5 text-green-500 mr-3" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
+                            </svg>
+                            Cartões de utilização única para requisições e processamento de faturas
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ROI Calculator Section -->
+    <section id="calculator" class="py-20 relative z-10" style="background: var(--bg-secondary);">
+        <div class="max-w-6xl mx-auto px-6">
+            <div class="text-center mb-16">
+                <h2 class="text-4xl md:text-5xl font-bold mb-6" style="color: var(--text-primary);">
+                    <span class="cyber-text">💰 CALCULADORA</span>
+                    <br>
+                    <span class="gradient-text">DE POUPANÇAS</span>
+                </h2>
+                <p class="text-xl max-w-3xl mx-auto leading-relaxed" style="color: var(--text-secondary);">
+                    Calcule quanto pode poupar eliminando riscos fiscais e laborais com a Factorial
+                </p>
+            </div>
+            
+            <div class="roi-card rounded-2xl p-8">
+                <div class="grid md:grid-cols-2 gap-8">
+                    <div>
+                        <h3 class="text-2xl font-bold mb-6 text-white">Dados da Sua Empresa</h3>
+                        <div class="space-y-6">
+                            <div>
+                                <label class="block text-sm font-medium mb-2 text-white">Colaboradores que submetem despesas</label>
+                                <input type="number" id="submitters" class="w-full p-4 rounded-lg bg-white bg-opacity-20 border border-white border-opacity-30 text-white placeholder-white placeholder-opacity-70" placeholder="Ex.: 40">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium mb-2 text-white">Aprovadores (gestores / controlo financeiro)</label>
+                                <input type="number" id="approvers" class="w-full p-4 rounded-lg bg-white bg-opacity-20 border border-white border-opacity-30 text-white placeholder-white placeholder-opacity-70" placeholder="Ex.: 10">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium mb-2 text-white">Setor de Atividade</label>
+                                <select id="industry" class="w-full p-4 rounded-lg bg-white bg-opacity-20 border border-white border-opacity-30 text-white">
+                                    <option value="services">Serviços (1.0)</option>
+                                    <option value="manufacturing">Indústria (1.3)</option>
+                                    <option value="technology">Tecnologia (0.9)</option>
+                                    <option value="retail">Retalho (1.1)</option>
+                                    <option value="healthcare">Saúde (1.2)</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium mb-2 text-white">Transações de despesas (mês)</label>
+                                <input type="number" id="transactions" class="w-full p-4 rounded-lg bg-white bg-opacity-20 border border-white border-opacity-30 text-white placeholder-white placeholder-opacity-70" placeholder="Ex.: 1000">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium mb-2 text-white">Tempo manual por transação (min)</label>
+                                <input type="number" id="minutesPerTx" class="w-full p-4 rounded-lg bg-white bg-opacity-20 border border-white border-opacity-30 text-white placeholder-white placeholder-opacity-70" placeholder="Ex.: 6">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium mb-2 text-white">Custo médio por hora (€)</label>
+                                <input type="number" id="hourlyCost" class="w-full p-4 rounded-lg bg-white bg-opacity-20 border border-white border-opacity-30 text-white placeholder-white placeholder-opacity-70" placeholder="Ex.: 25">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium mb-2 text-white">Valor médio por erro (€)</label>
+                                <input type="number" id="avgErrorValue" class="w-full p-4 rounded-lg bg-white bg-opacity-20 border border-white border-opacity-30 text-white placeholder-white placeholder-opacity-70" placeholder="Ex.: 20">
+                            </div>
+                            <div class="pt-2 border-t border-white/30"></div>
+                            <div>
+                                <label class="block text-sm font-medium mb-2 text-white">Total de colaboradores (Core obrigatório)</label>
+                                <input type="number" id="companyEmployees" class="w-full p-4 rounded-lg bg-white bg-opacity-20 border border-white border-opacity-30 text-white placeholder-white placeholder-opacity-70" placeholder="Ex.: 120" value="0">
+                                <p class="text-xs text-white/80 mt-1">Core é por colaborador ativo (obrigatório para todos).</p>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium mb-2 text-white">Utilizadores de Despesas (total)</label>
+                                <input type="number" id="expensesUsers" class="w-full p-4 rounded-lg bg-white bg-opacity-20 border border-white border-opacity-30 text-white placeholder-white placeholder-opacity-70" placeholder="Ex.: 20" value="0">
+                                <p class="text-xs text-white/80 mt-1">O módulo de Despesas tem um custo fixo obrigatório (fixed fee) e tiers aplicados apenas aos usuários adicionais:<br>Business: €43.3 fixed | Enterprise: €76.7 fixed</p>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium mb-2 text-white">Seats em Projetos (Project Management)</label>
+                                <input type="number" id="projectSeats" class="w-full p-4 rounded-lg bg-white bg-opacity-20 border border-white border-opacity-30 text-white placeholder-white placeholder-opacity-70" placeholder="Ex.: 30" value="0">
+                                <p class="text-xs text-white/80 mt-1">Preço por seat varia por nível.</p>
+                            </div>
+                            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                                <label class="inline-flex items-center text-white">
+                                    <input type="checkbox" id="procurementEnabled" class="mr-2"> Procurement (AP + Compras)
+                                </label>
+                                <label class="inline-flex items-center text-white">
+                                    <input type="checkbox" id="salesInvoicingEnabled" class="mr-2"> Faturamento de Vendas
+                                </label>
+                                <div>
+                                    <label class="block text-sm font-medium mb-2 text-white">Plano</label>
+                                    <select id="priceLevel" class="w-full p-3 rounded-lg bg-white bg-opacity-20 border border-white border-opacity-30 text-white" onchange="handlePlanChange()">
+                                        <option value="business" selected>Business</option>
+                                        <option value="enterprise">Enterprise</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <button onclick="calculateROI()" class="w-full bg-white py-4 rounded-lg font-bold hover:bg-gray-100 transition-colors" style="color: #FF355E;">
+                                Calcular Poupanças
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div>
+                        <h3 class="text-2xl font-bold mb-6 text-white">Suas Poupanças Potenciais</h3>
+                        <div id="roi-results" class="space-y-4">
+                            <div class="bg-white bg-opacity-20 rounded-lg p-4">
+                                <div class="text-sm opacity-80 text-white">Tempo Poupança Mensal</div>
+                                <div id="time-saved" class="text-2xl font-bold text-white">0 horas</div>
+                            </div>
+                            <div class="bg-white bg-opacity-20 rounded-lg p-4">
+                                <div class="text-sm opacity-80 text-white">Economia Operacional (mês)</div>
+                                <div id="operational-savings" class="text-2xl font-bold text-white">€0</div>
+                            </div>
+                            <div class="bg-white bg-opacity-20 rounded-lg p-4">
+                                <div class="text-sm opacity-80 text-white">Redução de Erros</div>
+                                <div id="error-reduction" class="text-2xl font-bold text-white">€0</div>
+                            </div>
+                            <div class="bg-white bg-opacity-20 rounded-lg p-4">
+                                <div class="text-sm opacity-80 text-white">Economia Total (mês)</div>
+                                <div id="total-savings" class="text-2xl font-bold text-white">€0</div>
+                            </div>
+                            <div class="bg-white bg-opacity-20 rounded-lg p-4">
+                                <div class="text-sm opacity-80 text-white">ROI Anual</div>
+                                <div id="annual-roi" class="text-2xl font-bold text-white">0%</div>
+                            </div>
+                            <div class="bg-white bg-opacity-20 rounded-lg p-4">
+                            <div class="flex items-center justify-between mb-2">
+                                <div class="text-sm opacity-80 text-white">Custo estimado Factorial (mês)</div>
+                                <button id="toggle-breakdown" class="text-xs text-white/70 hover:text-white underline" onclick="toggleCostBreakdown()">Ver detalhes</button>
+                            </div>
+                            <div id="monthly-cost-total" class="text-2xl font-bold text-white">€0</div>
+                            <div class="mt-2 text-xs text-white/90 hidden" id="cost-breakdown"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Chart Container -->
+                <div class="mt-8">
+                    <div class="bg-white rounded-lg p-6">
+                        <canvas id="roiChart" width="400" height="200"></canvas>
+                    </div>
+                </div>
+                
+                <!-- ROI Comparativo -->
+                <div class="mt-8 border-t border-white/30 pt-6">
+                    <h3 class="text-xl font-semibold text-white mb-4">Comparativo de Custos</h3>
+                    <div class="space-y-4">
+                        <div>
+                            <div class="flex justify-between text-sm text-white/80 mb-1">
+                                <span>Custo Manual Estimado</span>
+                                <span id="manual-cost-percent">0%</span>
+                            </div>
+                            <div class="h-3 bg-white/20 rounded">
+                                <div id="manual-cost-bar" class="h-3 rounded" style="width: 0%; background-color: #FF355E;"></div>
+                            </div>
+                        </div>
+                        <div>
+                            <div class="flex justify-between text-sm text-white/80 mb-1">
+                                <span>Custo Factorial</span>
+                                <span>100%</span>
+                            </div>
+                            <div class="h-3 bg-white/20 rounded">
+                                <div class="h-3 bg-green-500 rounded" style="width: 100%"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <p class="mt-4 text-sm text-white/90">
+                        Economia estimada: <strong id="savings-display">€0</strong> (<span id="roi-percent-display">0%</span> ROI)
+                    </p>
+                </div>
+                
+                <!-- Micro-conversion form -->
+                <div class="mt-8 bg-white rounded-lg p-6 border border-gray-200">
+                    <h4 class="text-xl font-bold text-gray-900 mb-2">Receba o resultado detalhado da sua simulação</h4>
+                    <p class="text-gray-600 mb-4">Preencha para receber por email o relatório completo de ROI e recomendações.</p>
+                    <form class="grid md:grid-cols-3 gap-4">
+                        <input type="text" placeholder="Nome" class="p-3 rounded-lg border border-gray-300" />
+                        <input type="email" placeholder="Email" class="p-3 rounded-lg border border-gray-300" />
+                        <input type="text" placeholder="Empresa" class="p-3 rounded-lg border border-gray-300" />
+                        <div class="md:col-span-3">
+                            <button type="button" class="px-6 py-3 rounded-lg font-bold text-white" style="background:#E63946;">Enviar Relatório</button>
+                        </div>
+                    </form>
+                </div>
+                <div class="mt-8 bg-white bg-opacity-20 rounded-lg p-6">
+                    <h4 class="text-xl font-bold text-white mb-2">Como calculamos o ROI</h4>
+                    <ul class="text-white text-sm opacity-90 list-disc pl-5 space-y-1">
+                        <li><strong>Eficiência operacional</strong>: Tempo poupado = (transações × tempo médio × 0.6 × multiplicador setor) / 60</li>
+                        <li><strong>Economia operacional (€)</strong>: Tempo poupado × custo médio/hora</li>
+                        <li><strong>Redução de erros (€)</strong>: transações × valor médio por erro × (0.3 × multiplicador setor)</li>
+                        <li><strong>Custo Factorial (mês)</strong>: Core (todos) + Despesas (Business/Enterprise: fixed fee + tiers por utilizador) + Procurement/Faturamento (apenas Business, fixo) + Projetos (por seat, preço varia por plano)</li>
+                        <li><strong>ROI anual</strong>: ((poupança total × 12) − (custo mensal × 12)) / (custo mensal × 12) × 100</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Compliance Section -->
+    <section id="compliance" class="py-20" style="background: linear-gradient(135deg, rgba(255, 53, 94, 0.05), rgba(255, 165, 0, 0.05));">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16">
+                <h2 class="text-4xl font-bold text-gray-900 mb-4">
+                    <span style="color: #FF355E;">⚠️ RISCOS FISCAIS</span>
+                    <br>
+                    <span class="text-gray-800">ELIMINADOS</span>
+                </h2>
+                <p class="text-xl text-gray-600 max-w-4xl mx-auto">
+                    Proteção completa contra as penalizações mais severas do sistema fiscal português
+                </p>
+            </div>
+            
+            <!-- Risk Mitigation Cards -->
+            <div class="grid md:grid-cols-1 lg:grid-cols-3 gap-8 mb-16">
+                <!-- Tributação Autónoma -->
+                <div class="bg-white rounded-2xl p-8 shadow-xl border-l-8" style="border-left-color: #FF355E;">
+                    <div class="flex items-center mb-6">
+                        <div class="w-16 h-16 rounded-full flex items-center justify-center mr-4" style="background-color: rgba(255, 53, 94, 0.1);">
+                            <span class="text-3xl">💥</span>
+                        </div>
+                        <div>
+                            <h3 class="text-2xl font-bold mb-2" style="color: #FF355E;">Tributação Autónoma</h3>
+                            <p class="text-sm text-gray-500">Risco de 50–70% sobre despesas não documentadas</p>
+                        </div>
+                    </div>
+                    <div class="space-y-4">
+                        <div class="p-4 rounded-lg" style="background-color: rgba(255, 53, 94, 0.05);">
+                            <h4 class="font-bold mb-2" style="color: #CC1A3A;">❌ SEM FACTORIAL:</h4>
+                            <ul class="text-sm space-y-1" style="color: #B91C3C;">
+                                <li>• Despesas não documentadas = Tributação Autónoma de 50%</li>
+                                <li>• Em caso de prejuízo = 70%</li>
+                                <li>• Multas da AT por documentação deficiente</li>
+                            </ul>
+                        </div>
+                        <div class="bg-green-50 p-4 rounded-lg">
+                            <h4 class="font-bold text-green-800 mb-2">✅ COM FACTORIAL:</h4>
+                            <ul class="text-sm text-green-700 space-y-1">
+                                <li>• OCR obriga validação documental</li>
+                                <li>• Fluxos de aprovação eliminam despesas informais</li>
+                                <li>• Risco de Tributação Autónoma eliminado</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Multas ACT -->
+                <div class="bg-white rounded-2xl p-8 shadow-xl border-l-8 border-orange-500">
+                    <div class="flex items-center mb-6">
+                        <div class="w-16 h-16 bg-orange-100 rounded-full flex items-center justify-center mr-4">
+                            <span class="text-3xl">⏰</span>
+                        </div>
+                        <div>
+                            <h3 class="text-2xl font-bold text-orange-600 mb-2">Multas ACT</h3>
+                            <p class="text-sm text-gray-500">Registo de tempo obrigatório por lei</p>
+                        </div>
+                    </div>
+                    <div class="space-y-4">
+                        <div class="bg-orange-50 p-4 rounded-lg">
+                            <h4 class="font-bold text-orange-800 mb-2">❌ SEM FACTORIAL:</h4>
+                            <ul class="text-sm text-orange-700 space-y-1">
+                                <li>• Registo manual suscetível de manipulação</li>
+                                <li>• Multas pesadas da ACT</li>
+                                <li>• Dados não auditáveis por 5 anos</li>
+                            </ul>
+                        </div>
+                        <div class="bg-green-50 p-4 rounded-lg">
+                            <h4 class="font-bold text-green-800 mb-2">✅ COM FACTORIAL:</h4>
+                            <ul class="text-sm text-green-700 space-y-1">
+                                <li>• Registo fidedigno e imutável</li>
+                                <li>• Conformidade total com ACT</li>
+                                <li>• Audit trail automático por 5 anos</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Perda Isenção TSU -->
+                <div class="bg-white rounded-2xl p-8 shadow-xl border-l-8 border-purple-500">
+                    <div class="flex items-center mb-6">
+                        <div class="w-16 h-16 bg-purple-100 rounded-full flex items-center justify-center mr-4">
+                            <span class="text-3xl">💰</span>
+                        </div>
+                        <div>
+                            <h3 class="text-2xl font-bold text-purple-600 mb-2">Isenção TSU / IRS</h3>
+                            <p class="text-sm text-gray-500">Ajudas de custo e quilometragens com limite legal</p>
+                        </div>
+                    </div>
+                    <div class="space-y-4">
+                        <div class="bg-purple-50 p-4 rounded-lg">
+                            <h4 class="font-bold text-purple-800 mb-2">❌ SEM FACTORIAL:</h4>
+                            <ul class="text-sm text-purple-700 space-y-1">
+                                <li>• Ajudas de custo > 10,20€/dia = IRS + TSU</li>
+                                <li>• Quilometragem > 0,40€/km = IRS + TSU</li>
+                                <li>• Custos adicionais não previstos</li>
+                            </ul>
+                        </div>
+                        <div class="bg-green-50 p-4 rounded-lg">
+                            <h4 class="font-bold text-green-800 mb-2">✅ COM FACTORIAL:</h4>
+                            <ul class="text-sm text-green-700 space-y-1">
+                                <li>• Políticas automáticas respeitam limites legais</li>
+                                <li>• Máxima isenção fiscal garantida</li>
+                                <li>• Integração direta no recibo de vencimento</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Taxas de IVA Regionais -->
+            <div class="bg-white rounded-2xl p-8 shadow-xl mb-8">
+                <h3 class="text-2xl font-bold text-gray-900 mb-6 text-center">Taxas de IVA por Região Portuguesa (2025)</h3>
+                <div class="bg-green-50 border border-green-200 rounded-lg p-4 mb-6 text-center">
+                    <p class="text-green-800 font-semibold">✅ Resultado: Conformidade total, risco fiscal eliminado e eficiência documental comprovada.</p>
+                </div>
+                <div class="overflow-x-auto">
+                    <table class="w-full border-collapse border border-gray-300">
+                        <thead>
+                            <tr class="bg-gray-100">
+                                <th class="border border-gray-300 px-4 py-3 text-left font-bold">Região Fiscal</th>
+                                <th class="border border-gray-300 px-4 py-3 text-center font-bold">Taxa Normal</th>
+                                <th class="border border-gray-300 px-4 py-3 text-center font-bold">Taxa Intermédia</th>
+                                <th class="border border-gray-300 px-4 py-3 text-center font-bold">Taxa Reduzida</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td class="border border-gray-300 px-4 py-3 font-semibold">Portugal Continental</td>
+                                <td class="border border-gray-300 px-4 py-3 text-center font-bold" style="color: #FF355E;">23%</td>
+                                <td class="border border-gray-300 px-4 py-3 text-center text-orange-600 font-bold">13%</td>
+                                <td class="border border-gray-300 px-4 py-3 text-center text-green-600 font-bold">6%</td>
+                            </tr>
+                            <tr class="bg-gray-50">
+                                <td class="border border-gray-300 px-4 py-3 font-semibold">Região Autónoma da Madeira</td>
+                                <td class="border border-gray-300 px-4 py-3 text-center font-bold" style="color: #FF355E;">22%</td>
+                                <td class="border border-gray-300 px-4 py-3 text-center text-orange-600 font-bold">12%</td>
+                                <td class="border border-gray-300 px-4 py-3 text-center text-green-600 font-bold">5%</td>
+                            </tr>
+                            <tr>
+                                <td class="border border-gray-300 px-4 py-3 font-semibold">Região Autónoma dos Açores</td>
+                                <td class="border border-gray-300 px-4 py-3 text-center font-bold" style="color: #FF355E;">16%</td>
+                                <td class="border border-gray-300 px-4 py-3 text-center text-orange-600 font-bold">9%</td>
+                                <td class="border border-gray-300 px-4 py-3 text-center text-green-600 font-bold">4%</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <p class="text-sm text-gray-600 mt-4 text-center">
+                    A Factorial aplica automaticamente as taxas corretas por região, garantindo conformidade total com o CIVA
+                </p>
+            </div>
+
+            <!-- Limites de Isenção -->
+            <div class="bg-white rounded-2xl p-8 shadow-xl">
+                <h3 class="text-2xl font-bold text-gray-900 mb-6 text-center">Limites de Isenção TSU/IRS</h3>
+                <div class="grid md:grid-cols-2 gap-8">
+                    <div class="bg-green-50 p-6 rounded-lg">
+                        <h4 class="text-lg font-bold text-green-800 mb-4">Alimentação Diária</h4>
+                        <div class="space-y-2">
+                            <div class="flex justify-between">
+                                <span class="text-gray-700">Em Dinheiro:</span>
+                                <span class="font-bold text-green-600">6,00€/dia</span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span class="text-gray-700">Cartão/Vale:</span>
+                                <span class="font-bold text-green-600">10,20€/dia</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="bg-blue-50 p-6 rounded-lg">
+                        <h4 class="text-lg font-bold text-blue-800 mb-4">Quilometragem</h4>
+                        <div class="space-y-2">
+                            <div class="flex justify-between">
+                                <span class="text-gray-700">Veículo Próprio:</span>
+                                <span class="font-bold text-blue-600">0,40€/km</span>
+                            </div>
+                            <div class="text-sm text-gray-600 mt-2">
+                                A Factorial controla automaticamente estes limites
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Integrations Section -->
+    <section id="integrations" class="py-20" style="background: linear-gradient(135deg, rgba(59, 130, 246, 0.05), rgba(147, 51, 234, 0.05));">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16">
+                <h2 class="text-4xl font-bold text-gray-900 mb-4">
+                    <span style="color: #3B82F6;">🔗 INTEGRAÇÕES</span>
+                    <br>
+                    <span class="text-gray-800">COM ECOSSISTEMA PORTUGUÊS</span>
+                </h2>
+                <p class="text-xl text-gray-600 max-w-4xl mx-auto">
+                    Conecte-se com as principais ferramentas de contabilidade e gestão de RH do mercado português
+                </p>
+            </div>
+            
+            <!-- Integrations Grid -->
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 mb-12">
+                <!-- A3 Nom Integration -->
+                <div class="bg-white rounded-xl p-6 shadow-lg hover:shadow-xl transition-shadow border-l-4" style="border-left-color: #3B82F6;">
+                    <div class="flex items-center mb-4">
+                        <div class="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center mr-4">
+                            <span class="text-xl font-bold" style="color: #3B82F6;">A3</span>
+                    </div>
+                        <div>
+                            <h3 class="font-bold text-gray-900">A3 Nom Integration</h3>
+                            <p class="text-xs text-gray-500">a3nom</p>
+                        </div>
+                    </div>
+                    <p class="text-sm text-gray-600">Automatize suplementos e exporte novos contratados para simplificar os recibos de vencimento.</p>
+                </div>
+                
+                <!-- DATEV LODAS -->
+                <div class="bg-white rounded-xl p-6 shadow-lg hover:shadow-xl transition-shadow border-l-4" style="border-left-color: #10B981;">
+                    <div class="flex items-center mb-4">
+                        <div class="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center mr-4">
+                            <span class="text-xl font-bold" style="color: #10B981;">D</span>
+                    </div>
+                        <div>
+                            <h3 class="font-bold text-gray-900">DATEV LODAS</h3>
+                            <p class="text-xs text-gray-500">Export new hires</p>
+                        </div>
+                    </div>
+                    <p class="text-sm text-gray-600">Gira as exportações de dados dos colaboradores da Factorial para DATEV LODAS.</p>
+                </div>
+                
+                <!-- Payflow -->
+                <div class="bg-white rounded-xl p-6 shadow-lg hover:shadow-xl transition-shadow border-l-4" style="border-left-color: #F59E0B;">
+                    <div class="flex items-center mb-4">
+                        <div class="w-12 h-12 bg-yellow-100 rounded-lg flex items-center justify-center mr-4">
+                            <span class="text-xl font-bold" style="color: #F59E0B;">P</span>
+                    </div>
+                        <div>
+                            <h3 class="font-bold text-gray-900">Payflow</h3>
+                            <p class="text-xs text-gray-500">Payflow</p>
+                        </div>
+                    </div>
+                    <p class="text-sm text-gray-600">Otimize os dados das pessoas e a gestão dos recibos de vencimento com a sincronização automática.</p>
+                </div>
+                
+                <!-- Primavera -->
+                <div class="bg-white rounded-xl p-6 shadow-lg hover:shadow-xl transition-shadow border-l-4" style="border-left-color: #8B5CF6;">
+                    <div class="flex items-center mb-4">
+                        <div class="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center mr-4">
+                            <span class="text-xl font-bold" style="color: #8B5CF6;">P</span>
+                    </div>
+                        <div>
+                            <h3 class="font-bold text-gray-900">Primavera</h3>
+                            <p class="text-xs text-gray-500">Primavera Icon</p>
+                        </div>
+                    </div>
+                    <p class="text-sm text-gray-600">Sincronize eficazmente as informações de RH entre a Factorial e o Primavera.</p>
+                </div>
+
+                <!-- Zucchetti -->
+                <div class="bg-white rounded-xl p-6 shadow-lg hover:shadow-xl transition-shadow border-l-4" style="border-left-color: #EF4444;">
+                    <div class="flex items-center mb-4">
+                        <div class="w-12 h-12 bg-red-100 rounded-lg flex items-center justify-center mr-4">
+                            <span class="text-xl font-bold" style="color: #EF4444;">Z</span>
+                        </div>
+                        <div>
+                            <h3 class="font-bold text-gray-900">Zucchetti</h3>
+                            <p class="text-xs text-gray-500">Zucchetti</p>
+                        </div>
+                    </div>
+                    <p class="text-sm text-gray-600">Simplifique a gestão da empresa com soluções personalizadas.</p>
+                </div>
+
+                <!-- Sage -->
+                <div class="bg-white rounded-xl p-6 shadow-lg hover:shadow-xl transition-shadow border-l-4" style="border-left-color: #06B6D4;">
+                    <div class="flex items-center mb-4">
+                        <div class="w-12 h-12 bg-cyan-100 rounded-lg flex items-center justify-center mr-4">
+                            <span class="text-xl font-bold" style="color: #06B6D4;">S</span>
+                        </div>
+                        <div>
+                            <h3 class="font-bold text-gray-900">Sage</h3>
+                            <p class="text-xs text-gray-500">Sage 200 & Sage Despachos</p>
+                        </div>
+                    </div>
+                    <p class="text-sm text-gray-600">Soluções inteligentes para melhorar os fluxos de trabalho e o controlo financeiro.</p>
+                </div>
+
+                <!-- Silae HR -->
+                <div class="bg-white rounded-xl p-6 shadow-lg hover:shadow-xl transition-shadow border-l-4" style="border-left-color: #84CC16;">
+                    <div class="flex items-center mb-4">
+                        <div class="w-12 h-12 bg-lime-100 rounded-lg flex items-center justify-center mr-4">
+                            <span class="text-xl font-bold" style="color: #84CC16;">S</span>
+                        </div>
+                        <div>
+                            <h3 class="font-bold text-gray-900">Silae HR</h3>
+                            <p class="text-xs text-gray-500">Silae (file export)</p>
+                        </div>
+                    </div>
+                    <p class="text-sm text-gray-600">Automatize as exportações dos recibos de vencimento e sincronize os dados com o Silae.</p>
+                </div>
+
+                <!-- A3Innuva -->
+                <div class="bg-white rounded-xl p-6 shadow-lg hover:shadow-xl transition-shadow border-l-4" style="border-left-color: #EC4899;">
+                    <div class="flex items-center mb-4">
+                        <div class="w-12 h-12 bg-pink-100 rounded-lg flex items-center justify-center mr-4">
+                            <span class="text-xl font-bold" style="color: #EC4899;">A3</span>
+                        </div>
+                        <div>
+                            <h3 class="font-bold text-gray-900">A3Innuva</h3>
+                            <p class="text-xs text-gray-500">a3innuva Nómina</p>
+                        </div>
+                    </div>
+                    <p class="text-sm text-gray-600">Sincronize a Factorial com a3innuva Nómina.</p>
+                </div>
+
+                <!-- PaieHR -->
+                <div class="bg-white rounded-xl p-6 shadow-lg hover:shadow-xl transition-shadow border-l-4" style="border-left-color: #F97316;">
+                    <div class="flex items-center mb-4">
+                        <div class="w-12 h-12 bg-orange-100 rounded-lg flex items-center justify-center mr-4">
+                            <span class="text-xl font-bold" style="color: #F97316;">P</span>
+                        </div>
+                        <div>
+                            <h3 class="font-bold text-gray-900">PaieHR</h3>
+                            <p class="text-xs text-gray-500">Paie&RH</p>
+                        </div>
+                    </div>
+                    <p class="text-sm text-gray-600">Centralize os dados dos recibos de vencimento e automatize a gestão dos suplementos e das ausências.</p>
+                </div>
+
+                <!-- PayCaptain -->
+                <div class="bg-white rounded-xl p-6 shadow-lg hover:shadow-xl transition-shadow border-l-4" style="border-left-color: #6366F1;">
+                    <div class="flex items-center mb-4">
+                        <div class="w-12 h-12 bg-indigo-100 rounded-lg flex items-center justify-center mr-4">
+                            <span class="text-xl font-bold" style="color: #6366F1;">PC</span>
+                        </div>
+                        <div>
+                            <h3 class="font-bold text-gray-900">PayCaptain</h3>
+                            <p class="text-xs text-gray-500">PayCaptain_logo</p>
+                        </div>
+                    </div>
+                    <p class="text-sm text-gray-600">Automatize o processamento dos recibos de vencimento e sincronize os dados dos colaboradores.</p>
+                </div>
+
+                <!-- Cimplx -->
+                <div class="bg-white rounded-xl p-6 shadow-lg hover:shadow-xl transition-shadow border-l-4" style="border-left-color: #14B8A6;">
+                    <div class="flex items-center mb-4">
+                        <div class="w-12 h-12 bg-teal-100 rounded-lg flex items-center justify-center mr-4">
+                            <span class="text-xl font-bold" style="color: #14B8A6;">C</span>
+                        </div>
+                        <div>
+                            <h3 class="font-bold text-gray-900">Cimplx</h3>
+                            <p class="text-xs text-gray-500">Cimplx</p>
+                        </div>
+                    </div>
+                    <p class="text-sm text-gray-600">Escolha soluções de recibos de vencimento simples, escaláveis e em conformidade.</p>
+                </div>
+
+                <!-- Dataia (Em breve) -->
+                <div class="bg-white rounded-xl p-6 shadow-lg hover:shadow-xl transition-shadow border-l-4 opacity-75" style="border-left-color: #6B7280;">
+                    <div class="flex items-center mb-4">
+                        <div class="w-12 h-12 bg-gray-100 rounded-lg flex items-center justify-center mr-4">
+                            <span class="text-xl font-bold text-gray-500">D</span>
+                        </div>
+                        <div>
+                            <h3 class="font-bold text-gray-700">Dataia</h3>
+                            <p class="text-xs text-gray-400">Em breve</p>
+                        </div>
+                    </div>
+                    <p class="text-sm text-gray-500">Centralize os processos de recibos de vencimento com Dataia.</p>
+                </div>
+
+                <!-- Sage 50 Payroll (Em breve) -->
+                <div class="bg-white rounded-xl p-6 shadow-lg hover:shadow-xl transition-shadow border-l-4 opacity-75" style="border-left-color: #6B7280;">
+                    <div class="flex items-center mb-4">
+                        <div class="w-12 h-12 bg-gray-100 rounded-lg flex items-center justify-center mr-4">
+                            <span class="text-xl font-bold text-gray-500">S50</span>
+                        </div>
+                        <div>
+                            <h3 class="font-bold text-gray-700">Sage 50 Payroll</h3>
+                            <p class="text-xs text-gray-400">Em breve</p>
+                        </div>
+                    </div>
+                    <p class="text-sm text-gray-500">Simplifique os processos de recibos de vencimento e de RH com o Sage 50.</p>
+                </div>
+            </div>
+
+            <!-- Contabilista Certificado -->
+            <div class="bg-white rounded-2xl p-8 shadow-xl">
+                <div class="text-center mb-8">
+                    <h3 class="text-2xl font-bold text-gray-900 mb-4">
+                        <span class="text-blue-600">👨‍💼 PARCERIA</span>
+                        <br>
+                        <span class="text-gray-800">COM CONTABILISTA CERTIFICADO</span>
+                    </h3>
+                    <p class="text-lg text-gray-600 max-w-3xl mx-auto">
+                        A Factorial não é concorrente, mas sim parceiro indispensável do Contabilista Certificado
+                    </p>
+                </div>
+                
+                <div class="grid md:grid-cols-2 gap-8">
+                    <div class="space-y-6">
+                        <h4 class="text-xl font-bold text-gray-900 mb-4">O que a Factorial oferece ao CC:</h4>
+                        <div class="space-y-4">
+                            <div class="flex items-start">
+                                <div class="w-8 h-8 bg-green-100 rounded-full flex items-center justify-center mr-4 mt-1">
+                                    <span class="text-green-600 font-bold">✓</span>
+                                </div>
+                                <div>
+                                    <h5 class="font-bold text-gray-900">Documentação Legal</h5>
+                                    <p class="text-gray-600 text-sm">Faturas digitalizadas e validadas via OCR</p>
+                                </div>
+                            </div>
+                            <div class="flex items-start">
+                                <div class="w-8 h-8 bg-green-100 rounded-full flex items-center justify-center mr-4 mt-1">
+                                    <span class="text-green-600 font-bold">✓</span>
+                                </div>
+                                <div>
+                                    <h5 class="font-bold text-gray-900">Classificação Contabilística</h5>
+                                    <p class="text-gray-600 text-sm">Imputação automática aos Centros de Custo (SNC)</p>
+                                </div>
+                            </div>
+                            <div class="flex items-start">
+                                <div class="w-8 h-8 bg-green-100 rounded-full flex items-center justify-center mr-4 mt-1">
+                                    <span class="text-green-600 font-bold">✓</span>
+                                </div>
+                                <div>
+                                    <h5 class="font-bold text-gray-900">Auditabilidade</h5>
+                                    <p class="text-gray-600 text-sm">Dados prontos para formato SAFT-PT</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="bg-blue-50 p-6 rounded-xl">
+                        <h4 class="text-lg font-bold text-blue-800 mb-4">Benefícios para o CC:</h4>
+                        <ul class="space-y-3 text-sm text-blue-700">
+                            <li class="flex items-start">
+                                <span class="text-blue-600 mr-2">•</span>
+                                <span>Reduz tempo manual de correção de dados</span>
+                            </li>
+                            <li class="flex items-start">
+                                <span class="text-blue-600 mr-2">•</span>
+                                <span>Elimina erros de classificação contabilística</span>
+                            </li>
+                            <li class="flex items-start">
+                                <span class="text-blue-600 mr-2">•</span>
+                                <span>Foco na análise estratégica e planeamento fiscal</span>
+                            </li>
+                            <li class="flex items-start">
+                                <span class="text-blue-600 mr-2">•</span>
+                                <span>Dados sempre atualizados e auditáveis</span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+
+    <!-- Social Proof Section -->
+    <section id="social-proof" class="py-20" style="background:#ffffff;">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="text-center mb-10">
+                <h3 class="text-3xl font-semibold text-gray-900 mb-2">Empresas que confiam na Factorial</h3>
+                <p class="text-gray-600">Conformidade total com a Autoridade Tributária | GDPR | SAFT-PT</p>
+                </div>
+                
+            <!-- Logos Row -->
+            <div class="grid grid-cols-2 md:grid-cols-6 gap-6 items-center mb-10">
+                <div class="h-12 flex items-center justify-center">
+                    <img src="images/logos/maleo-logo.png" alt="Maleo" class="h-12 object-contain filter grayscale hover:grayscale-0 transition-all duration-300">
+                        </div>
+                <div class="h-12 flex items-center justify-center">
+                    <img src="images/logos/visor-ai-logo.png" alt="Visor.ai" class="h-12 object-contain filter grayscale hover:grayscale-0 transition-all duration-300">
+                            </div>
+                <div class="h-12 flex items-center justify-center">
+                    <img src="images/logos/despomar-logo.png" alt="Despomar" class="h-12 object-contain filter grayscale hover:grayscale-0 transition-all duration-300">
+                            </div>
+                <div class="h-12 flex items-center justify-center">
+                    <img src="images/logos/empresa4-logo.png" alt="Empresa 4" class="h-12 object-contain filter grayscale hover:grayscale-0 transition-all duration-300">
+                        </div>
+                <div class="h-12 flex items-center justify-center">
+                    <img src="images/logos/empresa5-logo.png" alt="Empresa 5" class="h-12 object-contain filter grayscale hover:grayscale-0 transition-all duration-300">
+                </div>
+                <div class="h-12 flex items-center justify-center">
+                    <img src="images/logos/empresa6-logo.png" alt="Empresa 6" class="h-12 object-contain filter grayscale hover:grayscale-0 transition-all duration-300">
+                    </div>
+                </div>
+                
+            <!-- Testimonials Carousel (depoimentos reais Factorial Portugal) -->
+            <div class="grid md:grid-cols-3 gap-6 py-4">
+                <div class="bg-white border border-gray-200 rounded-xl p-6 shadow-sm">
+                    <p class="text-gray-800 mb-4 text-sm leading-relaxed">"Permite poupar imenso tempo. A automatização do envio dos convites de recrutamento permite-me poupar imenso tempo. Além disso, a inteligência artificial ajuda-nos a realizar a triagem de forma mais eficiente."</p>
+                    <div class="border-t border-gray-100 pt-3">
+                        <p class="text-sm font-semibold text-gray-700">Joana Santos</p>
+                        <p class="text-xs text-gray-500">People and Culture Manager, Maleo</p>
+                        <p class="text-xs text-gray-400 mt-1">0-50 colaboradores</p>
+                        </div>
+                            </div>
+                <div class="bg-white border border-gray-200 rounded-xl p-6 shadow-sm">
+                    <p class="text-gray-800 mb-4 text-sm leading-relaxed">"Estamos satisfeitos com a Factorial. Reduzimos pela metade o tempo gasto na preparação e lançamento das avaliações. Essa procura constante da Factorial por melhorar a plataforma é algo que nos deixa bastante satisfeitos."</p>
+                    <div class="border-t border-gray-100 pt-3">
+                        <p class="text-sm font-semibold text-gray-700">Catarina Ribeiro</p>
+                        <p class="text-xs text-gray-500">CEO and Founder, Visor.ai</p>
+                        <p class="text-xs text-gray-400 mt-1">50-100 colaboradores</p>
+                            </div>
+                        </div>
+                <div class="bg-white border border-gray-200 rounded-xl p-6 shadow-sm">
+                    <p class="text-gray-800 mb-4 text-sm leading-relaxed">"Acompanhamos todo o desenvolvimento do colaborador. Estamos a monitorizar desde a entrada de cada colaborador, todo o seu desenvolvimento dentro da empresa, quer em termos de carreira, quer em termos de avaliação de desempenho, quer em termos de desafios."</p>
+                    <div class="border-t border-gray-100 pt-3">
+                        <p class="text-sm font-semibold text-gray-700">Sofia Gonçalves</p>
+                        <p class="text-xs text-gray-500">HR Manager, Despomar</p>
+                        <p class="text-xs text-gray-400 mt-1">350-400 colaboradores</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="text-center mt-10">
+                <button onclick="document.getElementById('contact').scrollIntoView()" class="px-8 py-4 rounded-lg font-bold text-white" style="background:#E63946;">Agendar demonstração gratuita</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section id="contact" class="py-20" style="background: linear-gradient(135deg, rgba(255, 53, 94, 0.05), rgba(255, 165, 0, 0.05));">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <h2 class="text-4xl font-bold text-gray-900 mb-4">
+                <span style="color: #FF355E;">🛡️ PRONTO PARA</span>
+                <br>
+                <span class="text-gray-800">Trabalhar de forma mais inteligente?</span>
+            </h2>
+            <p class="text-xl text-gray-600 mb-8 max-w-3xl mx-auto">
+                Como? Libertamos profissionais de tarefas burocráticas para que possam dedicar mais tempo a apoiar as suas equipas e criar uma cultura empresarial forte e envolvente.
+            </p>
+            <div class="flex flex-col sm:flex-row gap-4 justify-center">
+                <button onclick="window.scrollTo({top: 0, behavior: 'smooth'})" class="text-white px-8 py-4 rounded-lg font-bold text-lg transition-all duration-300 transform hover:scale-105" style="background-color: #FF355E;" onmouseover="this.style.backgroundColor='#E91E63'" onmouseout="this.style.backgroundColor='#FF355E'">
+                    ⬆️ Voltar ao Início
+                </button>
+                <button class="border-2 px-8 py-4 rounded-lg font-bold text-lg transition-all duration-300 transform hover:scale-105" style="border-color: #FF355E; color: #FF355E;" onmouseover="this.style.backgroundColor='#FF355E'; this.style.color='white';" onmouseout="this.style.backgroundColor='transparent'; this.style.color='#FF355E';">
+                    📞 Demonstração Personalizada
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="text-white py-12" style="background: linear-gradient(135deg, #FFFFFF, #FFE5E8, #FFB3BA, #FF355E);">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center">
+                <h3 class="text-2xl font-bold mb-4">
+                    <span style="color: #FF355E;">Factorial Finance</span>
+                    <span style="color: #B91C3C;"> Portugal</span>
+                </h3>
+                <p class="mb-4 text-lg" style="color: #7F1D1D;">
+                    Simplificamos a conformidade fiscal e laboral para empresas portuguesas.
+                </p>
+                <p class="mb-8 text-base" style="color: #991B1B;">
+                    Mitigação de riscos, automação documental e contabilidade analítica integrada.
+                </p>
+                <p class="text-sm mb-2" style="color: #6B7280;">
+                    © 2025 Factorial RH — Todos os direitos reservados.
+                </p>
+                <p class="text-xs" style="color: #9CA3AF;">
+                    Em conformidade com a legislação portuguesa, GDPR
+                </p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Dark Mode Toggle
+        function toggleDarkMode() {
+            document.body.classList.toggle('dark');
+            const icon = document.getElementById('dark-mode-icon');
+            icon.textContent = document.body.classList.contains('dark') ? '☀️' : '🌙';
+        }
+
+        // Loading Animation Control
+        function hideLoadingAnimation() {
+            const loading = document.getElementById('loading-animation');
+            loading.style.opacity = '0';
+            loading.style.transition = 'opacity 0.5s ease-out';
+            setTimeout(() => {
+                loading.style.display = 'none';
+            }, 500);
+        }
+
+        // Função para iniciar a experiência
+        function startExperience() {
+            hideLoadingAnimation();
+        }
+
+        // Mobile menu functionality
+        const mobileMenuButton = document.getElementById('mobile-menu-button');
+        const mobileMenu = document.getElementById('mobile-menu');
+        const closeMobileMenu = document.getElementById('close-mobile-menu');
+
+        mobileMenuButton.addEventListener('click', () => {
+            mobileMenu.classList.add('open');
+        });
+
+        closeMobileMenu.addEventListener('click', () => {
+            mobileMenu.classList.remove('open');
+        });
+
+        // Smooth scrolling for navigation links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                    // Close mobile menu
+                    mobileMenu.classList.remove('open');
+                }
+            });
+        });
+
+        // GSAP Animations
+        window.addEventListener('DOMContentLoaded', function() {
+            // Verificar se GSAP está carregado
+            if (typeof gsap !== 'undefined') {
+                // Initialize GSAP
+                gsap.registerPlugin(ScrollTrigger);
+                
+                // Garantir que elementos tenham opacidade inicial correta
+                gsap.set('.hero-gradient h1, .hero-gradient p', { opacity: 1 });
+                gsap.set('.holographic-card', { opacity: 1 });
+                
+                // Enhanced GSAP Animations
+                gsap.from('.hero-gradient h1', {
+                    duration: 1.5,
+                    y: 50,
+                    opacity: 0,
+                    ease: 'power2.out'
+                });
+                
+                gsap.from('.hero-gradient p', {
+                    duration: 1.5,
+                    y: 50,
+                    opacity: 0,
+                    ease: 'power3.out',
+                    delay: 0.3
+                });
+                
+                gsap.from('.holographic-card', {
+                    scrollTrigger: {
+                        trigger: '.holographic-card',
+                        start: 'top 80%',
+                        toggleActions: 'play none none reverse'
+                    },
+                    duration: 1.2,
+                    y: 100,
+                    opacity: 0,
+                    ease: 'power3.out',
+                    stagger: 0.2
+                });
+                
+                // Animações para elementos flutuantes
+                gsap.to('.floating', {
+                    duration: 6,
+                    y: -20,
+                    rotation: 180,
+                    ease: 'power2.inOut',
+                    repeat: -1,
+                    yoyo: true
+                });
+                
+                // Animações de hover para cards
+                document.querySelectorAll('.holographic-card, .lesson-card').forEach(card => {
+                    card.addEventListener('mouseenter', () => {
+                        gsap.to(card, { duration: 0.3, scale: 1.02, ease: 'power2.out' });
+                    });
+                    card.addEventListener('mouseleave', () => {
+                        gsap.to(card, { duration: 0.3, scale: 1, ease: 'power2.out' });
+                    });
+                });
+                
+            } else {
+                console.error('GSAP não foi carregado corretamente');
+            }
+        });
+        
+        // Fallback para caso GSAP não carregue
+        window.addEventListener('load', function() {
+            if (typeof gsap === 'undefined') {
+                // Aplicar estilos de fallback
+                document.querySelectorAll('.holographic-card, .lesson-card').forEach(card => {
+                    card.style.opacity = '1';
+                    card.style.transform = 'translateY(0)';
+                });
+            }
+        });
+
+        // Handle plan change - disable Procurement/Invoicing for Enterprise
+        function handlePlanChange() {
+            const plan = document.getElementById('priceLevel').value;
+            const procurementCheckbox = document.getElementById('procurementEnabled');
+            const invoicingCheckbox = document.getElementById('salesInvoicingEnabled');
+            
+            if (plan === 'enterprise') {
+                procurementCheckbox.checked = false;
+                invoicingCheckbox.checked = false;
+                procurementCheckbox.disabled = true;
+                invoicingCheckbox.disabled = true;
+            } else {
+                procurementCheckbox.disabled = false;
+                invoicingCheckbox.disabled = false;
+            }
+        }
+
+        // Pricing function (Business/Enterprise com cálculo escalonado correto)
+        function computeMonthlyCostHybrid() {
+            const priceLevel = document.getElementById('priceLevel').value; // 'business' | 'enterprise'
+            const coreSeats = parseInt(document.getElementById('companyEmployees').value) || 0;
+            const expensesUsers = parseInt(document.getElementById('expensesUsers').value) || 0;
+            const projectSeats = parseInt(document.getElementById('projectSeats').value) || 0;
+            const procurementEnabled = document.getElementById('procurementEnabled').checked;
+            const salesInvoicingEnabled = document.getElementById('salesInvoicingEnabled').checked;
+
+            // Core cost (obrigatório em ambos os planos)
+            const coreCost = coreSeats * 1.7;
+
+            // Expenses: cálculo escalonado correto
+            let expensesCost = 0;
+            if (expensesUsers > 0) {
+                const fixedFee = priceLevel === 'business' ? 43.3 : 76.7;
+                
+                const tiers = priceLevel === 'business' 
+                    ? [
+                        { limit: 20, price: 4.0 },
+                        { limit: 50, price: 3.2 },
+                        { limit: 100, price: 2.8 },
+                        { limit: Infinity, price: 2.0 }
+                    ]
+                    : [
+                        { limit: 20, price: 6.0 },
+                        { limit: 50, price: 4.8 },
+                        { limit: 100, price: 4.2 },
+                        { limit: Infinity, price: 3.0 }
+                    ];
+
+                let remaining = expensesUsers;
+                let prevLimit = 0;
+                let varCost = 0;
+
+                for (const { limit, price } of tiers) {
+                    if (remaining <= 0) break;
+                    const tierUsers = Math.min(remaining, limit - prevLimit);
+                    varCost += tierUsers * price;
+                    remaining -= tierUsers;
+                    prevLimit = limit;
+                }
+
+                expensesCost = fixedFee + varCost;
+            }
+
+            // Project seats conforme plano
+            const projectCost = projectSeats * (priceLevel === 'business' ? 2.8 : 4.3);
+
+            // Procurement e Invoicing: apenas Business
+            const procurementCost = (priceLevel === 'business' && procurementEnabled) ? 221.1 : 0;
+            const invoicingCost = (priceLevel === 'business' && salesInvoicingEnabled) ? 30.0 : 0;
+
+            // Total mensal
+            return coreCost + expensesCost + projectCost + procurementCost + invoicingCost;
+        }
+
+        // Breakdown detalhado do custo mensal (Business/Enterprise)
+        function computeMonthlyCostBreakdown() {
+            const priceLevel = document.getElementById('priceLevel').value;
+            const coreSeats = parseInt(document.getElementById('companyEmployees').value) || 0;
+            const expensesUsers = parseInt(document.getElementById('expensesUsers').value) || 0;
+            const projectSeats = parseInt(document.getElementById('projectSeats').value) || 0;
+            const procurementEnabled = document.getElementById('procurementEnabled').checked;
+            const salesInvoicingEnabled = document.getElementById('salesInvoicingEnabled').checked;
+
+            const coreCost = coreSeats * 1.7;
+
+            // Expenses breakdown com cálculo escalonado
+            let expensesFixed = 0;
+            let tier1 = 0, tier2 = 0, tier3 = 0, tier4 = 0;
+            if (expensesUsers > 0) {
+                expensesFixed = priceLevel === 'business' ? 43.3 : 76.7;
+                
+                const tiers = priceLevel === 'business' 
+                    ? [
+                        { limit: 20, price: 4.0 },
+                        { limit: 50, price: 3.2 },
+                        { limit: 100, price: 2.8 },
+                        { limit: Infinity, price: 2.0 }
+                    ]
+                    : [
+                        { limit: 20, price: 6.0 },
+                        { limit: 50, price: 4.8 },
+                        { limit: 100, price: 4.2 },
+                        { limit: Infinity, price: 3.0 }
+                    ];
+
+                let remaining = expensesUsers;
+                let prevLimit = 0;
+
+                for (const { limit, price } of tiers) {
+                    if (remaining <= 0) break;
+                    const tierUsers = Math.min(remaining, limit - prevLimit);
+                    if (prevLimit === 0) tier1 = tierUsers * price;
+                    else if (prevLimit === 20) tier2 = tierUsers * price;
+                    else if (prevLimit === 50) tier3 = tierUsers * price;
+                    else if (prevLimit === 100) tier4 = tierUsers * price;
+                    remaining -= tierUsers;
+                    prevLimit = limit;
+                }
+            }
+
+            const procurementCost = (priceLevel === 'business' && procurementEnabled) ? 221.1 : 0;
+            const projectCost = projectSeats * (priceLevel === 'business' ? 2.8 : 4.3);
+            const invoicingCost = (priceLevel === 'business' && salesInvoicingEnabled) ? 30.0 : 0;
+
+            const total = coreCost + expensesFixed + tier1 + tier2 + tier3 + tier4 + procurementCost + projectCost + invoicingCost;
+
+            return {
+                total: Math.round(total),
+                items: {
+                    core: Math.round(coreCost),
+                    despesas: {
+                        fixed: Math.round(expensesFixed),
+                        incluidos: 0,
+                        adicionais: expensesUsers,
+                        tier1: Math.round(tier1),
+                        tier2: Math.round(tier2),
+                        tier3: Math.round(tier3),
+                        tier4: Math.round(tier4)
+                    },
+                    procurement: Math.round(procurementCost),
+                    projetos: Math.round(projectCost),
+                    faturamento: Math.round(invoicingCost)
+                }
+            };
+        }
+
+        // Toggle para mostrar/ocultar breakdown de custos
+        function toggleCostBreakdown() {
+            const breakdown = document.getElementById('cost-breakdown');
+            const toggle = document.getElementById('toggle-breakdown');
+            
+            if (breakdown.classList.contains('hidden')) {
+                breakdown.classList.remove('hidden');
+                toggle.textContent = 'Ocultar detalhes';
+            } else {
+                breakdown.classList.add('hidden');
+                toggle.textContent = 'Ver detalhes';
+            }
+        }
+
+        // ROI Calculator (Modelo Revisado)
+        function calculateROI() {
+            const submitters = parseInt(document.getElementById('submitters').value) || 0;
+            const approvers = parseInt(document.getElementById('approvers').value) || 0;
+            const totalEmployees = submitters + approvers;
+            const industry = document.getElementById('industry').value;
+            const transactions = parseInt(document.getElementById('transactions').value) || 0;
+            const minutesPerTx = parseFloat(document.getElementById('minutesPerTx').value) || 0;
+            const hourlyCost = parseFloat(document.getElementById('hourlyCost').value) || 0;
+            const avgErrorValue = parseFloat(document.getElementById('avgErrorValue').value) || 0;
+
+            if (totalEmployees === 0) {
+                alert('Por favor, insira colaboradores que lançam e aprovam');
+                return;
+            }
+            if (transactions === 0) {
+                alert('Por favor, insira as transações mensais');
+                return;
+            }
+            
+            // Multiplicadores por setor (complexidade)
+            const industryMultipliers = {
+                'services': 1.0,
+                'manufacturing': 1.3,
+                'technology': 0.9,
+                'retail': 1.1,
+                'healthcare': 1.2
+            };
+            
+            const multiplier = industryMultipliers[industry] || 1.0;
+            
+            // 60% de automação do tempo manual (ajustado por complexidade)
+            const automationFactor = 0.6 * multiplier;
+
+            // Tempo poupado (horas/mês)
+            const timeSaved = Math.round(((transactions * minutesPerTx * automationFactor) / 60) * 10) / 10;
+
+            // Economia operacional (€)
+            const operationalSavings = Math.round(timeSaved * hourlyCost);
+
+            // Redução de erros e fraudes (€) — 30% menos erros (ajustado por complexidade)
+            const errorReductionRate = 0.3 * multiplier;
+            const errorReduction = Math.round(transactions * avgErrorValue * errorReductionRate);
+
+            // Economia total (€)
+            const totalSavings = operationalSavings + errorReduction;
+
+            // Custo mensal Factorial (€) — híbrido conforme sua tabela
+            const monthlyCost = Math.round(computeMonthlyCostHybrid());
+            const breakdown = computeMonthlyCostBreakdown();
+
+            // ROI anual (%)
+            const annualROI = Math.round(((totalSavings * 12) - (monthlyCost * 12)) / (monthlyCost * 12) * 100);
+
+            // Atualiza UI
+            document.getElementById('time-saved').textContent = timeSaved + ' horas';
+            document.getElementById('operational-savings').textContent = '€' + operationalSavings.toLocaleString();
+            document.getElementById('error-reduction').textContent = '€' + errorReduction.toLocaleString();
+            document.getElementById('total-savings').textContent = '€' + totalSavings.toLocaleString();
+            document.getElementById('annual-roi').textContent = annualROI + '%';
+            document.getElementById('monthly-cost-total').textContent = '€' + breakdown.total.toLocaleString();
+            const b = breakdown.items;
+            const planLabel = (document.getElementById('priceLevel').value === 'enterprise') ? 'Enterprise' : 'Business';
+            const breakdownHtml = `
+                <div>Plano: <strong>${planLabel}</strong></div>
+                <div>Core (${(document.getElementById('companyEmployees').value||0)} seats): <strong>€${b.core.toLocaleString()}</strong></div>
+                <div>Despesas: fixed fee <strong>€${b.despesas.fixed.toLocaleString()}</strong></div>
+                ${b.despesas.adicionais>0?`<div class="ml-2">Utilizadores (${b.despesas.adicionais}): T1 €${b.despesas.tier1.toLocaleString()} T2 €${b.despesas.tier2.toLocaleString()} T3 €${b.despesas.tier3.toLocaleString()} T4 €${b.despesas.tier4.toLocaleString()}</div>`:''}
+                ${b.projetos>0?`<div>Projetos (${(document.getElementById('projectSeats').value||0)} seats): <strong>€${b.projetos.toLocaleString()}</strong></div>`:''}
+                ${b.procurement>0?`<div>Procurement (fixo): <strong>€${b.procurement.toLocaleString()}</strong></div>`:''}
+                ${b.faturamento>0?`<div>Faturamento (fixo): <strong>€${b.faturamento.toLocaleString()}</strong></div>`:''}
+            `;
+            document.getElementById('cost-breakdown').innerHTML = breakdownHtml;
+            
+            // Atualiza gráfico
+            updateROIChart(totalEmployees, totalSavings, monthlyCost);
+            
+            // Atualiza bloco comparativo
+            const manualCost = totalSavings + monthlyCost; // Custo manual estimado
+            const manualPercent = Math.min((manualCost / monthlyCost) * 100, 1000); // Limita a 1000% para visualização
+            document.getElementById('manual-cost-percent').textContent = Math.round(manualPercent) + '%';
+            document.getElementById('manual-cost-bar').style.width = Math.min(manualPercent, 100) + '%';
+            document.getElementById('savings-display').textContent = '€' + totalSavings.toLocaleString();
+            document.getElementById('roi-percent-display').textContent = annualROI + '%';
+            
+            // Scroll para o resultado
+            setTimeout(() => {
+                document.getElementById('roi-results').scrollIntoView({ 
+                    behavior: 'smooth', 
+                    block: 'start' 
+                });
+            }, 100);
+        }
+        
+        function updateROIChart(totalEmployees, monthlySavings, monthlyCost) {
+            const ctx = document.getElementById('roiChart').getContext('2d');
+            
+            // Destroy existing chart if it exists
+            if (window.roiChartInstance) {
+                window.roiChartInstance.destroy();
+            }
+            
+            window.roiChartInstance = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: ['Custo Factorial (12m)', 'Poupança Total (12m)'],
+                    datasets: [{
+                        label: 'Comparação (€)',
+                        data: [monthlyCost * 12, monthlySavings * 12],
+                        backgroundColor: [
+                            'rgba(118, 75, 162, 0.8)',
+                            'rgba(34, 197, 94, 0.8)'
+                        ],
+                        borderColor: [
+                            'rgba(118, 75, 162, 1)',
+                            'rgba(34, 197, 94, 1)'
+                        ],
+                        borderWidth: 2
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        title: {
+                            display: true,
+                            text: 'ROI Anual — Custo vs. Poupança (12 meses)'
+                        },
+                        legend: {
+                            display: false
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            ticks: {
+                                callback: function(value) {
+                                    return '€' + value.toLocaleString();
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        }
+    </script>
+</body>
+</html>
