@@ -287,8 +287,11 @@
 
             <!-- Botões -->
             <div class="flex flex-col sm:flex-row gap-4 justify-center mt-8">
+                <button id="previewProposal" class="bg-green-600 hover:bg-green-700 text-white font-semibold py-3 px-8 rounded-lg transition duration-200">
+                    👁️ Visualizar Proposta
+                </button>
                 <button id="generateProposal" class="bg-purple-600 hover:bg-purple-700 text-white font-semibold py-3 px-8 rounded-lg transition duration-200">
-                    📄 Gerar Proposta Executiva
+                    📄 Gerar Proposta HTML
                 </button>
                 <button id="exportPDF" class="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-8 rounded-lg transition duration-200">
                     📋 Exportar PDF
@@ -444,6 +447,22 @@
             }
         }
 
+        // Visualizar proposta
+        function previewProposal() {
+            const formData = getFormData();
+            if (!validateForm(formData)) return;
+
+            const proposalHTML = createProposalHTML(formData);
+            
+            // Mostrar no modal
+            const modal = document.getElementById('previewModal');
+            const iframe = document.getElementById('proposalPreviewFrame');
+            iframe.srcdoc = proposalHTML;
+            modal.classList.remove('hidden');
+            
+            showStatus('👁️ Proposta visualizada no modal!', 'success');
+        }
+
         // Gerar proposta
         function generateProposal() {
             const formData = getFormData();
@@ -452,17 +471,17 @@
             const proposalHTML = createProposalHTML(formData);
             
             // Criar e baixar arquivo
-                const blob = new Blob([proposalHTML], { type: 'text/html;charset=utf-8' });
-                const url = URL.createObjectURL(blob);
-                const a = document.createElement('a');
-                a.href = url;
+            const blob = new Blob([proposalHTML], { type: 'text/html;charset=utf-8' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
             a.download = `proposta-executiva-factorial-${formData.companyName.toLowerCase().replace(/\s+/g, '-')}.html`;
-                document.body.appendChild(a);
-                a.click();
-                document.body.removeChild(a);
-                URL.revokeObjectURL(url);
-                
-            showStatus('✅ Proposta executiva gerada com sucesso!', 'success');
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+            
+            showStatus('✅ Proposta HTML baixada com sucesso!', 'success');
         }
 
         // Exportar PDF
@@ -750,6 +769,7 @@
             setupEventListeners();
             
             // Botões principais
+            document.getElementById('previewProposal').addEventListener('click', previewProposal);
             document.getElementById('generateProposal').addEventListener('click', generateProposal);
             document.getElementById('exportPDF').addEventListener('click', exportPDF);
             document.getElementById('clearSelection').addEventListener('click', clearSelection);
